@@ -28,16 +28,25 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       return <div className="my-3" />;
     }
     
+    // Use CSS borders for solid, dashed, dotted (cleaner and responsive)
+    if (style === 'solid') {
+      return <div className="my-2 border-t border-gray-400" />;
+    }
+    if (style === 'dashed') {
+      return <div className="my-2 border-t border-dashed border-gray-400" />;
+    }
+    if (style === 'dotted') {
+      return <div className="my-2 border-t border-dotted border-gray-400" />;
+    }
+    
+    // Use text for double and stars (special characters)
     const textDividers = {
-      dashed: '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -',
-      solid: '=================================================',
-      dotted: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .',
       double: '⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮',
       stars: '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *',
     };
 
     return (
-      <div className="my-2 text-center text-gray-400 text-xs overflow-hidden">
+      <div className="my-2 text-center text-gray-400 text-xs overflow-hidden whitespace-nowrap">
         {textDividers[style as keyof typeof textDividers] || ''}
       </div>
     );
