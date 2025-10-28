@@ -14,85 +14,85 @@ const Pricing: NextPage = () => {
         <meta name="description" content="Choose your plan" />
       </Head>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl lg:text-5xl font-bold text-navy-900 mb-4 tracking-tight">
             Simple, Transparent Pricing
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-navy-600">
             Choose the plan that works best for you
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <div className="bg-white rounded-lg shadow-lg p-8 border-2 border-gray-200">
-            <h3 className="text-2xl font-bold mb-4">Free</h3>
+          <div className="bg-white rounded-xl shadow-lg p-8 border-2 border-navy-100">
+            <h3 className="text-2xl font-bold mb-4 text-navy-900">Free</h3>
             <div className="mb-6">
-              <span className="text-4xl font-bold">$0</span>
-              <span className="text-gray-600">/month</span>
+              <span className="text-5xl font-bold text-navy-900">$0</span>
+              <span className="text-navy-600 text-lg">/month</span>
             </div>
             <ul className="space-y-3 mb-8">
               <li className="flex items-start">
-                <FiCheck className="text-green-500 mr-2 mt-1" />
-                <span>Access to all templates</span>
+                <FiCheck className="text-success-500 mr-3 mt-1 flex-shrink-0" />
+                <span className="text-navy-700">Access to all templates</span>
               </li>
               <li className="flex items-start">
-                <FiCheck className="text-green-500 mr-2 mt-1" />
-                <span>Customize receipts</span>
+                <FiCheck className="text-success-500 mr-3 mt-1 flex-shrink-0" />
+                <span className="text-navy-700">Customize receipts</span>
               </li>
               <li className="flex items-start">
-                <FiCheck className="text-green-500 mr-2 mt-1" />
-                <span>Live preview</span>
+                <FiCheck className="text-success-500 mr-3 mt-1 flex-shrink-0" />
+                <span className="text-navy-700">Live preview</span>
               </li>
               <li className="flex items-start">
-                <FiCheck className="text-green-500 mr-2 mt-1" />
-                <span>Download with watermark</span>
+                <FiCheck className="text-success-500 mr-3 mt-1 flex-shrink-0" />
+                <span className="text-navy-700">Download with watermark</span>
               </li>
             </ul>
-            <button className="w-full bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition">
+            <button className="w-full bg-navy-100 text-navy-700 px-6 py-3 rounded-xl font-semibold hover:bg-navy-200 transition-all">
               Current Plan
             </button>
           </div>
 
-          <div className="bg-white rounded-lg shadow-lg p-8 border-2 border-blue-600 relative">
-            <div className="absolute top-0 right-0 bg-blue-600 text-white px-4 py-1 rounded-bl-lg rounded-tr-lg text-sm font-semibold">
+          <div className="bg-white rounded-xl shadow-xl p-8 border-2 border-accent-500 relative transform md:-translate-y-2 md:scale-105">
+            <div className="absolute top-0 right-0 bg-accent-500 text-white px-4 py-1 rounded-bl-xl rounded-tr-xl text-sm font-semibold">
               Popular
             </div>
-            <h3 className="text-2xl font-bold mb-4">Premium</h3>
+            <h3 className="text-2xl font-bold mb-4 text-navy-900">Premium</h3>
             <div className="mb-6">
-              <span className="text-4xl font-bold">$9.99</span>
-              <span className="text-gray-600">/month</span>
+              <span className="text-5xl font-bold text-navy-900">$9.99</span>
+              <span className="text-navy-600 text-lg">/month</span>
             </div>
             <ul className="space-y-3 mb-8">
               <li className="flex items-start">
-                <FiCheck className="text-green-500 mr-2 mt-1" />
-                <span>Everything in Free</span>
+                <FiCheck className="text-success-500 mr-3 mt-1 flex-shrink-0" />
+                <span className="text-navy-700">Everything in Free</span>
               </li>
               <li className="flex items-start">
-                <FiCheck className="text-green-500 mr-2 mt-1" />
-                <span className="font-semibold">Download without watermark</span>
+                <FiCheck className="text-success-500 mr-3 mt-1 flex-shrink-0" />
+                <span className="text-navy-700 font-semibold">Download without watermark</span>
               </li>
               <li className="flex items-start">
-                <FiCheck className="text-green-500 mr-2 mt-1" />
-                <span>Save custom templates</span>
+                <FiCheck className="text-success-500 mr-3 mt-1 flex-shrink-0" />
+                <span className="text-navy-700">Save custom templates</span>
               </li>
               <li className="flex items-start">
-                <FiCheck className="text-green-500 mr-2 mt-1" />
-                <span>Priority support</span>
+                <FiCheck className="text-success-500 mr-3 mt-1 flex-shrink-0" />
+                <span className="text-navy-700">Priority support</span>
               </li>
               <li className="flex items-start">
-                <FiCheck className="text-green-500 mr-2 mt-1" />
-                <span>Unlimited downloads</span>
+                <FiCheck className="text-success-500 mr-3 mt-1 flex-shrink-0" />
+                <span className="text-navy-700">Unlimited downloads</span>
               </li>
             </ul>
             {user ? (
-              <button className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+              <button className="w-full bg-accent-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-accent-600 transition-all hover:shadow-lg">
                 Upgrade to Premium
               </button>
             ) : (
               <button
                 onClick={signIn}
-                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+                className="w-full bg-accent-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-accent-600 transition-all hover:shadow-lg"
               >
                 Sign In to Subscribe
               </button>

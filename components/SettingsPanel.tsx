@@ -22,45 +22,45 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
   };
 
   return (
-    <div className="border rounded-lg bg-gray-50 mb-4">
+    <div className="border border-navy-200 rounded-xl bg-white mb-6 shadow-sm">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-100 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-navy-50 transition-colors rounded-t-xl"
       >
-        <div className="flex items-center gap-2">
-          <FiSettings className="text-gray-600" />
-          <span className="font-semibold text-gray-900">Settings</span>
+        <div className="flex items-center gap-3">
+          <FiSettings className="text-accent-500" />
+          <span className="font-semibold text-navy-900">Global Settings</span>
         </div>
-        {isExpanded ? <FiChevronUp className="text-gray-600" /> : <FiChevronDown className="text-gray-600" />}
+        {isExpanded ? <FiChevronUp className="text-navy-600" /> : <FiChevronDown className="text-navy-600" />}
       </button>
 
       {isExpanded && (
-        <div className="px-4 pb-4 space-y-4">
+        <div className="px-4 pb-4 space-y-6 border-t border-navy-100">
           {/* Currency and Format Section */}
-          <div className="grid grid-cols-[auto_1fr] gap-4 items-start">
+          <div className="grid grid-cols-[auto_1fr] gap-4 items-start pt-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Currency</label>
+              <label className="block text-sm font-medium mb-2 text-navy-700">Currency</label>
               <input
                 type="text"
                 value={settings.currency}
                 onChange={(e) => onUpdate({ ...settings, currency: e.target.value })}
                 placeholder="$"
                 maxLength={5}
-                className="w-16 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+                className="w-16 px-3 py-2 border border-navy-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 text-center font-medium"
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-2">Format</label>
-              <div className="flex gap-2">
+              <label className="block text-sm font-medium mb-2 text-navy-700">Format</label>
+              <div className="flex gap-2 flex-wrap">
                 {(['symbol_before', 'symbol_after', 'symbol_after_space'] as CurrencyFormat[]).map((format) => (
                   <button
                     key={format}
                     onClick={() => onUpdate({ ...settings, currencyFormat: format })}
-                    className={`px-4 py-2 border rounded transition-colors ${
+                    className={`px-4 py-2 border rounded-lg transition-all font-medium ${
                       settings.currencyFormat === format
-                        ? 'bg-blue-500 text-white border-blue-500'
-                        : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                        ? 'bg-accent-500 text-white border-accent-500 shadow-sm'
+                        : 'bg-white text-navy-700 border-navy-200 hover:bg-navy-50'
                     }`}
                   >
                     {formatExample(settings.currency, format)}
@@ -72,73 +72,73 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
 
           {/* Font Section */}
           <div>
-            <label className="block text-sm font-medium mb-2">Font</label>
-            <div className="flex gap-2">
+            <label className="block text-sm font-medium mb-2 text-navy-700">Font Style</label>
+            <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => onUpdate({ ...settings, font: 'handwritten' })}
-                className={`px-6 py-2 border rounded transition-colors ${
+                className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'handwritten'
-                    ? 'bg-blue-500 text-white border-blue-500'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    ? 'bg-accent-500 text-white border-accent-500 shadow-sm'
+                    : 'bg-white text-navy-700 border-navy-200 hover:bg-navy-50'
                 }`}
                 style={{ fontFamily: 'Caveat, cursive' }}
               >
-                Font 1
+                Handwritten
               </button>
               <button
                 onClick={() => onUpdate({ ...settings, font: 'mono' })}
-                className={`px-6 py-2 border rounded transition-colors ${
+                className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'mono'
-                    ? 'bg-blue-500 text-white border-blue-500'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    ? 'bg-accent-500 text-white border-accent-500 shadow-sm'
+                    : 'bg-white text-navy-700 border-navy-200 hover:bg-navy-50'
                 }`}
                 style={{ fontFamily: 'Courier New, monospace' }}
               >
-                Font 2
+                Monospace
               </button>
               <button
                 onClick={() => onUpdate({ ...settings, font: 'receipt' })}
-                className={`px-6 py-2 border rounded transition-colors ${
+                className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'receipt'
-                    ? 'bg-blue-500 text-white border-blue-500'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    ? 'bg-accent-500 text-white border-accent-500 shadow-sm'
+                    : 'bg-white text-navy-700 border-navy-200 hover:bg-navy-50'
                 }`}
                 style={{ fontFamily: 'monospace' }}
               >
-                Font 3
+                Receipt
               </button>
             </div>
           </div>
 
           {/* Text Color Section */}
           <div>
-            <label className="block text-sm font-medium mb-2">Text color</label>
+            <label className="block text-sm font-medium mb-2 text-navy-700">Text Color</label>
             <div className="flex items-center gap-3">
               <input
                 type="color"
                 value={settings.textColor}
                 onChange={(e) => onUpdate({ ...settings, textColor: e.target.value })}
-                className="w-16 h-10 border rounded cursor-pointer"
+                className="w-16 h-10 border border-navy-200 rounded-lg cursor-pointer"
               />
-              <span className="text-sm text-gray-600">{settings.textColor}</span>
+              <span className="text-sm text-navy-600 font-mono">{settings.textColor}</span>
             </div>
           </div>
 
           {/* Background Texture Section */}
           <div>
-            <label className="block text-sm font-medium mb-2">Show receipt background</label>
-            <div className="flex gap-2">
+            <label className="block text-sm font-medium mb-2 text-navy-700">Receipt Background Texture</label>
+            <div className="flex gap-2 flex-wrap">
               {(['none', 'texture1', 'texture2', 'texture3', 'texture4', 'texture5'] as BackgroundTexture[]).map((texture, index) => (
                 <button
                   key={texture}
                   onClick={() => onUpdate({ ...settings, backgroundTexture: texture })}
-                  className={`px-4 py-2 border rounded transition-colors ${
+                  className={`px-4 py-2 border rounded-lg transition-all font-medium ${
                     settings.backgroundTexture === texture
-                      ? 'bg-blue-500 text-white border-blue-500'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                      ? 'bg-accent-500 text-white border-accent-500 shadow-sm'
+                      : 'bg-white text-navy-700 border-navy-200 hover:bg-navy-50'
                   }`}
                 >
-                  {texture === 'none' ? 'Off' : `#${index}`}
+                  {texture === 'none' ? 'Off' : `Texture ${index}`}
                 </button>
               ))}
             </div>
