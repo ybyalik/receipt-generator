@@ -708,8 +708,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
   };
 
   return (
-    <div className="border border-gray-300 rounded-xl bg-white">
-      <div className="flex items-center justify-between p-3 bg-navy-50 rounded-t-xl">
+    <div className="border border-gray-300 rounded-xl bg-white overflow-hidden">
+      <div className={`flex items-center justify-between p-3 bg-navy-50 ${isExpanded ? 'rounded-t-xl' : 'rounded-xl'}`}>
         <div className="flex items-center space-x-2">
           <button {...dragHandleProps} className="cursor-move text-navy-400 hover:text-navy-600 transition-colors">
             <FiMove />
