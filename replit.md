@@ -55,6 +55,25 @@ The application is fully functional with all core features implemented:
 
 Preferred communication style: Simple, everyday language.
 
+## CSS Architecture (Cleaned & Organized)
+
+**File Structure:**
+- ✅ `styles/globals.css` - Single CSS file with @theme directive for all colors + base styles
+- ✅ `tailwind.config.js` - Minimal config (fonts, shadows, spacing, border-radius only)
+- ✅ `postcss.config.js` - PostCSS plugins for Tailwind v4 and oklch color conversion
+- ❌ No CSS modules, no component-level CSS files, no duplicate styles
+
+**Color System:**
+- All colors (standard + custom) defined once in `@theme` directive in `globals.css`
+- Custom brand colors: `navy-*` (50-900), `accent-*` (50-900)
+- Utility colors: `success-*`, `warning-*`, `error-*`
+- Hex values used everywhere for html2canvas compatibility (no oklch)
+
+**Styling Approach:**
+- Tailwind utility classes for 99% of styling
+- Inline styles only for dynamic values (transforms from @dnd-kit, transition delays, font families from settings)
+- No className duplication or CSS conflicts
+
 ## System Architecture
 
 ### Frontend Architecture
@@ -71,10 +90,12 @@ Preferred communication style: Simple, everyday language.
 - SectionEditor provides customization interface for receipt sections
 
 **Styling**: Tailwind CSS v4
-- Utility-first CSS framework
-- PostCSS integration for processing
+- Utility-first CSS framework with modern @theme directive
+- **Single source of truth**: All colors defined in `styles/globals.css` @theme block
+- PostCSS integration with `@csstools/postcss-oklab-function` for html2canvas compatibility
 - Responsive design patterns throughout
-- Custom configuration in `tailwind.config.js`
+- Minimal `tailwind.config.js` (extends only non-color theme properties)
+- No CSS modules or component-level CSS files (all Tailwind utility classes)
 
 **State Management**:
 - React Context API for authentication state (AuthContext)

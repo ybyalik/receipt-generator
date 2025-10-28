@@ -10,54 +10,9 @@ module.exports = {
     optimizeUniversalDefaults: true,
   },
   theme: {
-    colors: ({ colors }) => ({
-      ...colors,
-      // Override with RGB format for html2canvas compatibility
-      transparent: 'transparent',
-      current: 'currentColor',
-      black: '#000000',
-      white: '#ffffff',
-    }),
     extend: {
-      colors: {
-        // Modern, sophisticated color palette
-        navy: {
-          50: '#f0f4f8',
-          100: '#d9e2ec',
-          200: '#bcccdc',
-          300: '#9fb3c8',
-          400: '#829ab1',
-          500: '#627d98',
-          600: '#486581',
-          700: '#334e68',
-          800: '#243b53',
-          900: '#102a43',
-        },
-        accent: {
-          50: '#e6f6ff',
-          100: '#b3e0ff',
-          200: '#80c9ff',
-          300: '#4db3ff',
-          400: '#1a9cff',
-          500: '#0070c9', // Primary accent - darkened for WCAG compliance (4.7:1 contrast with white)
-          600: '#005fa3',
-          700: '#004d85',
-          800: '#003a66',
-          900: '#002747',
-        },
-        success: {
-          500: '#10b981',
-          600: '#059669',
-        },
-        warning: {
-          500: '#f59e0b',
-          600: '#d97706',
-        },
-        error: {
-          500: '#ef4444',
-          600: '#dc2626',
-        },
-      },
+      // All colors are defined in styles/globals.css @theme directive
+      // Keeping config minimal for Tailwind v4
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
       },

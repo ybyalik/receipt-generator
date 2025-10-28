@@ -3,6 +3,8 @@
 
 @theme {
   /* Override oklch colors with hex values for html2canvas compatibility */
+  /* Only standard Tailwind colors - custom colors (navy, accent) are defined in tailwind.config.js */
+  
   --color-gray-50: #f9fafb;
   --color-gray-100: #f3f4f6;
   --color-gray-200: #e5e7eb;
@@ -63,7 +65,7 @@
   --color-yellow-900: #713f12;
   --color-yellow-950: #422006;
   
-  /* Custom navy colors */
+  /* Custom brand colors - navy palette */
   --color-navy-50: #f0f4f8;
   --color-navy-100: #d9e2ec;
   --color-navy-200: #bcccdc;
@@ -75,7 +77,7 @@
   --color-navy-800: #243b53;
   --color-navy-900: #102a43;
   
-  /* Custom accent colors */
+  /* Custom brand colors - accent palette */
   --color-accent-50: #e6f6ff;
   --color-accent-100: #b3e0ff;
   --color-accent-200: #80c9ff;
@@ -86,8 +88,17 @@
   --color-accent-700: #004d85;
   --color-accent-800: #003a66;
   --color-accent-900: #002747;
+  
+  /* Utility colors */
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
 }
 
+/* Base styles */
 html,
 body {
   padding: 0;
@@ -107,16 +118,11 @@ a {
   box-sizing: border-box;
 }
 
-/* Better focus states */
+/* Accessibility - Focus states */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
   outline: 2px solid #0085e6;
   outline-offset: 2px;
-}
-
-/* Smooth transitions */
-button, a {
-  transition: all 0.2s ease-in-out;
 }

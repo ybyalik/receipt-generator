@@ -191,7 +191,7 @@ const Home: NextPage = () => {
           </p>
           <Link
             href="/templates"
-            className="inline-block bg-white text-navy-800 px-10 py-4 rounded-xl text-lg font-semibold hover:bg-gray-100 transition-colors cursor-pointer"
+            className="inline-block bg-white text-navy-900 px-10 py-4 rounded-xl text-lg font-semibold hover:bg-gray-50 transition-colors cursor-pointer shadow-lg"
           >
             Create Your First Receipt
           </Link>
