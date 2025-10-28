@@ -5,6 +5,7 @@ export const templates = pgTable('templates', {
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
   sections: jsonb('sections').notNull(),
+  settings: jsonb('settings').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -16,6 +17,7 @@ export const userTemplates = pgTable('user_templates', {
   name: text('name').notNull(),
   slug: text('slug').notNull(),
   sections: jsonb('sections').notNull(),
+  settings: jsonb('settings').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

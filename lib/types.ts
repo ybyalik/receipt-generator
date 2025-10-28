@@ -48,11 +48,11 @@ export interface ItemsListSection {
   increaseTotalSize?: boolean;
   totalSizeIncrease?: number; // Percentage: 10, 20, 50, 75, 100
   // Divider after items (before total lines)
-  dividerAfterItems: boolean;
-  dividerAfterItemsStyle: DividerStyle;
+  dividerAfterItems?: boolean;
+  dividerAfterItemsStyle?: DividerStyle;
   // Divider after total lines (at bottom)
-  dividerAfterTotal: boolean;
-  dividerAfterTotalStyle: DividerStyle;
+  dividerAfterTotal?: boolean;
+  dividerAfterTotalStyle?: DividerStyle;
   // Keep old properties for backward compatibility
   dividerAtBottom?: boolean;
   dividerStyle?: DividerStyle;
@@ -101,11 +101,24 @@ export type Section =
   | DateTimeSection 
   | BarcodeSection;
 
+export type CurrencySymbol = '$' | '€' | '£' | '¥' | '₹';
+export type CurrencyFormat = 'symbol_before' | 'symbol_after' | 'symbol_after_space'; // $2.99, 2.99$, 2.99 $
+export type FontStyle = 'receipt' | 'mono' | 'handwritten'; // Font 1, Font 2, Font 3
+
+export interface TemplateSettings {
+  currency: CurrencySymbol;
+  currencyFormat: CurrencyFormat;
+  font: FontStyle;
+  textColor: string;
+  showBackground: boolean;
+}
+
 export interface Template {
   id: string;
   name: string;
   slug: string;
   sections: Section[];
+  settings: TemplateSettings;
   createdAt: string;
   updatedAt: string;
 }
@@ -116,6 +129,7 @@ export interface UserTemplate {
   templateId: string;
   name: string;
   customSections: Section[];
+  settings: TemplateSettings;
   createdAt: string;
   updatedAt: string;
 }

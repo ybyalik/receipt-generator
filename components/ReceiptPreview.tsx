@@ -1,16 +1,19 @@
 import React, { useRef } from 'react';
-import { Section } from '../lib/types';
+import { Section, TemplateSettings } from '../lib/types';
+import { formatCurrency, getFontFamily } from '../lib/currency';
 import JsBarcode from 'jsbarcode';
 import { format } from 'date-fns';
 
 interface ReceiptPreviewProps {
   sections: Section[];
+  settings: TemplateSettings;
   showWatermark?: boolean;
   previewRef?: React.RefObject<HTMLDivElement>;
 }
 
 const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ 
-  sections, 
+  sections,
+  settings,
   showWatermark = true,
   previewRef 
 }) => {
@@ -97,7 +100,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                     <span>
                       {item.quantity} x {item.item}
                     </span>
-                    <span>${item.price.toFixed(2)}</span>
+                    <span>{formatCurrency(item.price, settings.currency, settings.currencyFormat)}</span>
                   </div>
                 ))}
               </div>
@@ -113,7 +116,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                 {section.totalLines.map((line, idx) => (
                   <div key={idx} className="flex justify-between">
                     <span>{line.title}:</span>
-                    <span>${line.value.toFixed(2)}</span>
+                    <span>{formatCurrency(line.value, settings.currency, settings.currencyFormat)}</span>
                   </div>
                 ))}
                 <div 
@@ -125,7 +128,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                   }
                 >
                   <span>{section.total.title}:</span>
-                  <span>${section.total.price.toFixed(2)}</span>
+                  <span>{formatCurrency(section.total.price, settings.currency, settings.currencyFormat)}</span>
                 </div>
               </div>
             </div>
@@ -202,8 +205,11 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
     <div className="relative">
       <div 
         ref={ref}
-        className="bg-white p-8 shadow-lg max-w-md mx-auto relative"
-        style={{ fontFamily: 'monospace' }}
+        className={`p-8 shadow-lg max-w-md mx-auto relative ${settings.showBackground ? 'bg-white' : 'bg-transparent'}`}
+        style={{ 
+          fontFamily: getFontFamily(settings.font),
+          color: settings.textColor
+        }}
       >
         {sections.map(renderSection)}
       </div>
