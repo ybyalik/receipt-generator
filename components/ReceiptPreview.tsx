@@ -206,18 +206,23 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       return { backgroundColor: 'white' };
     }
     
+    // Realistic receipt textures - subtle wear, creases, and fold marks
     const textures = {
-      texture1: 'repeating-linear-gradient(45deg, #f5f5f0 0px, #f5f5f0 10px, #e8e8e0 10px, #e8e8e0 20px)',
-      texture2: 'radial-gradient(circle at 20% 50%, rgba(0,0,0,0.05) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(0,0,0,0.05) 0%, transparent 50%)',
-      texture3: 'linear-gradient(135deg, #faf8f3 25%, transparent 25%), linear-gradient(225deg, #faf8f3 25%, transparent 25%), linear-gradient(45deg, #faf8f3 25%, transparent 25%), linear-gradient(315deg, #faf8f3 25%, #f5f2ed 25%)',
-      texture4: 'repeating-radial-gradient(circle at 0 0, transparent 0, #f5f5f0 10px), repeating-linear-gradient(#e8e8e055, #e8e8e0)',
-      texture5: 'linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px)',
+      // Slight crease down the middle (vertical fold)
+      texture1: 'linear-gradient(to right, transparent 49%, rgba(0,0,0,0.02) 49.5%, rgba(0,0,0,0.04) 50%, rgba(0,0,0,0.02) 50.5%, transparent 51%)',
+      // Horizontal fold marks (receipt folded in thirds)
+      texture2: 'linear-gradient(to bottom, transparent 32%, rgba(0,0,0,0.015) 33%, rgba(0,0,0,0.03) 33.5%, rgba(0,0,0,0.015) 34%, transparent 34.5%, transparent 65%, rgba(0,0,0,0.015) 66%, rgba(0,0,0,0.03) 66.5%, rgba(0,0,0,0.015) 67%, transparent 67.5%)',
+      // Slightly worn/aged with subtle staining
+      texture3: 'radial-gradient(ellipse at 20% 30%, rgba(0,0,0,0.01) 0%, transparent 40%), radial-gradient(ellipse at 80% 70%, rgba(0,0,0,0.015) 0%, transparent 35%), radial-gradient(ellipse at 50% 90%, rgba(0,0,0,0.01) 0%, transparent 30%)',
+      // Crumpled texture (multiple creases)
+      texture4: 'linear-gradient(45deg, transparent 48%, rgba(0,0,0,0.015) 49%, rgba(0,0,0,0.02) 50%, rgba(0,0,0,0.015) 51%, transparent 52%), linear-gradient(-45deg, transparent 48%, rgba(0,0,0,0.01) 49.5%, rgba(0,0,0,0.015) 50%, rgba(0,0,0,0.01) 50.5%, transparent 52%)',
+      // Edge wear and center fold combined
+      texture5: 'linear-gradient(to right, rgba(0,0,0,0.02) 0%, transparent 5%, transparent 48%, rgba(0,0,0,0.025) 50%, transparent 52%, transparent 95%, rgba(0,0,0,0.02) 100%), linear-gradient(to bottom, rgba(0,0,0,0.015) 0%, transparent 3%, transparent 97%, rgba(0,0,0,0.015) 100%)',
     };
     
     return {
-      backgroundColor: '#faf8f3',
+      backgroundColor: 'white',
       backgroundImage: textures[settings.backgroundTexture as keyof typeof textures] || textures.texture1,
-      backgroundSize: settings.backgroundTexture === 'texture5' ? '20px 20px' : (settings.backgroundTexture === 'texture3' ? '40px 40px' : 'auto'),
     };
   };
 

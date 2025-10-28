@@ -36,36 +36,37 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
 
       {isExpanded && (
         <div className="px-4 pb-4 space-y-4">
-          {/* Currency Section */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Currency</label>
-            <input
-              type="text"
-              value={settings.currency}
-              onChange={(e) => onUpdate({ ...settings, currency: e.target.value })}
-              placeholder="$"
-              maxLength={5}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Format Section */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Format</label>
-            <div className="flex gap-2">
-              {(['symbol_before', 'symbol_after', 'symbol_after_space'] as CurrencyFormat[]).map((format) => (
-                <button
-                  key={format}
-                  onClick={() => onUpdate({ ...settings, currencyFormat: format })}
-                  className={`px-4 py-2 border rounded transition-colors ${
-                    settings.currencyFormat === format
-                      ? 'bg-blue-500 text-white border-blue-500'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  {formatExample(settings.currency, format)}
-                </button>
-              ))}
+          {/* Currency and Format Section */}
+          <div className="grid grid-cols-[auto_1fr] gap-4 items-start">
+            <div>
+              <label className="block text-sm font-medium mb-2">Currency</label>
+              <input
+                type="text"
+                value={settings.currency}
+                onChange={(e) => onUpdate({ ...settings, currency: e.target.value })}
+                placeholder="$"
+                maxLength={5}
+                className="w-16 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-2">Format</label>
+              <div className="flex gap-2">
+                {(['symbol_before', 'symbol_after', 'symbol_after_space'] as CurrencyFormat[]).map((format) => (
+                  <button
+                    key={format}
+                    onClick={() => onUpdate({ ...settings, currencyFormat: format })}
+                    className={`px-4 py-2 border rounded transition-colors ${
+                      settings.currencyFormat === format
+                        ? 'bg-blue-500 text-white border-blue-500'
+                        : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    {formatExample(settings.currency, format)}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
