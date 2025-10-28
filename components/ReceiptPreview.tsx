@@ -116,43 +116,18 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
         );
 
       case 'payment':
+        const paymentFields = section.fields || [];
         return (
           <div key={section.id} className="mb-4">
             <div className="text-xs space-y-1">
-              {section.paymentType === 'cash' && section.cash && (
-                <div className="flex justify-between">
-                  <span>{section.cash.title}:</span>
-                  <span>{section.cash.value}</span>
+              {paymentFields.map((field, idx) => (
+                <div key={idx} className="flex justify-between">
+                  <span>{field.title}:</span>
+                  <span className={idx === paymentFields.length - 1 ? 'font-bold' : ''}>
+                    {field.value}
+                  </span>
                 </div>
-              )}
-              {section.paymentType === 'card' && section.card && (
-                <>
-                  <div className="flex justify-between">
-                    <span>Card number:</span>
-                    <span>{section.card.cardNumber}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Card type:</span>
-                    <span>{section.card.cardType}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Card entry:</span>
-                    <span>{section.card.cardEntry}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Date/time:</span>
-                    <span>{section.card.dateTime}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Reference #:</span>
-                    <span>{section.card.referencedNumber}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Status:</span>
-                    <span className="font-bold">{section.card.status}</span>
-                  </div>
-                </>
-              )}
+              ))}
             </div>
             {renderDivider(section.dividerStyle, section.dividerAtBottom)}
           </div>

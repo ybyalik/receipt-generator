@@ -325,49 +325,90 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
         );
 
       case 'payment':
+        const paymentFields = section.fields || [];
         return (
           <>
             <div className="mb-3">
-              <label className="block text-sm font-medium mb-1">Payment Type</label>
-              <select
-                value={section.paymentType}
-                onChange={(e) => onUpdate({ ...section, paymentType: e.target.value as 'cash' | 'card' })}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="cash">Cash</option>
-                <option value="card">Card</option>
-              </select>
+              <div className="flex border rounded overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => onUpdate({ ...section, paymentType: 'cash' })}
+                  className={`flex-1 px-4 py-2 font-medium transition-colors ${
+                    section.paymentType === 'cash'
+                      ? 'bg-gray-100 text-gray-900'
+                      : 'bg-white text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  Cash
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onUpdate({ ...section, paymentType: 'card' })}
+                  className={`flex-1 px-4 py-2 font-medium transition-colors ${
+                    section.paymentType === 'card'
+                      ? 'bg-gray-100 text-gray-900'
+                      : 'bg-white text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  Card
+                </button>
+              </div>
             </div>
-            {section.paymentType === 'card' && section.card && (
-              <>
-                <div className="mb-3">
-                  <label className="block text-sm font-medium mb-1">Card Number</label>
+            
+            <div className="mb-3">
+              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 mb-2 text-xs text-gray-600 font-medium">
+                <div>Title</div>
+                <div>Value</div>
+                <div></div>
+              </div>
+              {paymentFields.map((field, idx) => (
+                <div key={idx} className="grid grid-cols-[1fr_1fr_auto] gap-2 mb-2">
                   <input
                     type="text"
-                    value={section.card.cardNumber}
-                    onChange={(e) => onUpdate({
-                      ...section,
-                      card: { ...section.card!, cardNumber: e.target.value }
-                    })}
-                    className="w-full border rounded px-3 py-2 placeholder:text-gray-400"
-                    placeholder="**** **** **** 1234"
+                    value={field.title}
+                    onChange={(e) => {
+                      const newFields = [...paymentFields];
+                      newFields[idx].title = e.target.value;
+                      onUpdate({ ...section, fields: newFields });
+                    }}
+                    placeholder="e.g., Card number"
+                    className="border rounded px-2 py-1 text-sm placeholder:text-gray-400"
                   />
-                </div>
-                <div className="mb-3">
-                  <label className="block text-sm font-medium mb-1">Card Type</label>
                   <input
                     type="text"
-                    value={section.card.cardType}
-                    onChange={(e) => onUpdate({
-                      ...section,
-                      card: { ...section.card!, cardType: e.target.value }
-                    })}
-                    className="w-full border rounded px-3 py-2 placeholder:text-gray-400"
-                    placeholder="Visa, Mastercard, etc."
+                    value={field.value}
+                    onChange={(e) => {
+                      const newFields = [...paymentFields];
+                      newFields[idx].value = e.target.value;
+                      onUpdate({ ...section, fields: newFields });
+                    }}
+                    placeholder="Enter value"
+                    className="border rounded px-2 py-1 text-sm placeholder:text-gray-400"
                   />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newFields = paymentFields.filter((_, i) => i !== idx);
+                      onUpdate({ ...section, fields: newFields });
+                    }}
+                    className="text-red-600 hover:text-red-800 hover:bg-red-50 px-2 rounded transition-colors"
+                    title="Remove field"
+                  >
+                    ×
+                  </button>
                 </div>
-              </>
-            )}
+              ))}
+              <button
+                type="button"
+                onClick={() => {
+                  const newFields = [...paymentFields, { title: '', value: '' }];
+                  onUpdate({ ...section, fields: newFields });
+                }}
+                className="w-full border-2 border-dashed border-gray-300 rounded px-3 py-2 text-sm text-blue-600 hover:border-blue-400 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+              >
+                <span className="text-lg">⊕</span> Add line
+              </button>
+            </div>
           </>
         );
 

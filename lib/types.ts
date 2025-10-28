@@ -52,18 +52,10 @@ export interface PaymentSection {
   type: 'payment';
   id: string;
   paymentType: PaymentType;
-  cash?: {
+  fields: Array<{
     title: string;
     value: string;
-  };
-  card?: {
-    cardNumber: string;
-    cardType: string;
-    cardEntry: string;
-    dateTime: string;
-    referencedNumber: string;
-    status: string;
-  };
+  }>;
   dividerAtBottom: boolean;
   dividerStyle: DividerStyle;
 }
