@@ -3,12 +3,12 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
-import { mockTemplates } from '../lib/mockTemplates';
+import { useTemplates } from '../contexts/TemplatesContext';
 import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 
 const Admin: NextPage = () => {
   const router = useRouter();
-  const [templates, setTemplates] = useState(mockTemplates);
+  const { templates, addTemplate, deleteTemplate } = useTemplates();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newTemplateName, setNewTemplateName] = useState('');
 
@@ -42,7 +42,7 @@ const Admin: NextPage = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    setTemplates([...templates, newTemplate]);
+    addTemplate(newTemplate);
     setNewTemplateName('');
     setShowCreateModal(false);
     router.push(`/template/${slug}`);
@@ -54,8 +54,8 @@ const Admin: NextPage = () => {
 
   const handleDeleteTemplate = (templateId: string, templateName: string) => {
     if (confirm(`Are you sure you want to delete "${templateName}"?`)) {
-      setTemplates(templates.filter(t => t.id !== templateId));
-      alert(`Template "${templateName}" has been deleted (this change is temporary and will reset on page refresh)`);
+      deleteTemplate(templateId);
+      alert(`Template "${templateName}" has been deleted successfully!`);
     }
   };
 

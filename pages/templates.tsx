@@ -2,10 +2,12 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '../components/Layout';
-import { mockTemplates } from '../lib/mockTemplates';
+import { useTemplates } from '../contexts/TemplatesContext';
 import { FiArrowRight } from 'react-icons/fi';
 
 const Templates: NextPage = () => {
+  const { templates } = useTemplates();
+  
   return (
     <Layout>
       <Head>
@@ -24,7 +26,7 @@ const Templates: NextPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {mockTemplates.map((template) => (
+          {templates.map((template) => (
             <Link
               key={template.id}
               href={`/template/${template.slug}`}
