@@ -3,8 +3,9 @@ import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import Layout from '../../../components/Layout';
 import ReceiptPreview from '../../../components/ReceiptPreview';
+import SettingsPanel from '../../../components/SettingsPanel';
 import { useTemplates } from '../../../contexts/TemplatesContext';
-import { Section } from '../../../lib/types';
+import { Section, TemplateSettings } from '../../../lib/types';
 import { useAuth } from '../../../contexts/AuthContext';
 import { isAdmin } from '../../../lib/auth';
 import { FiSave, FiRefreshCw, FiEdit2, FiPlus, FiArrowLeft } from 'react-icons/fi';
@@ -77,6 +78,13 @@ export default function AdminTemplateEditor() {
   const [templateSlug, setTemplateSlug] = useState('');
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingSlug, setIsEditingSlug] = useState(false);
+  const [settings, setSettings] = useState<TemplateSettings>({
+    currency: '$',
+    currencyFormat: 'symbol_before',
+    font: 'mono',
+    textColor: '#000000',
+    showBackground: true,
+  });
 
   useEffect(() => {
     // Temporarily disabled for testing - re-enable for production
@@ -90,6 +98,9 @@ export default function AdminTemplateEditor() {
       setSections(template.sections);
       setTemplateName(template.name);
       setTemplateSlug(template.slug);
+      if (template.settings) {
+        setSettings(template.settings);
+      }
     }
   }, [template]);
 
@@ -290,6 +301,7 @@ export default function AdminTemplateEditor() {
           name: templateName,
           slug: newSlug,
           sections: sections,
+          settings: settings,
         }),
       });
       
@@ -423,6 +435,10 @@ export default function AdminTemplateEditor() {
             </DndContext>
             
             <div className="mt-4 pt-4 border-t">
+              <SettingsPanel settings={settings} onUpdate={setSettings} />
+            </div>
+            
+            <div className="mt-4 pt-4 border-t">
               <div className="text-sm font-medium mb-2">Add New Section</div>
               <div className="grid grid-cols-2 gap-2">
                 <button
@@ -473,7 +489,8 @@ export default function AdminTemplateEditor() {
               
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded">
                 <ReceiptPreview 
-                  sections={sections} 
+                  sections={sections}
+                  settings={settings}
                   showWatermark={false}
                   previewRef={previewRef}
                 />

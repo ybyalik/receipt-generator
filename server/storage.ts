@@ -15,6 +15,7 @@ export async function getAllTemplates(): Promise<ReceiptTemplate[]> {
     name: row.name,
     slug: row.slug,
     sections: row.sections as Section[],
+    settings: row.settings as any,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   }));
@@ -30,6 +31,7 @@ export async function getTemplateById(id: string): Promise<ReceiptTemplate | nul
     name: row.name,
     slug: row.slug,
     sections: row.sections as Section[],
+    settings: row.settings as any,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -45,6 +47,7 @@ export async function getTemplateBySlug(slug: string): Promise<ReceiptTemplate |
     name: row.name,
     slug: row.slug,
     sections: row.sections as Section[],
+    settings: row.settings as any,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -55,6 +58,7 @@ export async function createTemplate(template: Omit<ReceiptTemplate, 'id'>): Pro
     name: template.name,
     slug: template.slug,
     sections: template.sections as any,
+    settings: template.settings as any,
   }).returning();
   
   const row = result[0];
@@ -63,6 +67,7 @@ export async function createTemplate(template: Omit<ReceiptTemplate, 'id'>): Pro
     name: row.name,
     slug: row.slug,
     sections: row.sections as Section[],
+    settings: row.settings as any,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -74,6 +79,7 @@ export async function updateTemplate(id: string, updates: Partial<Omit<ReceiptTe
       ...(updates.name && { name: updates.name }),
       ...(updates.slug && { slug: updates.slug }),
       ...(updates.sections && { sections: updates.sections as any }),
+      ...(updates.settings && { settings: updates.settings as any }),
       updatedAt: new Date(),
     })
     .where(eq(templates.id, parseInt(id)))
@@ -87,6 +93,7 @@ export async function updateTemplate(id: string, updates: Partial<Omit<ReceiptTe
     name: row.name,
     slug: row.slug,
     sections: row.sections as Section[],
+    settings: row.settings as any,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -105,6 +112,7 @@ export async function getUserTemplates(userId: string): Promise<ReceiptTemplate[
     name: row.name,
     slug: row.slug,
     sections: row.sections as Section[],
+    settings: row.settings as any,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   }));
@@ -122,6 +130,7 @@ export async function getUserTemplateById(id: string, userId: string): Promise<R
     name: row.name,
     slug: row.slug,
     sections: row.sections as Section[],
+    settings: row.settings as any,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -138,6 +147,7 @@ export async function createUserTemplate(
     name: template.name,
     slug: template.slug,
     sections: template.sections as any,
+    settings: template.settings as any,
   }).returning();
   
   const row = result[0];
@@ -146,6 +156,7 @@ export async function createUserTemplate(
     name: row.name,
     slug: row.slug,
     sections: row.sections as Section[],
+    settings: row.settings as any,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -161,6 +172,7 @@ export async function updateUserTemplate(
       ...(updates.name && { name: updates.name }),
       ...(updates.slug && { slug: updates.slug }),
       ...(updates.sections && { sections: updates.sections as any }),
+      ...(updates.settings && { settings: updates.settings as any }),
       updatedAt: new Date(),
     })
     .where(and(eq(userTemplates.id, parseInt(id)), eq(userTemplates.userId, userId)))
@@ -174,6 +186,7 @@ export async function updateUserTemplate(
     name: row.name,
     slug: row.slug,
     sections: row.sections as Section[],
+    settings: row.settings as any,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
