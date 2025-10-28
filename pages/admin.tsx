@@ -2,23 +2,11 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import Layout from '../components/Layout';
-import { useAuth } from '../contexts/AuthContext';
 import { mockTemplates } from '../lib/mockTemplates';
 import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 
 const Admin: NextPage = () => {
-  const { user } = useAuth();
   const [templates, setTemplates] = useState(mockTemplates);
-
-  if (!user) {
-    return (
-      <Layout>
-        <div className="max-w-7xl mx-auto px-4 py-12 text-center">
-          <h1 className="text-2xl font-bold mb-4">Please sign in to access the admin panel</h1>
-        </div>
-      </Layout>
-    );
-  }
 
   return (
     <Layout>
