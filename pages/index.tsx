@@ -55,13 +55,13 @@ const Home: NextPage = () => {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
                 href="/templates"
-                className="bg-navy-700 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:bg-navy-800 hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+                className="bg-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 Browse Templates
               </Link>
               <Link
                 href="/pricing"
-                className="bg-white text-navy-700 border-2 border-navy-300 px-8 py-4 rounded-xl text-lg font-semibold shadow-md hover:bg-navy-50 hover:border-accent-500 hover:shadow-lg transition-all"
+                className="bg-white text-gray-900 border-2 border-gray-300 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-50 hover:border-blue-500 transition-all cursor-pointer"
               >
                 View Pricing
               </Link>
@@ -191,7 +191,7 @@ const Home: NextPage = () => {
           </p>
           <Link
             href="/templates"
-            className="inline-block bg-accent-500 text-white px-10 py-4 rounded-xl text-lg font-semibold shadow-xl hover:bg-accent-600 hover:shadow-2xl hover:scale-105 transform transition-all"
+            className="inline-block bg-white text-navy-800 px-10 py-4 rounded-xl text-lg font-semibold hover:bg-gray-100 transition-colors cursor-pointer"
           >
             Create Your First Receipt
           </Link>

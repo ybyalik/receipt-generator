@@ -417,37 +417,37 @@ export default function TemplateEditor() {
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => addSection('header')}
-                  className="px-3 py-2 text-sm border rounded hover:bg-gray-50 transition-colors text-left"
+                  className="px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 hover:border-gray-400 transition-all cursor-pointer text-left"
                 >
                   <FiPlus className="inline mr-1" /> Header
                 </button>
                 <button
                   onClick={() => addSection('custom_message')}
-                  className="px-3 py-2 text-sm border rounded hover:bg-gray-50 transition-colors text-left"
+                  className="px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 hover:border-gray-400 transition-all cursor-pointer text-left"
                 >
                   <FiPlus className="inline mr-1" /> Custom Message
                 </button>
                 <button
                   onClick={() => addSection('items_list')}
-                  className="px-3 py-2 text-sm border rounded hover:bg-gray-50 transition-colors text-left"
+                  className="px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 hover:border-gray-400 transition-all cursor-pointer text-left"
                 >
                   <FiPlus className="inline mr-1" /> Items List
                 </button>
                 <button
                   onClick={() => addSection('payment')}
-                  className="px-3 py-2 text-sm border rounded hover:bg-gray-50 transition-colors text-left"
+                  className="px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 hover:border-gray-400 transition-all cursor-pointer text-left"
                 >
                   <FiPlus className="inline mr-1" /> Payment
                 </button>
                 <button
                   onClick={() => addSection('date_time')}
-                  className="px-3 py-2 text-sm border rounded hover:bg-gray-50 transition-colors text-left"
+                  className="px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 hover:border-gray-400 transition-all cursor-pointer text-left"
                 >
                   <FiPlus className="inline mr-1" /> Date & Time
                 </button>
                 <button
                   onClick={() => addSection('barcode')}
-                  className="px-3 py-2 text-sm border rounded hover:bg-gray-50 transition-colors text-left"
+                  className="px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 hover:border-gray-400 transition-all cursor-pointer text-left"
                 >
                   <FiPlus className="inline mr-1" /> Barcode
                 </button>
@@ -462,15 +462,16 @@ export default function TemplateEditor() {
                 <div className="flex space-x-2">
                   <button
                     onClick={downloadWithWatermark}
-                    className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
+                    className="flex items-center px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
                   >
+                    <FiDownload className="mr-2" />
                     Download Sample
                   </button>
                   <button
                     onClick={downloadReceipt}
-                    className="flex items-center px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                    className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
                   >
-                    <FiDownload className="mr-1" />
+                    <FiDownload className="mr-2" />
                     Download
                   </button>
                 </div>
