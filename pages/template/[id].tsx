@@ -115,13 +115,13 @@ export default function TemplateEditor() {
     }
   };
 
-  const saveTemplate = () => {
+  const saveTemplate = async () => {
     if (!template) return;
     
     const oldSlug = template.slug;
     const newSlug = templateSlug.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     
-    updateTemplate(template.id, {
+    await updateTemplate(template.id, {
       name: templateName,
       slug: newSlug,
       sections: sections,

@@ -16,7 +16,7 @@ const Admin: NextPage = () => {
     setShowCreateModal(true);
   };
 
-  const createTemplate = () => {
+  const createTemplate = async () => {
     if (!newTemplateName.trim()) {
       alert('Please enter a template name');
       return;
@@ -42,7 +42,7 @@ const Admin: NextPage = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    addTemplate(newTemplate);
+    await addTemplate(newTemplate);
     setNewTemplateName('');
     setShowCreateModal(false);
     router.push(`/template/${slug}`);
@@ -52,9 +52,9 @@ const Admin: NextPage = () => {
     router.push(`/template/${templateSlug}`);
   };
 
-  const handleDeleteTemplate = (templateId: string, templateName: string) => {
+  const handleDeleteTemplate = async (templateId: string, templateName: string) => {
     if (confirm(`Are you sure you want to delete "${templateName}"?`)) {
-      deleteTemplate(templateId);
+      await deleteTemplate(templateId);
       alert(`Template "${templateName}" has been deleted successfully!`);
     }
   };

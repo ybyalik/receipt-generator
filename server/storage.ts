@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { templates } from '../shared/schema';
-import type { Template as ReceiptTemplate, ReceiptSection } from '../lib/types';
+import type { Template as ReceiptTemplate, Section } from '../lib/types';
 import { eq } from 'drizzle-orm';
 
 const connectionString = process.env.DATABASE_URL!;
@@ -14,7 +14,9 @@ export async function getAllTemplates(): Promise<ReceiptTemplate[]> {
     id: row.id.toString(),
     name: row.name,
     slug: row.slug,
-    sections: row.sections as ReceiptSection[],
+    sections: row.sections as Section[],
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
   }));
 }
 
@@ -27,7 +29,9 @@ export async function getTemplateById(id: string): Promise<ReceiptTemplate | nul
     id: row.id.toString(),
     name: row.name,
     slug: row.slug,
-    sections: row.sections as ReceiptSection[],
+    sections: row.sections as Section[],
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
   };
 }
 
@@ -40,7 +44,9 @@ export async function getTemplateBySlug(slug: string): Promise<ReceiptTemplate |
     id: row.id.toString(),
     name: row.name,
     slug: row.slug,
-    sections: row.sections as ReceiptSection[],
+    sections: row.sections as Section[],
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
   };
 }
 
@@ -56,7 +62,9 @@ export async function createTemplate(template: Omit<ReceiptTemplate, 'id'>): Pro
     id: row.id.toString(),
     name: row.name,
     slug: row.slug,
-    sections: row.sections as ReceiptSection[],
+    sections: row.sections as Section[],
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
   };
 }
 
@@ -78,7 +86,9 @@ export async function updateTemplate(id: string, updates: Partial<Omit<ReceiptTe
     id: row.id.toString(),
     name: row.name,
     slug: row.slug,
-    sections: row.sections as ReceiptSection[],
+    sections: row.sections as Section[],
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
   };
 }
 
