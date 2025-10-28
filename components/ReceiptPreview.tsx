@@ -89,21 +89,27 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       case 'items_list':
         return (
           <div key={section.id} className="mb-4">
-            <div className="space-y-1 text-xs">
-              {section.items.map((item, idx) => (
-                <div key={idx} className="flex justify-between">
-                  <span>
-                    {item.quantity} x {item.item}
-                  </span>
-                  <span>${item.price.toFixed(2)}</span>
-                </div>
-              ))}
+            <div className="text-xs">
+              {/* Items list */}
+              <div className="space-y-1">
+                {section.items.map((item, idx) => (
+                  <div key={idx} className="flex justify-between">
+                    <span>
+                      {item.quantity} x {item.item}
+                    </span>
+                    <span>${item.price.toFixed(2)}</span>
+                  </div>
+                ))}
+              </div>
+              
               {/* Divider after items */}
               {renderDivider(
                 section.dividerAfterItemsStyle ?? section.dividerStyle,
-                section.dividerAfterItems ?? section.dividerAtBottom
+                section.dividerAfterItems ?? false
               )}
-              <div className={`${section.dividerAfterItems || section.dividerAtBottom ? 'mt-2 pt-2' : 'border-t border-gray-300 mt-2 pt-2'}`}>
+              
+              {/* Total lines section */}
+              <div className={`space-y-1 ${(section.dividerAfterItems) ? 'mt-2' : 'border-t border-gray-300 mt-2 pt-2'}`}>
                 {section.totalLines.map((line, idx) => (
                   <div key={idx} className="flex justify-between">
                     <span>{line.title}:</span>
@@ -116,10 +122,11 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                 </div>
               </div>
             </div>
+            
             {/* Divider after total */}
             {renderDivider(
               section.dividerAfterTotalStyle ?? section.dividerStyle,
-              section.dividerAfterTotal ?? section.dividerAtBottom
+              section.dividerAfterTotal ?? section.dividerAtBottom ?? false
             )}
           </div>
         );
