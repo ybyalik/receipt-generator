@@ -50,7 +50,11 @@ export const mockTemplates: Template[] = [
         type: 'payment',
         id: 'payment-1',
         paymentType: 'card',
-        fields: [
+        cashFields: [
+          { title: 'Cash Tendered', value: '$400.00' },
+          { title: 'Change', value: '$26.54' },
+        ],
+        cardFields: [
           { title: 'Card number', value: '**** **** **** 4922' },
           { title: 'Card type', value: 'Debit' },
           { title: 'Card entry', value: 'Chip' },
@@ -131,9 +135,17 @@ export const mockTemplates: Template[] = [
         type: 'payment',
         id: 'payment-2',
         paymentType: 'cash',
-        fields: [
+        cashFields: [
           { title: 'Cash Tendered', value: '$100.00' },
           { title: 'Change', value: '$19.43' },
+        ],
+        cardFields: [
+          { title: 'Card number', value: '**** **** **** 1234' },
+          { title: 'Card type', value: 'Credit' },
+          { title: 'Card entry', value: 'Chip' },
+          { title: 'Date/time', value: new Date().toLocaleString() },
+          { title: 'Reference #', value: 'REF123456789' },
+          { title: 'Status', value: 'APPROVED' },
         ],
         dividerAtBottom: false,
         dividerStyle: 'dashed',
@@ -186,7 +198,11 @@ export const mockTemplates: Template[] = [
         type: 'payment',
         id: 'payment-3',
         paymentType: 'card',
-        fields: [
+        cashFields: [
+          { title: 'Cash Tendered', value: '$50.00' },
+          { title: 'Change', value: '$6.25' },
+        ],
+        cardFields: [
           { title: 'Card number', value: '**** **** **** 1234' },
           { title: 'Card type', value: 'Credit' },
           { title: 'Card entry', value: 'Contactless' },

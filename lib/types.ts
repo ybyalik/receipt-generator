@@ -52,7 +52,11 @@ export interface PaymentSection {
   type: 'payment';
   id: string;
   paymentType: PaymentType;
-  fields: Array<{
+  cashFields: Array<{
+    title: string;
+    value: string;
+  }>;
+  cardFields: Array<{
     title: string;
     value: string;
   }>;

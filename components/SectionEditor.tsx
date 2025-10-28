@@ -325,21 +325,18 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
         );
 
       case 'payment':
-        const paymentFields = section.fields || [];
+        const currentFields = section.paymentType === 'cash' 
+          ? (section.cashFields || [])
+          : (section.cardFields || []);
+        const fieldKey = section.paymentType === 'cash' ? 'cashFields' : 'cardFields';
+        
         return (
           <>
             <div className="mb-3">
               <div className="flex border rounded overflow-hidden">
                 <button
                   type="button"
-                  onClick={() => {
-                    const updated = {
-                      ...section,
-                      paymentType: 'cash' as const,
-                      fields: paymentFields
-                    };
-                    onUpdate(updated);
-                  }}
+                  onClick={() => onUpdate({ ...section, paymentType: 'cash' as const })}
                   className={`flex-1 px-4 py-2 font-medium transition-colors ${
                     section.paymentType === 'cash'
                       ? 'bg-gray-100 text-gray-900'
@@ -350,14 +347,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    const updated = {
-                      ...section,
-                      paymentType: 'card' as const,
-                      fields: paymentFields
-                    };
-                    onUpdate(updated);
-                  }}
+                  onClick={() => onUpdate({ ...section, paymentType: 'card' as const })}
                   className={`flex-1 px-4 py-2 font-medium transition-colors ${
                     section.paymentType === 'card'
                       ? 'bg-gray-100 text-gray-900'
@@ -375,15 +365,15 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <div>Value</div>
                 <div></div>
               </div>
-              {paymentFields.map((field, idx) => (
+              {currentFields.map((field, idx) => (
                 <div key={idx} className="grid grid-cols-[1fr_1fr_auto] gap-2 mb-2">
                   <input
                     type="text"
                     value={field.title}
                     onChange={(e) => {
-                      const newFields = [...paymentFields];
+                      const newFields = [...currentFields];
                       newFields[idx].title = e.target.value;
-                      onUpdate({ ...section, fields: newFields });
+                      onUpdate({ ...section, [fieldKey]: newFields });
                     }}
                     placeholder="e.g., Card number"
                     className="border rounded px-2 py-1 text-sm placeholder:text-gray-400"
@@ -392,9 +382,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     type="text"
                     value={field.value}
                     onChange={(e) => {
-                      const newFields = [...paymentFields];
+                      const newFields = [...currentFields];
                       newFields[idx].value = e.target.value;
-                      onUpdate({ ...section, fields: newFields });
+                      onUpdate({ ...section, [fieldKey]: newFields });
                     }}
                     placeholder="Enter value"
                     className="border rounded px-2 py-1 text-sm placeholder:text-gray-400"
@@ -402,8 +392,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => {
-                      const newFields = paymentFields.filter((_, i) => i !== idx);
-                      onUpdate({ ...section, fields: newFields });
+                      const newFields = currentFields.filter((_, i) => i !== idx);
+                      onUpdate({ ...section, [fieldKey]: newFields });
                     }}
                     className="text-red-600 hover:text-red-800 hover:bg-red-50 px-2 rounded transition-colors"
                     title="Remove field"
@@ -415,8 +405,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               <button
                 type="button"
                 onClick={() => {
-                  const newFields = [...paymentFields, { title: '', value: '' }];
-                  onUpdate({ ...section, fields: newFields });
+                  const newFields = [...currentFields, { title: '', value: '' }];
+                  onUpdate({ ...section, [fieldKey]: newFields });
                 }}
                 className="w-full border-2 border-dashed border-gray-300 rounded px-3 py-2 text-sm text-blue-600 hover:border-blue-400 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
               >

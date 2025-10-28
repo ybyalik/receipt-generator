@@ -116,7 +116,9 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
         );
 
       case 'payment':
-        const paymentFields = section.fields || [];
+        const paymentFields = section.paymentType === 'cash'
+          ? (section.cashFields || [])
+          : (section.cardFields || []);
         return (
           <div key={section.id} className="mb-4">
             <div className="text-xs space-y-1">
