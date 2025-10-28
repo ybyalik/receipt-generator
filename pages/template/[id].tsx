@@ -9,6 +9,7 @@ import { Section, TemplateSettings } from '../../lib/types';
 import { useAuth } from '../../contexts/AuthContext';
 import html2canvas from 'html2canvas';
 import { FiSave, FiDownload, FiRefreshCw, FiEdit2, FiPlus } from 'react-icons/fi';
+import { useToast } from '../../components/ToastContainer';
 import {
   DndContext,
   closestCenter,
@@ -71,13 +72,10 @@ export default function TemplateEditor() {
   const { user } = useAuth();
   const previewRef = useRef<HTMLDivElement>(null);
   const { getTemplateBySlug, updateTemplate } = useTemplates();
+  const { showSuccess, showError } = useToast();
 
   const template = getTemplateBySlug(id as string);
   const [sections, setSections] = useState<Section[]>([]);
-  const [templateName, setTemplateName] = useState('');
-  const [templateSlug, setTemplateSlug] = useState('');
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [isEditingSlug, setIsEditingSlug] = useState(false);
   const [settings, setSettings] = useState<TemplateSettings>({
     currency: '$',
     currencyFormat: 'symbol_before',
@@ -89,8 +87,6 @@ export default function TemplateEditor() {
   useEffect(() => {
     if (template) {
       setSections(template.sections);
-      setTemplateName(template.name);
-      setTemplateSlug(template.slug);
       if (template.settings) {
         setSettings(template.settings);
       }
@@ -146,9 +142,7 @@ export default function TemplateEditor() {
   };
 
   const removeSection = (sectionId: string) => {
-    if (confirm('Are you sure you want to remove this section?')) {
-      setSections(sections.filter(s => s.id !== sectionId));
-    }
+    setSections(sections.filter(s => s.id !== sectionId));
   };
 
   const duplicateSection = (section: Section) => {
@@ -257,18 +251,20 @@ export default function TemplateEditor() {
   const resetTemplate = () => {
     if (template) {
       setSections(template.sections);
-      setTemplateName(template.name);
-      setTemplateSlug(template.slug);
+      if (template.settings) {
+        setSettings(template.settings);
+      }
     }
   };
 
   const saveTemplate = async () => {
     if (!template || !user) {
+      showError('Please sign in to save templates');
       router.push('/');
       return;
     }
     
-    const newSlug = templateSlug.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const newSlug = template.slug.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     
     try {
       const res = await fetch('/api/user-templates', {
@@ -278,7 +274,7 @@ export default function TemplateEditor() {
           userId: user.uid,
           baseTemplateId: template.id,
           template: {
-            name: templateName,
+            name: `My ${template.name}`,
             slug: `${newSlug}-${Date.now()}`,
             sections: sections,
             settings: settings,
@@ -287,14 +283,14 @@ export default function TemplateEditor() {
       });
       
       if (res.ok) {
-        alert(`Template "${templateName}" has been saved to your collection!`);
+        showSuccess(`Template saved to your collection!`);
         router.push('/my-templates');
       } else {
-        alert('Failed to save template. Please try again.');
+        showError('Failed to save template. Please try again.');
       }
     } catch (error) {
       console.error('Save error:', error);
-      alert('Failed to save template. Please try again.');
+      showError('Failed to save template. Please try again.');
     }
   };
 
@@ -332,36 +328,20 @@ export default function TemplateEditor() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            {isEditingName ? (
-              <input
-                type="text"
-                value={templateName}
-                onChange={(e) => setTemplateName(e.target.value)}
-                onBlur={() => setIsEditingName(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
-                className="text-3xl font-bold border-b-2 border-blue-500 focus:outline-none"
-                autoFocus
-              />
-            ) : (
-              <h1 
-                className="text-3xl font-bold cursor-pointer hover:text-blue-600 transition-colors"
-                onClick={() => setIsEditingName(true)}
-                title="Click to edit template name"
-              >
-                {templateName}
-              </h1>
-            )}
+            <h1 className="text-3xl font-bold">
+              {template.name}
+            </h1>
             <div className="flex space-x-3">
               <button
                 onClick={resetTemplate}
-                className="flex items-center px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+                className="flex items-center px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
               >
                 <FiRefreshCw className="mr-2" />
                 Reset
               </button>
               <button
                 onClick={saveTemplate}
-                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 <FiSave className="mr-2" />
                 Save Template
@@ -369,27 +349,8 @@ export default function TemplateEditor() {
             </div>
           </div>
           <div className="flex items-center text-sm text-gray-600">
-            <span className="mr-2">URL:</span>
-            {isEditingSlug ? (
-              <input
-                type="text"
-                value={templateSlug}
-                onChange={(e) => setTemplateSlug(e.target.value)}
-                onBlur={() => setIsEditingSlug(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setIsEditingSlug(false)}
-                className="border-b border-blue-500 focus:outline-none px-1"
-                autoFocus
-              />
-            ) : (
-              <span 
-                className="cursor-pointer hover:text-blue-600 transition-colors flex items-center"
-                onClick={() => setIsEditingSlug(true)}
-                title="Click to edit URL slug"
-              >
-                /template/{templateSlug}
-                <FiEdit2 className="ml-1 w-3 h-3" />
-              </span>
-            )}
+            <span className="mr-2">Template ID:</span>
+            <span>/template/{template.slug}</span>
           </div>
         </div>
 
