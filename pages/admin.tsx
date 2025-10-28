@@ -14,8 +14,8 @@ const Admin: NextPage = () => {
     alert('Create new template feature coming soon! For now, you can create templates by editing the mockTemplates.ts file.');
   };
 
-  const handleEditTemplate = (templateId: string) => {
-    router.push(`/template/${templateId}`);
+  const handleEditTemplate = (templateSlug: string) => {
+    router.push(`/template/${templateSlug}`);
   };
 
   const handleDeleteTemplate = (templateId: string, templateName: string) => {
@@ -59,7 +59,7 @@ const Admin: NextPage = () => {
                 </div>
                 <div className="flex space-x-2">
                   <button 
-                    onClick={() => handleEditTemplate(template.id)}
+                    onClick={() => handleEditTemplate(template.slug)}
                     className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
                     title="Edit template"
                   >
