@@ -45,17 +45,29 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
         return (
           <div key={section.id} className="mb-4">
             <div className={`text-${section.alignment}`}>
-              {section.logo && (
-                <div className="mb-2">
-                  <div 
-                    className="inline-block bg-gray-200 rounded"
+              <div className="mb-2">
+                {section.logo ? (
+                  <img 
+                    src={section.logo} 
+                    alt="Business logo" 
                     style={{ 
                       width: section.logoSize, 
                       height: section.logoSize 
                     }}
+                    className="inline-block object-contain"
                   />
-                </div>
-              )}
+                ) : (
+                  <div 
+                    className="inline-block bg-gray-200 rounded flex items-center justify-center"
+                    style={{ 
+                      width: section.logoSize, 
+                      height: section.logoSize 
+                    }}
+                  >
+                    <span className="text-gray-400 text-xs">LOGO</span>
+                  </div>
+                )}
+              </div>
               <div className="whitespace-pre-line text-sm font-medium">
                 {section.businessDetails}
               </div>

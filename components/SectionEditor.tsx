@@ -92,6 +92,47 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
           <>
             {renderAlignmentButtons(section.alignment, (alignment) => onUpdate({ ...section, alignment }))}
             <div className="mb-3">
+              <label className="block text-sm font-medium mb-1">Logo</label>
+              <div className="flex items-center gap-3">
+                {section.logo && (
+                  <div className="relative">
+                    <img 
+                      src={section.logo} 
+                      alt="Logo preview" 
+                      style={{ width: section.logoSize, height: section.logoSize }}
+                      className="object-contain border rounded"
+                    />
+                  </div>
+                )}
+                <div className="flex-1">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          onUpdate({ ...section, logo: reader.result as string });
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="w-full text-sm"
+                  />
+                  {section.logo && (
+                    <button
+                      type="button"
+                      onClick={() => onUpdate({ ...section, logo: undefined })}
+                      className="mt-2 text-xs text-red-600 hover:text-red-800"
+                    >
+                      Remove Logo
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="mb-3">
               <label className="block text-sm font-medium mb-1">Business Details</label>
               <textarea
                 value={section.businessDetails}
