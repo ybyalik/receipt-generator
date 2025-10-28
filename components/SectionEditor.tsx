@@ -243,7 +243,86 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               </button>
             </div>
             
-            <div className="mb-3 pt-3 border-t">
+            {/* Divider after Items controls */}
+            <div className="mb-3 pb-3 border-b">
+              <ToggleSwitch
+                checked={section.dividerAfterItems ?? false}
+                onChange={(checked) => onUpdate({ ...section, dividerAfterItems: checked })}
+                label="Divider after Items"
+              />
+              {section.dividerAfterItems && (
+                <div className="flex gap-0 border rounded overflow-hidden w-fit mt-2">
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'dashed' })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'dashed'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {renderDividerIcon('dashed')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'solid' })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'solid'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {renderDividerIcon('solid')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'dotted' })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'dotted'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {renderDividerIcon('dotted')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'double' })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'double'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {renderDividerIcon('double')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'stars' })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'stars'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {renderDividerIcon('stars')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'blank' })}
+                    className={`px-4 py-2 transition-colors ${
+                      (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'blank'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {renderDividerIcon('blank')}
+                  </button>
+                </div>
+              )}
+            </div>
+            
+            <div className="mb-3">
               <label className="block text-sm font-medium mb-2">Total Lines</label>
               <div className="grid grid-cols-[1fr_120px_auto] gap-2 mb-2 text-xs text-gray-600 font-medium">
                 <div>Title</div>
@@ -320,6 +399,85 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   className="border rounded px-2 py-1 text-sm font-medium placeholder:text-gray-400"
                 />
               </div>
+            </div>
+            
+            {/* Divider after Total controls */}
+            <div className="mb-3">
+              <ToggleSwitch
+                checked={section.dividerAfterTotal ?? section.dividerAtBottom ?? false}
+                onChange={(checked) => onUpdate({ ...section, dividerAfterTotal: checked })}
+                label="Divider after Total"
+              />
+              {(section.dividerAfterTotal ?? section.dividerAtBottom) && (
+                <div className="flex gap-0 border rounded overflow-hidden w-fit mt-2">
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'dashed' })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'dashed'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {renderDividerIcon('dashed')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'solid' })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'solid'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {renderDividerIcon('solid')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'dotted' })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'dotted'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {renderDividerIcon('dotted')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'double' })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'double'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {renderDividerIcon('double')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'stars' })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'stars'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {renderDividerIcon('stars')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'blank' })}
+                    className={`px-4 py-2 transition-colors ${
+                      (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'blank'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {renderDividerIcon('blank')}
+                  </button>
+                </div>
+              )}
             </div>
           </>
         );
@@ -507,177 +665,16 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
         <div className="p-4">
           {renderFields()}
           
-          <div className="mt-4 pt-4 border-t">
-            {section.type === 'items_list' ? (
-              // Special handling for items_list with two dividers
-              <>
-                <div className="mb-4">
-                  <ToggleSwitch
-                    checked={section.dividerAfterItems ?? section.dividerAtBottom ?? false}
-                    onChange={(checked) => onUpdate({ ...section, dividerAfterItems: checked })}
-                    label="Divider after Items"
-                  />
-                </div>
-                {(section.dividerAfterItems ?? section.dividerAtBottom) && (
-                  <div className="flex gap-0 border rounded overflow-hidden w-fit mb-4">
-                    <button
-                      type="button"
-                      onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'dashed' })}
-                      className={`px-4 py-2 border-r transition-colors ${
-                        (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'dashed'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {renderDividerIcon('dashed')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'solid' })}
-                      className={`px-4 py-2 border-r transition-colors ${
-                        (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'solid'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {renderDividerIcon('solid')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'dotted' })}
-                      className={`px-4 py-2 border-r transition-colors ${
-                        (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'dotted'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {renderDividerIcon('dotted')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'double' })}
-                      className={`px-4 py-2 border-r transition-colors ${
-                        (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'double'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {renderDividerIcon('double')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'stars' })}
-                      className={`px-4 py-2 border-r transition-colors ${
-                        (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'stars'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {renderDividerIcon('stars')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'blank' })}
-                      className={`px-4 py-2 transition-colors ${
-                        (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'blank'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {renderDividerIcon('blank')}
-                    </button>
-                  </div>
-                )}
-                
-                <div className="mb-3">
-                  <ToggleSwitch
-                    checked={section.dividerAfterTotal ?? section.dividerAtBottom ?? false}
-                    onChange={(checked) => onUpdate({ ...section, dividerAfterTotal: checked })}
-                    label="Divider after Total"
-                  />
-                </div>
-                {(section.dividerAfterTotal ?? section.dividerAtBottom) && (
-                  <div className="flex gap-0 border rounded overflow-hidden w-fit">
-                    <button
-                      type="button"
-                      onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'dashed' })}
-                      className={`px-4 py-2 border-r transition-colors ${
-                        (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'dashed'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {renderDividerIcon('dashed')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'solid' })}
-                      className={`px-4 py-2 border-r transition-colors ${
-                        (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'solid'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {renderDividerIcon('solid')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'dotted' })}
-                      className={`px-4 py-2 border-r transition-colors ${
-                        (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'dotted'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {renderDividerIcon('dotted')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'double' })}
-                      className={`px-4 py-2 border-r transition-colors ${
-                        (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'double'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {renderDividerIcon('double')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'stars' })}
-                      className={`px-4 py-2 border-r transition-colors ${
-                        (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'stars'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {renderDividerIcon('stars')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'blank' })}
-                      className={`px-4 py-2 transition-colors ${
-                        (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'blank'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {renderDividerIcon('blank')}
-                    </button>
-                  </div>
-                )}
-              </>
-            ) : (
-              // Standard single divider for all other sections
-              <>
-                <div className="mb-3">
-                  <ToggleSwitch
-                    checked={section.dividerAtBottom}
-                    onChange={(checked) => onUpdate({ ...section, dividerAtBottom: checked })}
-                    label="Divider at the bottom"
-                  />
-                </div>
-                {section.dividerAtBottom && (
+          {section.type !== 'items_list' && (
+            <div className="mt-4 pt-4 border-t">
+              <div className="mb-3">
+                <ToggleSwitch
+                  checked={section.dividerAtBottom}
+                  onChange={(checked) => onUpdate({ ...section, dividerAtBottom: checked })}
+                  label="Divider at the bottom"
+                />
+              </div>
+              {section.dividerAtBottom && (
               <div className="flex gap-0 border rounded overflow-hidden w-fit">
                 <button
                   type="button"
@@ -747,9 +744,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 </button>
               </div>
             )}
-              </>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
     </div>
