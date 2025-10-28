@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 import { Template } from '../lib/types';
 import { mockTemplates } from '../lib/mockTemplates';
 
@@ -16,8 +16,13 @@ const TemplatesContext = createContext<TemplatesContextType | undefined>(undefin
 export function TemplatesProvider({ children }: { children: ReactNode }) {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
+  const hasLoadedRef = useRef(false);
 
   useEffect(() => {
+    if (hasLoadedRef.current) return;
+    
+    hasLoadedRef.current = true;
+    
     async function loadTemplates() {
       try {
         const res = await fetch('/api/templates');
