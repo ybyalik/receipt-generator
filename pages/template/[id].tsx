@@ -7,7 +7,7 @@ import { useTemplates } from '../../contexts/TemplatesContext';
 import { Section } from '../../lib/types';
 import { useAuth } from '../../contexts/AuthContext';
 import html2canvas from 'html2canvas';
-import { FiSave, FiDownload, FiRefreshCw, FiEdit2 } from 'react-icons/fi';
+import { FiSave, FiDownload, FiRefreshCw, FiEdit2, FiPlus } from 'react-icons/fi';
 import {
   DndContext,
   closestCenter,
@@ -27,7 +27,17 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import SectionEditor from '../../components/SectionEditor';
 
-function SortableSection({ section, onUpdate }: { section: Section; onUpdate: (section: Section) => void }) {
+function SortableSection({ 
+  section, 
+  onUpdate, 
+  onRemove, 
+  onDuplicate 
+}: { 
+  section: Section; 
+  onUpdate: (section: Section) => void;
+  onRemove: () => void;
+  onDuplicate: () => void;
+}) {
   const {
     attributes,
     listeners,
@@ -46,6 +56,8 @@ function SortableSection({ section, onUpdate }: { section: Section; onUpdate: (s
       <SectionEditor 
         section={section} 
         onUpdate={onUpdate}
+        onRemove={onRemove}
+        onDuplicate={onDuplicate}
         dragHandleProps={{ ...attributes, ...listeners }}
       />
     </div>
@@ -105,6 +117,109 @@ export default function TemplateEditor() {
 
   const updateSection = (updatedSection: Section) => {
     setSections(sections.map(s => s.id === updatedSection.id ? updatedSection : s));
+  };
+
+  const removeSection = (sectionId: string) => {
+    if (confirm('Are you sure you want to remove this section?')) {
+      setSections(sections.filter(s => s.id !== sectionId));
+    }
+  };
+
+  const duplicateSection = (section: Section) => {
+    const deepClone = JSON.parse(JSON.stringify(section));
+    const newSection = {
+      ...deepClone,
+      id: `${section.type}-${Date.now()}`,
+    };
+    const index = sections.findIndex(s => s.id === section.id);
+    const newSections = [...sections];
+    newSections.splice(index + 1, 0, newSection);
+    setSections(newSections);
+  };
+
+  const addSection = (type: Section['type']) => {
+    const newId = `${type}-${Date.now()}`;
+    let newSection: Section;
+
+    switch (type) {
+      case 'header':
+        newSection = {
+          type: 'header',
+          id: newId,
+          alignment: 'center',
+          logoSize: 50,
+          businessDetails: 'Your Business Name\nYour Address\nCity, State ZIP',
+          dividerAtBottom: true,
+          dividerStyle: 'dashed',
+        };
+        break;
+      case 'custom_message':
+        newSection = {
+          type: 'custom_message',
+          id: newId,
+          alignment: 'center',
+          message: 'Thank you for your business!',
+          dividerAtBottom: true,
+          dividerStyle: 'dashed',
+        };
+        break;
+      case 'items_list':
+        newSection = {
+          type: 'items_list',
+          id: newId,
+          items: [
+            { quantity: 1, item: 'Item 1', price: 10.00 },
+          ],
+          totalLines: [
+            { title: 'Subtotal:', value: 10.00 },
+          ],
+          tax: { title: 'Tax:', value: 0.80 },
+          total: { title: 'Total:', price: 10.80 },
+          dividerAtBottom: true,
+          dividerStyle: 'dashed',
+        };
+        break;
+      case 'payment':
+        newSection = {
+          type: 'payment',
+          id: newId,
+          paymentType: 'card',
+          card: {
+            cardNumber: '**** **** **** 1234',
+            cardType: 'Visa',
+            cardEntry: 'Chip',
+            dateTime: new Date().toLocaleString(),
+            referencedNumber: '123456789',
+            status: 'Approved',
+          },
+          dividerAtBottom: true,
+          dividerStyle: 'dashed',
+        };
+        break;
+      case 'date_time':
+        newSection = {
+          type: 'date_time',
+          id: newId,
+          alignment: 'left',
+          date: new Date().toLocaleString(),
+          dividerAtBottom: true,
+          dividerStyle: 'dashed',
+        };
+        break;
+      case 'barcode':
+        newSection = {
+          type: 'barcode',
+          id: newId,
+          size: 2,
+          length: 13,
+          value: '1234567890123',
+          dividerAtBottom: true,
+          dividerStyle: 'dashed',
+        };
+        break;
+    }
+
+    setSections([...sections, newSection]);
   };
 
   const resetTemplate = () => {
@@ -251,11 +366,55 @@ export default function TemplateEditor() {
                       key={section.id}
                       section={section}
                       onUpdate={updateSection}
+                      onRemove={() => removeSection(section.id)}
+                      onDuplicate={() => duplicateSection(section)}
                     />
                   ))}
                 </div>
               </SortableContext>
             </DndContext>
+            
+            <div className="mt-4 pt-4 border-t">
+              <div className="text-sm font-medium mb-2">Add New Section</div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => addSection('header')}
+                  className="px-3 py-2 text-sm border rounded hover:bg-gray-50 transition-colors text-left"
+                >
+                  <FiPlus className="inline mr-1" /> Header
+                </button>
+                <button
+                  onClick={() => addSection('custom_message')}
+                  className="px-3 py-2 text-sm border rounded hover:bg-gray-50 transition-colors text-left"
+                >
+                  <FiPlus className="inline mr-1" /> Custom Message
+                </button>
+                <button
+                  onClick={() => addSection('items_list')}
+                  className="px-3 py-2 text-sm border rounded hover:bg-gray-50 transition-colors text-left"
+                >
+                  <FiPlus className="inline mr-1" /> Items List
+                </button>
+                <button
+                  onClick={() => addSection('payment')}
+                  className="px-3 py-2 text-sm border rounded hover:bg-gray-50 transition-colors text-left"
+                >
+                  <FiPlus className="inline mr-1" /> Payment
+                </button>
+                <button
+                  onClick={() => addSection('date_time')}
+                  className="px-3 py-2 text-sm border rounded hover:bg-gray-50 transition-colors text-left"
+                >
+                  <FiPlus className="inline mr-1" /> Date & Time
+                </button>
+                <button
+                  onClick={() => addSection('barcode')}
+                  className="px-3 py-2 text-sm border rounded hover:bg-gray-50 transition-colors text-left"
+                >
+                  <FiPlus className="inline mr-1" /> Barcode
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="sticky top-8">

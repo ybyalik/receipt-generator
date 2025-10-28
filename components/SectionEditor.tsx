@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { Section, DividerStyle, Alignment } from '../lib/types';
-import { FiChevronDown, FiChevronUp, FiMove, FiTrash2, FiAlignLeft, FiAlignCenter, FiAlignRight } from 'react-icons/fi';
+import { FiChevronDown, FiChevronUp, FiMove, FiTrash2, FiCopy, FiAlignLeft, FiAlignCenter, FiAlignRight } from 'react-icons/fi';
 
 interface SectionEditorProps {
   section: Section;
   onUpdate: (section: Section) => void;
+  onRemove?: () => void;
+  onDuplicate?: () => void;
   dragHandleProps?: any;
 }
 
-const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, dragHandleProps }) => {
+const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemove, onDuplicate, dragHandleProps }) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const getSectionTitle = () => {
@@ -288,12 +290,32 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, dragHa
           </button>
           <span className="font-semibold">{getSectionTitle()}</span>
         </div>
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="text-gray-600 hover:text-gray-800"
-        >
-          {isExpanded ? <FiChevronUp /> : <FiChevronDown />}
-        </button>
+        <div className="flex items-center space-x-2">
+          {onDuplicate && (
+            <button
+              onClick={onDuplicate}
+              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded transition-colors"
+              title="Duplicate section"
+            >
+              <FiCopy />
+            </button>
+          )}
+          {onRemove && (
+            <button
+              onClick={onRemove}
+              className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded transition-colors"
+              title="Remove section"
+            >
+              <FiTrash2 />
+            </button>
+          )}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-gray-600 hover:text-gray-800"
+          >
+            {isExpanded ? <FiChevronUp /> : <FiChevronDown />}
+          </button>
+        </div>
       </div>
       
       {isExpanded && (
