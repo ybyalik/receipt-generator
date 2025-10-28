@@ -3,7 +3,21 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
   ],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
+  experimental: {
+    optimizeUniversalDefaults: true,
+  },
   theme: {
+    colors: ({ colors }) => ({
+      ...colors,
+      // Override with RGB format for html2canvas compatibility
+      transparent: 'transparent',
+      current: 'currentColor',
+      black: '#000000',
+      white: '#ffffff',
+    }),
     extend: {
       colors: {
         // Modern, sophisticated color palette

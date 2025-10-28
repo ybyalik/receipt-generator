@@ -59,7 +59,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                     onClick={() => onUpdate({ ...settings, currencyFormat: format })}
                     className={`px-4 py-2 border rounded-lg transition-all font-medium ${
                       settings.currencyFormat === format
-                        ? 'bg-gray-200 text-gray-900 border-gray-300 shadow-sm'
+                        ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                         : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                     }`}
                   >
@@ -78,7 +78,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 onClick={() => onUpdate({ ...settings, font: 'handwritten' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'handwritten'
-                    ? 'bg-gray-200 text-gray-900 border-gray-300 shadow-sm'
+                    ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                     : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                 }`}
                 style={{ fontFamily: 'Caveat, cursive' }}
@@ -89,7 +89,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 onClick={() => onUpdate({ ...settings, font: 'mono' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'mono'
-                    ? 'bg-gray-200 text-gray-900 border-gray-300 shadow-sm'
+                    ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                     : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                 }`}
                 style={{ fontFamily: 'Courier New, monospace' }}
@@ -100,7 +100,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 onClick={() => onUpdate({ ...settings, font: 'receipt' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'receipt'
-                    ? 'bg-gray-200 text-gray-900 border-gray-300 shadow-sm'
+                    ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                     : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                 }`}
                 style={{ fontFamily: 'monospace' }}
@@ -134,7 +134,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                   onClick={() => onUpdate({ ...settings, backgroundTexture: texture })}
                   className={`px-4 py-2 border rounded-lg transition-all font-medium ${
                     settings.backgroundTexture === texture
-                      ? 'bg-gray-200 text-gray-900 border-gray-300 shadow-sm'
+                      ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                       : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                   }`}
                 >
