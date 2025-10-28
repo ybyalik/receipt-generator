@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
-import Layout from '../../components/Layout';
-import ReceiptPreview from '../../components/ReceiptPreview';
-import { useTemplates } from '../../contexts/TemplatesContext';
-import { Section } from '../../lib/types';
-import { useAuth } from '../../contexts/AuthContext';
-import html2canvas from 'html2canvas';
-import { FiSave, FiDownload, FiRefreshCw, FiEdit2, FiPlus } from 'react-icons/fi';
+import Layout from '../../../components/Layout';
+import ReceiptPreview from '../../../components/ReceiptPreview';
+import { useTemplates } from '../../../contexts/TemplatesContext';
+import { Section } from '../../../lib/types';
+import { useAuth } from '../../../contexts/AuthContext';
+import { isAdmin } from '../../../lib/auth';
+import { FiSave, FiRefreshCw, FiEdit2, FiPlus, FiArrowLeft } from 'react-icons/fi';
 import {
   DndContext,
   closestCenter,
@@ -25,7 +25,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import SectionEditor from '../../components/SectionEditor';
+import SectionEditor from '../../../components/SectionEditor';
 
 function SortableSection({ 
   section, 
@@ -64,19 +64,25 @@ function SortableSection({
   );
 }
 
-export default function TemplateEditor() {
+export default function AdminTemplateEditor() {
   const router = useRouter();
   const { id } = router.query;
   const { user } = useAuth();
   const previewRef = useRef<HTMLDivElement>(null);
-  const { getTemplateBySlug, updateTemplate } = useTemplates();
+  const { templates, updateTemplate } = useTemplates();
 
-  const template = getTemplateBySlug(id as string);
+  const template = templates.find(t => t.id === id);
   const [sections, setSections] = useState<Section[]>([]);
   const [templateName, setTemplateName] = useState('');
   const [templateSlug, setTemplateSlug] = useState('');
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingSlug, setIsEditingSlug] = useState(false);
+
+  useEffect(() => {
+    if (!user || !isAdmin(user.email)) {
+      router.push('/admin');
+    }
+  }, [user, router]);
 
   useEffect(() => {
     if (template) {
@@ -92,6 +98,17 @@ export default function TemplateEditor() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  if (!user || !isAdmin(user.email)) {
+    return (
+      <Layout>
+        <div className="max-w-7xl mx-auto px-4 py-12 text-center">
+          <h1 className="text-2xl font-bold">Unauthorized</h1>
+          <p className="mt-2 text-gray-600">You need admin access to view this page.</p>
+        </div>
+      </Layout>
+    );
+  }
 
   if (!template) {
     return (
@@ -247,45 +264,34 @@ export default function TemplateEditor() {
     });
     
     if (oldSlug !== newSlug) {
-      router.push(`/template/${newSlug}`);
+      router.push(`/admin/templates/${template.id}`);
     }
     
-    alert(`Template "${templateName}" has been saved successfully!`);
-  };
-
-  const downloadReceipt = async () => {
-    if (!user?.isPremium) {
-      router.push('/pricing');
-      return;
-    }
-
-    if (previewRef.current) {
-      const canvas = await html2canvas(previewRef.current);
-      const link = document.createElement('a');
-      link.download = `${template.name}.png`;
-      link.href = canvas.toDataURL();
-      link.click();
-    }
-  };
-
-  const downloadWithWatermark = async () => {
-    if (previewRef.current) {
-      const canvas = await html2canvas(previewRef.current);
-      const link = document.createElement('a');
-      link.download = `${template.name}-sample.png`;
-      link.href = canvas.toDataURL();
-      link.click();
-    }
+    alert(`Global template "${templateName}" has been saved successfully!`);
   };
 
   return (
     <Layout>
       <Head>
-        <title>{template.name} - ReceiptGen</title>
+        <title>Edit {template.name} - Admin - ReceiptGen</title>
       </Head>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-6">
+          <button
+            onClick={() => router.push('/admin')}
+            className="flex items-center text-gray-600 hover:text-gray-900 mb-4"
+          >
+            <FiArrowLeft className="mr-2" />
+            Back to Admin Panel
+          </button>
+          
+          <div className="bg-yellow-50 border border-yellow-200 rounded p-4 mb-4">
+            <p className="text-sm text-yellow-800 font-medium">
+              🔒 Admin Mode: You are editing the global template. Changes will affect all users.
+            </p>
+          </div>
+          
           <div className="flex items-center justify-between mb-2">
             {isEditingName ? (
               <input
@@ -319,7 +325,7 @@ export default function TemplateEditor() {
                 className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <FiSave className="mr-2" />
-                Save Template
+                Save Global Template
               </button>
             </div>
           </div>
@@ -425,38 +431,15 @@ export default function TemplateEditor() {
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">Live Preview</h2>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={downloadWithWatermark}
-                    className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
-                  >
-                    Download Sample
-                  </button>
-                  <button
-                    onClick={downloadReceipt}
-                    className="flex items-center px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
-                  >
-                    <FiDownload className="mr-1" />
-                    Download
-                  </button>
-                </div>
               </div>
               
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded">
                 <ReceiptPreview 
                   sections={sections} 
-                  showWatermark={!user?.isPremium}
+                  showWatermark={false}
                   previewRef={previewRef}
                 />
               </div>
-              
-              {!user?.isPremium && (
-                <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
-                  <p className="text-sm text-yellow-800">
-                    Upgrade to Premium to remove the watermark and download high-quality receipts
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         </div>

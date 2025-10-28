@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getTemplateById, updateTemplate, deleteTemplate } from '../../../server/storage';
+import { isAdmin } from '../../../lib/auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
@@ -18,6 +19,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     
     if (req.method === 'PUT') {
+      const { userEmail } = req.body;
+      
+      if (!isAdmin(userEmail)) {
+        return res.status(403).json({ error: 'Unauthorized: Admin access required' });
+      }
+      
       const updated = await updateTemplate(id, req.body);
       if (!updated) {
         return res.status(404).json({ error: 'Template not found' });
@@ -26,6 +33,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     
     if (req.method === 'DELETE') {
+      const userEmail = req.query.userEmail as string;
+      
+      if (!isAdmin(userEmail)) {
+        return res.status(403).json({ error: 'Unauthorized: Admin access required' });
+      }
+      
       const deleted = await deleteTemplate(id);
       if (!deleted) {
         return res.status(404).json({ error: 'Template not found' });

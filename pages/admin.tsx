@@ -42,14 +42,14 @@ const Admin: NextPage = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    await addTemplate(newTemplate);
+    const createdTemplate = await addTemplate(newTemplate);
     setNewTemplateName('');
     setShowCreateModal(false);
-    router.push(`/template/${slug}`);
+    router.push(`/admin/templates/${createdTemplate.id}`);
   };
 
-  const handleEditTemplate = (templateSlug: string) => {
-    router.push(`/template/${templateSlug}`);
+  const handleEditTemplate = (templateId: string) => {
+    router.push(`/admin/templates/${templateId}`);
   };
 
   const handleDeleteTemplate = async (templateId: string, templateName: string) => {
@@ -93,9 +93,9 @@ const Admin: NextPage = () => {
                 </div>
                 <div className="flex space-x-2">
                   <button 
-                    onClick={() => handleEditTemplate(template.slug)}
+                    onClick={() => handleEditTemplate(template.id)}
                     className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                    title="Edit template"
+                    title="Edit global template"
                   >
                     <FiEdit />
                   </button>
