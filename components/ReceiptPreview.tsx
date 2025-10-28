@@ -98,7 +98,12 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                   <span>${item.price.toFixed(2)}</span>
                 </div>
               ))}
-              <div className="border-t border-gray-300 mt-2 pt-2">
+              {/* Divider after items */}
+              {renderDivider(
+                section.dividerAfterItemsStyle ?? section.dividerStyle,
+                section.dividerAfterItems ?? section.dividerAtBottom
+              )}
+              <div className={`${section.dividerAfterItems || section.dividerAtBottom ? 'mt-2 pt-2' : 'border-t border-gray-300 mt-2 pt-2'}`}>
                 {section.totalLines.map((line, idx) => (
                   <div key={idx} className="flex justify-between">
                     <span>{line.title}:</span>
@@ -111,7 +116,11 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                 </div>
               </div>
             </div>
-            {renderDivider(section.dividerStyle, section.dividerAtBottom)}
+            {/* Divider after total */}
+            {renderDivider(
+              section.dividerAfterTotalStyle ?? section.dividerStyle,
+              section.dividerAfterTotal ?? section.dividerAtBottom
+            )}
           </div>
         );
 

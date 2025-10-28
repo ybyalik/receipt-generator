@@ -175,8 +175,10 @@ export default function TemplateEditor() {
           ],
           tax: { title: 'Tax:', value: 0.80 },
           total: { title: 'Total:', price: 10.80 },
-          dividerAtBottom: true,
-          dividerStyle: 'dashed',
+          dividerAfterItems: false,
+          dividerAfterItemsStyle: 'dashed',
+          dividerAfterTotal: true,
+          dividerAfterTotalStyle: 'dashed',
         };
         break;
       case 'payment':

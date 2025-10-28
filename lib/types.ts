@@ -44,8 +44,15 @@ export interface ItemsListSection {
     title: string;
     price: number;
   };
-  dividerAtBottom: boolean;
-  dividerStyle: DividerStyle;
+  // Divider after items (before total lines)
+  dividerAfterItems: boolean;
+  dividerAfterItemsStyle: DividerStyle;
+  // Divider after total lines (at bottom)
+  dividerAfterTotal: boolean;
+  dividerAfterTotalStyle: DividerStyle;
+  // Keep old properties for backward compatibility
+  dividerAtBottom?: boolean;
+  dividerStyle?: DividerStyle;
 }
 
 export interface PaymentSection {
