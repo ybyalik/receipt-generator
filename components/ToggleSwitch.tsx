@@ -18,7 +18,7 @@ export default function ToggleSwitch({ checked, onChange, label }: ToggleSwitchP
         />
         <div
           className={`w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${
-            checked ? 'bg-navy-700' : 'bg-gray-200 border-2 border-gray-300'
+            checked ? 'bg-gray-400' : 'bg-gray-200 border-2 border-gray-300'
           }`}
         >
           <div

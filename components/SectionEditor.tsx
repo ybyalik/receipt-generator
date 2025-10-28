@@ -31,14 +31,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
     return (
       <div className="mb-3">
         <label className="block text-sm font-medium mb-1">Alignment</label>
-        <div className="flex gap-0 border border-navy-200 rounded overflow-hidden w-fit">
+        <div className="flex gap-0 border border-gray-300 rounded overflow-hidden w-fit">
           <button
             type="button"
             onClick={() => onChange('left')}
-            className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+            className={`px-4 py-2 border-r border-gray-300 transition-colors ${
               currentAlignment === 'left' 
-                ? 'bg-navy-700 text-white' 
-                : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                ? 'bg-gray-200 text-gray-900' 
+                : 'bg-white text-gray-900 hover:bg-gray-50'
             }`}
           >
             <FiAlignLeft size={18} />
@@ -46,10 +46,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
           <button
             type="button"
             onClick={() => onChange('center')}
-            className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+            className={`px-4 py-2 border-r border-gray-300 transition-colors ${
               currentAlignment === 'center' 
-                ? 'bg-navy-700 text-white' 
-                : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                ? 'bg-gray-200 text-gray-900' 
+                : 'bg-white text-gray-900 hover:bg-gray-50'
             }`}
           >
             <FiAlignCenter size={18} />
@@ -59,8 +59,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
             onClick={() => onChange('right')}
             className={`px-4 py-2 transition-colors ${
               currentAlignment === 'right' 
-                ? 'bg-navy-700 text-white' 
-                : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                ? 'bg-gray-200 text-gray-900' 
+                : 'bg-white text-gray-900 hover:bg-gray-50'
             }`}
           >
             <FiAlignRight size={18} />
@@ -103,7 +103,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       alt="Logo preview" 
                       width={section.logoSize || 64}
                       height={section.logoSize || 64}
-                      className="object-contain border border-navy-200 rounded-lg"
+                      className="object-contain border border-gray-300 rounded-lg"
                       unoptimized
                     />
                   </div>
@@ -141,7 +141,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               <textarea
                 value={section.businessDetails}
                 onChange={(e) => onUpdate({ ...section, businessDetails: e.target.value })}
-                className="w-full border border-navy-200 rounded-lg px-3 py-2 h-24 placeholder:text-gray-400"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 h-24 placeholder:text-gray-400"
                 placeholder="Business Name\nAddress\nPhone"
               />
             </div>
@@ -168,7 +168,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               <textarea
                 value={section.message}
                 onChange={(e) => onUpdate({ ...section, message: e.target.value })}
-                className="w-full border border-navy-200 rounded-lg px-3 py-2 h-24 placeholder:text-gray-400"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 h-24 placeholder:text-gray-400"
                 placeholder="Enter your custom message"
               />
             </div>
@@ -197,7 +197,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       onUpdate({ ...section, items: newItems });
                     }}
                     placeholder="Qty"
-                    className="border border-navy-200 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
+                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
                   />
                   <input
                     type="text"
@@ -208,7 +208,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       onUpdate({ ...section, items: newItems });
                     }}
                     placeholder="Item name"
-                    className="border border-navy-200 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
+                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
                   />
                   <input
                     type="number"
@@ -219,7 +219,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       onUpdate({ ...section, items: newItems });
                     }}
                     placeholder="$0.00"
-                    className="border border-navy-200 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
+                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
                   />
                   <button
                     type="button"
@@ -240,28 +240,28 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   const newItems = [...section.items, { quantity: 1, item: '', price: 0 }];
                   onUpdate({ ...section, items: newItems });
                 }}
-                className="w-full border-2 border-dashed border-navy-200 rounded-lg px-3 py-2 text-sm text-accent-500 hover:border-accent-600 hover:bg-accent-50 transition-colors flex items-center justify-center gap-2"
+                className="w-full border-2 border-dashed border-gray-300 rounded-lg px-3 py-2 text-sm text-accent-500 hover:border-accent-600 hover:bg-accent-50 transition-colors flex items-center justify-center gap-2"
               >
                 <span className="text-lg">⊕</span> Add line
               </button>
             </div>
             
             {/* Divider after Items controls */}
-            <div className="mb-3 pb-3 border-b border-navy-200">
+            <div className="mb-3 pb-3 border-b border-gray-300">
               <ToggleSwitch
                 checked={section.dividerAfterItems ?? false}
                 onChange={(checked) => onUpdate({ ...section, dividerAfterItems: checked })}
                 label="Divider after Items"
               />
               {section.dividerAfterItems && (
-                <div className="flex gap-0 border border-navy-200 rounded-lg overflow-hidden w-fit mt-2">
+                <div className="flex gap-0 border border-gray-300 rounded-lg overflow-hidden w-fit mt-2">
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'dashed' })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'dashed'
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     {renderDividerIcon('dashed')}
@@ -269,10 +269,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'solid' })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'solid'
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     {renderDividerIcon('solid')}
@@ -280,10 +280,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'dotted' })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'dotted'
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     {renderDividerIcon('dotted')}
@@ -291,10 +291,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'double' })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'double'
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     {renderDividerIcon('double')}
@@ -302,10 +302,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'stars' })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'stars'
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     {renderDividerIcon('stars')}
@@ -315,8 +315,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'blank' })}
                     className={`px-4 py-2 transition-colors ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'blank'
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     {renderDividerIcon('blank')}
@@ -343,7 +343,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       onUpdate({ ...section, totalLines: newLines });
                     }}
                     placeholder="e.g., Subtotal"
-                    className="border border-navy-200 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
+                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
                   />
                   <input
                     type="number"
@@ -354,7 +354,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       onUpdate({ ...section, totalLines: newLines });
                     }}
                     placeholder="$0.00"
-                    className="border border-navy-200 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
+                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
                   />
                   <button
                     type="button"
@@ -389,7 +389,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     total: { ...section.total, title: e.target.value }
                   })}
                   placeholder="Total:"
-                  className="border border-navy-200 rounded-lg px-2 py-1 text-sm font-medium placeholder:text-gray-400"
+                  className="border border-gray-300 rounded-lg px-2 py-1 text-sm font-medium placeholder:text-gray-400"
                 />
                 <input
                   type="number"
@@ -399,27 +399,27 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     total: { ...section.total, price: parseFloat(e.target.value) || 0 }
                   })}
                   placeholder="$0.00"
-                  className="border border-navy-200 rounded-lg px-2 py-1 text-sm font-medium placeholder:text-gray-400"
+                  className="border border-gray-300 rounded-lg px-2 py-1 text-sm font-medium placeholder:text-gray-400"
                 />
               </div>
             </div>
             
             {/* Total Size Increase controls */}
-            <div className="mb-3 pb-3 border-b border-navy-200">
+            <div className="mb-3 pb-3 border-b border-gray-300">
               <ToggleSwitch
                 checked={section.increaseTotalSize ?? false}
                 onChange={(checked) => onUpdate({ ...section, increaseTotalSize: checked, totalSizeIncrease: checked ? 20 : 0 })}
                 label='Increase "Total" number size'
               />
               {section.increaseTotalSize && (
-                <div className="flex gap-0 border border-navy-200 rounded-lg overflow-hidden w-fit mt-2">
+                <div className="flex gap-0 border border-gray-300 rounded-lg overflow-hidden w-fit mt-2">
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, totalSizeIncrease: 10 })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       section.totalSizeIncrease === 10
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     +10%
@@ -427,10 +427,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, totalSizeIncrease: 20 })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       section.totalSizeIncrease === 20
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     +20%
@@ -438,10 +438,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, totalSizeIncrease: 50 })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       section.totalSizeIncrease === 50
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     +50%
@@ -449,10 +449,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, totalSizeIncrease: 75 })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       section.totalSizeIncrease === 75
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     +75%
@@ -462,8 +462,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     onClick={() => onUpdate({ ...section, totalSizeIncrease: 100 })}
                     className={`px-4 py-2 transition-colors ${
                       section.totalSizeIncrease === 100
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     +100%
@@ -480,14 +480,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 label="Divider after Total"
               />
               {(section.dividerAfterTotal ?? section.dividerAtBottom) && (
-                <div className="flex gap-0 border border-navy-200 rounded-lg overflow-hidden w-fit mt-2">
+                <div className="flex gap-0 border border-gray-300 rounded-lg overflow-hidden w-fit mt-2">
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'dashed' })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'dashed'
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     {renderDividerIcon('dashed')}
@@ -495,10 +495,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'solid' })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'solid'
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     {renderDividerIcon('solid')}
@@ -506,10 +506,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'dotted' })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'dotted'
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     {renderDividerIcon('dotted')}
@@ -517,10 +517,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'double' })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'double'
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     {renderDividerIcon('double')}
@@ -528,10 +528,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'stars' })}
-                    className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                    className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'stars'
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     {renderDividerIcon('stars')}
@@ -541,8 +541,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'blank' })}
                     className={`px-4 py-2 transition-colors ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'blank'
-                        ? 'bg-navy-700 text-white'
-                        : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                        ? 'bg-gray-200 text-gray-900'
+                        : 'bg-white text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     {renderDividerIcon('blank')}
@@ -562,14 +562,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
         return (
           <>
             <div className="mb-3">
-              <div className="flex border border-navy-200 rounded-lg overflow-hidden">
+              <div className="flex border border-gray-300 rounded-lg overflow-hidden">
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, paymentType: 'cash' as const })}
                   className={`flex-1 px-4 py-2 font-medium transition-colors ${
                     section.paymentType === 'cash'
-                      ? 'bg-navy-100 text-navy-900'
-                      : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                      ? 'bg-gray-200 text-gray-900'
+                      : 'bg-white text-gray-900 hover:bg-gray-50'
                   }`}
                 >
                   Cash
@@ -579,8 +579,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   onClick={() => onUpdate({ ...section, paymentType: 'card' as const })}
                   className={`flex-1 px-4 py-2 font-medium transition-colors ${
                     section.paymentType === 'card'
-                      ? 'bg-navy-100 text-navy-900'
-                      : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                      ? 'bg-gray-200 text-gray-900'
+                      : 'bg-white text-gray-900 hover:bg-gray-50'
                   }`}
                 >
                   Card
@@ -605,7 +605,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       onUpdate({ ...section, [fieldKey]: newFields });
                     }}
                     placeholder="e.g., Card number"
-                    className="border border-navy-200 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
+                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
                   />
                   <input
                     type="text"
@@ -616,7 +616,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       onUpdate({ ...section, [fieldKey]: newFields });
                     }}
                     placeholder="Enter value"
-                    className="border border-navy-200 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
+                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
                   />
                   <button
                     type="button"
@@ -637,7 +637,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   const newFields = [...currentFields, { title: '', value: '' }];
                   onUpdate({ ...section, [fieldKey]: newFields });
                 }}
-                className="w-full border-2 border-dashed border-navy-200 rounded-lg px-3 py-2 text-sm text-accent-500 hover:border-accent-600 hover:bg-accent-50 transition-colors flex items-center justify-center gap-2"
+                className="w-full border-2 border-dashed border-gray-300 rounded-lg px-3 py-2 text-sm text-accent-500 hover:border-accent-600 hover:bg-accent-50 transition-colors flex items-center justify-center gap-2"
               >
                 <span className="text-lg">⊕</span> Add line
               </button>
@@ -655,7 +655,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 type="text"
                 value={section.date}
                 onChange={(e) => onUpdate({ ...section, date: e.target.value })}
-                className="w-full border border-navy-200 rounded-lg px-3 py-2 placeholder:text-gray-400"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 placeholder:text-gray-400"
                 placeholder="MM/DD/YYYY HH:MM AM"
               />
             </div>
@@ -671,7 +671,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 type="text"
                 value={section.value}
                 onChange={(e) => onUpdate({ ...section, value: e.target.value })}
-                className="w-full border border-navy-200 rounded-lg px-3 py-2 placeholder:text-gray-400"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 placeholder:text-gray-400"
                 placeholder="1234567890123"
               />
             </div>
@@ -696,7 +696,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
   };
 
   return (
-    <div className="border border-navy-200 rounded-xl bg-white">
+    <div className="border border-gray-300 rounded-xl bg-white">
       <div className="flex items-center justify-between p-3 bg-navy-50 rounded-t-xl">
         <div className="flex items-center space-x-2">
           <button {...dragHandleProps} className="cursor-move text-navy-400 hover:text-navy-600">
@@ -737,7 +737,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
           {renderFields()}
           
           {section.type !== 'items_list' && (
-            <div className="mt-4 pt-4 border-t border-navy-200">
+            <div className="mt-4 pt-4 border-t border-gray-300">
               <div className="mb-3">
                 <ToggleSwitch
                   checked={section.dividerAtBottom}
@@ -746,14 +746,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 />
               </div>
               {section.dividerAtBottom && (
-              <div className="flex gap-0 border border-navy-200 rounded-lg overflow-hidden w-fit">
+              <div className="flex gap-0 border border-gray-300 rounded-lg overflow-hidden w-fit">
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, dividerStyle: 'dashed' })}
-                  className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                  className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                     section.dividerStyle === 'dashed'
-                      ? 'bg-navy-700 text-white'
-                      : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                      ? 'bg-gray-200 text-gray-900'
+                      : 'bg-white text-gray-900 hover:bg-gray-50'
                   }`}
                 >
                   {renderDividerIcon('dashed')}
@@ -761,10 +761,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, dividerStyle: 'solid' })}
-                  className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                  className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                     section.dividerStyle === 'solid'
-                      ? 'bg-navy-700 text-white'
-                      : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                      ? 'bg-gray-200 text-gray-900'
+                      : 'bg-white text-gray-900 hover:bg-gray-50'
                   }`}
                 >
                   {renderDividerIcon('solid')}
@@ -772,10 +772,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, dividerStyle: 'dotted' })}
-                  className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                  className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                     section.dividerStyle === 'dotted'
-                      ? 'bg-navy-700 text-white'
-                      : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                      ? 'bg-gray-200 text-gray-900'
+                      : 'bg-white text-gray-900 hover:bg-gray-50'
                   }`}
                 >
                   {renderDividerIcon('dotted')}
@@ -783,10 +783,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, dividerStyle: 'double' })}
-                  className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                  className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                     section.dividerStyle === 'double'
-                      ? 'bg-navy-700 text-white'
-                      : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                      ? 'bg-gray-200 text-gray-900'
+                      : 'bg-white text-gray-900 hover:bg-gray-50'
                   }`}
                 >
                   {renderDividerIcon('double')}
@@ -794,10 +794,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, dividerStyle: 'stars' })}
-                  className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+                  className={`px-4 py-2 border-r border-gray-300 transition-colors ${
                     section.dividerStyle === 'stars'
-                      ? 'bg-navy-700 text-white'
-                      : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                      ? 'bg-gray-200 text-gray-900'
+                      : 'bg-white text-gray-900 hover:bg-gray-50'
                   }`}
                 >
                   {renderDividerIcon('stars')}
@@ -807,8 +807,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   onClick={() => onUpdate({ ...section, dividerStyle: 'blank' })}
                   className={`px-4 py-2 transition-colors ${
                     section.dividerStyle === 'blank'
-                      ? 'bg-navy-700 text-white'
-                      : 'bg-gray-100 text-navy-900 hover:bg-gray-200'
+                      ? 'bg-gray-200 text-gray-900'
+                      : 'bg-white text-gray-900 hover:bg-gray-50'
                   }`}
                 >
                   {renderDividerIcon('blank')}

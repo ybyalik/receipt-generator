@@ -22,7 +22,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
   };
 
   return (
-    <div className="border border-navy-200 rounded-xl bg-white mb-6 shadow-sm">
+    <div className="border border-gray-300 rounded-xl bg-white mb-6 shadow-sm">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full flex items-center justify-between p-4 hover:bg-navy-50 transition-colors rounded-t-xl"
@@ -46,7 +46,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 onChange={(e) => onUpdate({ ...settings, currency: e.target.value })}
                 placeholder="$"
                 maxLength={5}
-                className="w-16 px-3 py-2 border border-navy-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 text-center font-medium bg-white"
+                className="w-16 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 text-center font-medium bg-white"
               />
             </div>
             
@@ -59,8 +59,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                     onClick={() => onUpdate({ ...settings, currencyFormat: format })}
                     className={`px-4 py-2 border rounded-lg transition-all font-medium ${
                       settings.currencyFormat === format
-                        ? 'bg-navy-700 text-white border-navy-700 shadow-sm'
-                        : 'bg-gray-100 text-navy-900 border-navy-200 hover:bg-gray-200 hover:border-accent-500'
+                        ? 'bg-gray-200 text-gray-900 border-gray-300 shadow-sm'
+                        : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                     }`}
                   >
                     {formatExample(settings.currency, format)}
@@ -78,8 +78,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 onClick={() => onUpdate({ ...settings, font: 'handwritten' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'handwritten'
-                    ? 'bg-navy-700 text-white border-navy-700 shadow-sm'
-                    : 'bg-gray-100 text-navy-900 border-navy-200 hover:bg-gray-200 hover:border-accent-500'
+                    ? 'bg-gray-200 text-gray-900 border-gray-300 shadow-sm'
+                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                 }`}
                 style={{ fontFamily: 'Caveat, cursive' }}
               >
@@ -89,8 +89,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 onClick={() => onUpdate({ ...settings, font: 'mono' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'mono'
-                    ? 'bg-navy-700 text-white border-navy-700 shadow-sm'
-                    : 'bg-gray-100 text-navy-900 border-navy-200 hover:bg-gray-200 hover:border-accent-500'
+                    ? 'bg-gray-200 text-gray-900 border-gray-300 shadow-sm'
+                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                 }`}
                 style={{ fontFamily: 'Courier New, monospace' }}
               >
@@ -100,8 +100,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 onClick={() => onUpdate({ ...settings, font: 'receipt' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'receipt'
-                    ? 'bg-navy-700 text-white border-navy-700 shadow-sm'
-                    : 'bg-gray-100 text-navy-900 border-navy-200 hover:bg-gray-200 hover:border-accent-500'
+                    ? 'bg-gray-200 text-gray-900 border-gray-300 shadow-sm'
+                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                 }`}
                 style={{ fontFamily: 'monospace' }}
               >
@@ -118,7 +118,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 type="color"
                 value={settings.textColor}
                 onChange={(e) => onUpdate({ ...settings, textColor: e.target.value })}
-                className="w-16 h-10 border border-navy-200 rounded-lg cursor-pointer"
+                className="w-16 h-10 border border-gray-300 rounded-lg cursor-pointer"
               />
               <span className="text-sm text-navy-900 font-mono">{settings.textColor}</span>
             </div>
@@ -134,8 +134,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                   onClick={() => onUpdate({ ...settings, backgroundTexture: texture })}
                   className={`px-4 py-2 border rounded-lg transition-all font-medium ${
                     settings.backgroundTexture === texture
-                      ? 'bg-navy-700 text-white border-navy-700 shadow-sm'
-                      : 'bg-gray-100 text-navy-900 border-navy-200 hover:bg-gray-200 hover:border-accent-500'
+                      ? 'bg-gray-200 text-gray-900 border-gray-300 shadow-sm'
+                      : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                   }`}
                 >
                   {texture === 'none' ? 'Off' : `Texture ${index}`}
