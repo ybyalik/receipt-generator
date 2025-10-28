@@ -9,9 +9,43 @@ import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 const Admin: NextPage = () => {
   const router = useRouter();
   const [templates, setTemplates] = useState(mockTemplates);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newTemplateName, setNewTemplateName] = useState('');
 
   const handleCreateTemplate = () => {
-    alert('Create new template feature coming soon! For now, you can create templates by editing the mockTemplates.ts file.');
+    setShowCreateModal(true);
+  };
+
+  const createTemplate = () => {
+    if (!newTemplateName.trim()) {
+      alert('Please enter a template name');
+      return;
+    }
+
+    const slug = newTemplateName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const newTemplate = {
+      id: Date.now().toString(),
+      name: newTemplateName,
+      slug: slug,
+      sections: [
+        {
+          type: 'header' as const,
+          id: `header-${Date.now()}`,
+          alignment: 'center' as const,
+          logoSize: 50,
+          businessDetails: 'Your Business Name\nYour Address\nCity, State ZIP',
+          dividerAtBottom: true,
+          dividerStyle: 'dashed' as const,
+        },
+      ],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    setTemplates([...templates, newTemplate]);
+    setNewTemplateName('');
+    setShowCreateModal(false);
+    router.push(`/template/${slug}`);
   };
 
   const handleEditTemplate = (templateSlug: string) => {
@@ -97,6 +131,45 @@ const Admin: NextPage = () => {
           </div>
         </div>
       </div>
+
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <h2 className="text-2xl font-bold mb-4">Create New Template</h2>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Template Name</label>
+              <input
+                type="text"
+                value={newTemplateName}
+                onChange={(e) => setNewTemplateName(e.target.value)}
+                placeholder="e.g., Hotel Receipt"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onKeyDown={(e) => e.key === 'Enter' && createTemplate()}
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                URL will be: /{newTemplateName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || 'template-name'}
+              </p>
+            </div>
+            <div className="flex space-x-3">
+              <button
+                onClick={createTemplate}
+                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Create Template
+              </button>
+              <button
+                onClick={() => {
+                  setShowCreateModal(false);
+                  setNewTemplateName('');
+                }}
+                className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };

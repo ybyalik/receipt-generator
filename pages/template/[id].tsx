@@ -60,10 +60,13 @@ export default function TemplateEditor() {
 
   const template = mockTemplates.find(t => t.slug === id);
   const [sections, setSections] = useState<Section[]>([]);
+  const [templateName, setTemplateName] = useState('');
+  const [isEditingName, setIsEditingName] = useState(false);
 
   useEffect(() => {
     if (template) {
       setSections(template.sections);
+      setTemplateName(template.name);
     }
   }, [template]);
 
@@ -101,11 +104,22 @@ export default function TemplateEditor() {
   };
 
   const resetTemplate = () => {
-    setSections(template.sections);
+    if (template) {
+      setSections(template.sections);
+      setTemplateName(template.name);
+    }
   };
 
   const saveTemplate = () => {
-    alert('Template saved! (This would save to Firebase in production)');
+    const updatedTemplate = {
+      ...template!,
+      name: templateName,
+      sections: sections,
+      updatedAt: new Date().toISOString(),
+    };
+    
+    console.log('Template saved:', updatedTemplate);
+    alert(`Template "${templateName}" has been saved!\n\nNote: Changes are temporary and will reset on page refresh. To persist changes permanently, you'll need to set up a database.`);
   };
 
   const downloadReceipt = async () => {
@@ -141,24 +155,40 @@ export default function TemplateEditor() {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-3xl font-bold">{template.name}</h1>
+          {isEditingName ? (
+            <input
+              type="text"
+              value={templateName}
+              onChange={(e) => setTemplateName(e.target.value)}
+              onBlur={() => setIsEditingName(false)}
+              onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
+              className="text-3xl font-bold border-b-2 border-blue-500 focus:outline-none"
+              autoFocus
+            />
+          ) : (
+            <h1 
+              className="text-3xl font-bold cursor-pointer hover:text-blue-600 transition-colors"
+              onClick={() => setIsEditingName(true)}
+              title="Click to edit template name"
+            >
+              {templateName}
+            </h1>
+          )}
           <div className="flex space-x-3">
             <button
               onClick={resetTemplate}
-              className="flex items-center px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+              className="flex items-center px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
             >
               <FiRefreshCw className="mr-2" />
               Reset
             </button>
-            {user && (
-              <button
-                onClick={saveTemplate}
-                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                <FiSave className="mr-2" />
-                Save as new template
-              </button>
-            )}
+            <button
+              onClick={saveTemplate}
+              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <FiSave className="mr-2" />
+              Save Template
+            </button>
           </div>
         </div>
 
