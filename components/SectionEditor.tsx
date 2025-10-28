@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Section, DividerStyle, Alignment } from '../lib/types';
 import { FiChevronDown, FiChevronUp, FiMove, FiTrash2, FiCopy, FiAlignLeft, FiAlignCenter, FiAlignRight } from 'react-icons/fi';
 import ToggleSwitch from './ToggleSwitch';
@@ -97,11 +98,13 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               <div className="flex items-center gap-3">
                 {section.logo && (
                   <div className="relative">
-                    <img 
+                    <Image 
                       src={section.logo} 
                       alt="Logo preview" 
-                      style={{ width: section.logoSize, height: section.logoSize }}
+                      width={section.logoSize || 64}
+                      height={section.logoSize || 64}
                       className="object-contain border rounded"
+                      unoptimized
                     />
                   </div>
                 )}

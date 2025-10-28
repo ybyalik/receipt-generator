@@ -76,7 +76,7 @@ const MyTemplates: NextPage = () => {
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold">My Templates</h1>
-            <p className="text-gray-600 mt-1">Templates you've customized and saved</p>
+            <p className="text-gray-600 mt-1">Templates you&apos;ve customized and saved</p>
           </div>
           <button 
             onClick={() => router.push('/templates')}

@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import Image from 'next/image';
 import { Section, TemplateSettings } from '../lib/types';
 import { formatCurrency, getFontFamily } from '../lib/currency';
 import JsBarcode from 'jsbarcode';
@@ -50,14 +51,13 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
             <div className={`text-${section.alignment}`}>
               <div className="mb-2">
                 {section.logo ? (
-                  <img 
+                  <Image 
                     src={section.logo} 
                     alt="Business logo" 
-                    style={{ 
-                      width: section.logoSize, 
-                      height: section.logoSize 
-                    }}
+                    width={section.logoSize || 64}
+                    height={section.logoSize || 64}
                     className="inline-block object-contain"
+                    unoptimized
                   />
                 ) : (
                   <div 
