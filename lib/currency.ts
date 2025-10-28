@@ -5,17 +5,31 @@ export const formatCurrency = (
   symbol: CurrencySymbol = '$',
   format: CurrencyFormat = 'symbol_before'
 ): string => {
-  const formattedAmount = amount.toFixed(2);
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'decimal',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    signDisplay: 'auto',
+  });
+  
+  const parts = formatter.formatToParts(amount);
+  const hasMinusSign = parts.some(part => part.type === 'minusSign');
+  const minusSign = hasMinusSign ? '-' : '';
+  
+  const numberString = parts
+    .filter(part => part.type !== 'minusSign')
+    .map(part => part.value)
+    .join('');
   
   switch (format) {
     case 'symbol_before':
-      return `${symbol}${formattedAmount}`;
+      return `${minusSign}${symbol}${numberString}`;
     case 'symbol_after':
-      return `${formattedAmount}${symbol}`;
+      return `${minusSign}${numberString}${symbol}`;
     case 'symbol_after_space':
-      return `${formattedAmount} ${symbol}`;
+      return `${minusSign}${numberString} ${symbol}`;
     default:
-      return `${symbol}${formattedAmount}`;
+      return `${minusSign}${symbol}${numberString}`;
   }
 };
 
