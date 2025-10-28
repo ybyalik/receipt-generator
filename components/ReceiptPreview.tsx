@@ -1,0 +1,203 @@
+import React, { useRef } from 'react';
+import { Section } from '../lib/types';
+import JsBarcode from 'jsbarcode';
+import { format } from 'date-fns';
+
+interface ReceiptPreviewProps {
+  sections: Section[];
+  showWatermark?: boolean;
+  previewRef?: React.RefObject<HTMLDivElement>;
+}
+
+const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ 
+  sections, 
+  showWatermark = true,
+  previewRef 
+}) => {
+  const internalRef = useRef<HTMLDivElement>(null);
+  const ref = previewRef || internalRef;
+
+  const renderDivider = (style: string, show: boolean) => {
+    if (!show || style === 'none') return null;
+    
+    const styles = {
+      solid: 'border-t border-gray-400',
+      dashed: 'border-t border-dashed border-gray-400',
+      dotted: 'border-t border-dotted border-gray-400',
+      double: 'border-t-4 border-double border-gray-400',
+    };
+
+    return <div className={`my-2 ${styles[style as keyof typeof styles] || ''}`} />;
+  };
+
+  const renderSection = (section: Section) => {
+    switch (section.type) {
+      case 'header':
+        return (
+          <div key={section.id} className="mb-4">
+            <div className={`text-${section.alignment}`}>
+              {section.logo && (
+                <div className="mb-2">
+                  <div 
+                    className="inline-block bg-gray-200 rounded"
+                    style={{ 
+                      width: section.logoSize, 
+                      height: section.logoSize 
+                    }}
+                  />
+                </div>
+              )}
+              <div className="whitespace-pre-line text-sm font-medium">
+                {section.businessDetails}
+              </div>
+            </div>
+            {renderDivider(section.dividerStyle, section.dividerAtBottom)}
+          </div>
+        );
+
+      case 'custom_message':
+        return (
+          <div key={section.id} className="mb-4">
+            <div className={`text-${section.alignment} text-sm whitespace-pre-line`}>
+              {section.message}
+            </div>
+            {renderDivider(section.dividerStyle, section.dividerAtBottom)}
+          </div>
+        );
+
+      case 'items_list':
+        return (
+          <div key={section.id} className="mb-4">
+            <div className="space-y-1 text-xs">
+              {section.items.map((item, idx) => (
+                <div key={idx} className="flex justify-between">
+                  <span>
+                    {item.quantity} x {item.item}
+                  </span>
+                  <span>${item.price.toFixed(2)}</span>
+                </div>
+              ))}
+              <div className="border-t border-gray-300 mt-2 pt-2">
+                {section.totalLines.map((line, idx) => (
+                  <div key={idx} className="flex justify-between">
+                    <span>{line.title}:</span>
+                    <span>${line.value.toFixed(2)}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between font-bold mt-2">
+                  <span>{section.total.title}:</span>
+                  <span>${section.total.price.toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
+            {renderDivider(section.dividerStyle, section.dividerAtBottom)}
+          </div>
+        );
+
+      case 'payment':
+        return (
+          <div key={section.id} className="mb-4">
+            <div className="text-xs space-y-1">
+              {section.paymentType === 'cash' && section.cash && (
+                <div className="flex justify-between">
+                  <span>{section.cash.title}:</span>
+                  <span>{section.cash.value}</span>
+                </div>
+              )}
+              {section.paymentType === 'card' && section.card && (
+                <>
+                  <div className="flex justify-between">
+                    <span>Card number:</span>
+                    <span>{section.card.cardNumber}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Card type:</span>
+                    <span>{section.card.cardType}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Card entry:</span>
+                    <span>{section.card.cardEntry}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Date/time:</span>
+                    <span>{section.card.dateTime}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Reference #:</span>
+                    <span>{section.card.referencedNumber}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Status:</span>
+                    <span className="font-bold">{section.card.status}</span>
+                  </div>
+                </>
+              )}
+            </div>
+            {renderDivider(section.dividerStyle, section.dividerAtBottom)}
+          </div>
+        );
+
+      case 'date_time':
+        return (
+          <div key={section.id} className="mb-4">
+            <div className={`text-${section.alignment} text-xs`}>
+              {section.date}
+            </div>
+            {renderDivider(section.dividerStyle, section.dividerAtBottom)}
+          </div>
+        );
+
+      case 'barcode':
+        return (
+          <div key={section.id} className="mb-4">
+            <div className="flex justify-center">
+              <svg
+                ref={(svg) => {
+                  if (svg) {
+                    try {
+                      JsBarcode(svg, section.value, {
+                        format: 'CODE128',
+                        width: section.size,
+                        height: 50,
+                        displayValue: false,
+                      });
+                    } catch (e) {
+                      console.error('Barcode generation error:', e);
+                    }
+                  }
+                }}
+              />
+            </div>
+            {renderDivider(section.dividerStyle, section.dividerAtBottom)}
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="relative">
+      <div 
+        ref={ref}
+        className="bg-white p-8 shadow-lg max-w-md mx-auto relative"
+        style={{ fontFamily: 'monospace' }}
+      >
+        {sections.map(renderSection)}
+      </div>
+      {showWatermark && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div 
+            className="text-gray-300 font-bold transform rotate-[-45deg]"
+            style={{ fontSize: '4rem', opacity: 0.3 }}
+          >
+            SAMPLE
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ReceiptPreview;
