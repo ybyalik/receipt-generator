@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FiSettings, FiChevronDown, FiChevronUp } from 'react-icons/fi';
-import type { TemplateSettings, CurrencySymbol, CurrencyFormat, FontStyle } from '../lib/types';
+import type { TemplateSettings, CurrencyFormat, FontStyle, BackgroundTexture } from '../lib/types';
 
 interface SettingsPanelProps {
   settings: TemplateSettings;
@@ -39,21 +39,14 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
           {/* Currency Section */}
           <div>
             <label className="block text-sm font-medium mb-2">Currency</label>
-            <div className="flex gap-2">
-              {(['$', '€', '£', '¥', '₹'] as CurrencySymbol[]).map((symbol) => (
-                <button
-                  key={symbol}
-                  onClick={() => onUpdate({ ...settings, currency: symbol })}
-                  className={`px-4 py-2 border rounded transition-colors ${
-                    settings.currency === symbol
-                      ? 'bg-blue-500 text-white border-blue-500'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  {symbol}
-                </button>
-              ))}
-            </div>
+            <input
+              type="text"
+              value={settings.currency}
+              onChange={(e) => onUpdate({ ...settings, currency: e.target.value })}
+              placeholder="$"
+              maxLength={5}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
 
           {/* Format Section */}
@@ -130,17 +123,24 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
             </div>
           </div>
 
-          {/* Background Toggle */}
+          {/* Background Texture Section */}
           <div>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={settings.showBackground}
-                onChange={(e) => onUpdate({ ...settings, showBackground: e.target.checked })}
-                className="w-5 h-5 rounded"
-              />
-              <span className="text-sm font-medium">Show receipt background</span>
-            </label>
+            <label className="block text-sm font-medium mb-2">Show receipt background</label>
+            <div className="flex gap-2">
+              {(['none', 'texture1', 'texture2', 'texture3', 'texture4', 'texture5'] as BackgroundTexture[]).map((texture, index) => (
+                <button
+                  key={texture}
+                  onClick={() => onUpdate({ ...settings, backgroundTexture: texture })}
+                  className={`px-4 py-2 border rounded transition-colors ${
+                    settings.backgroundTexture === texture
+                      ? 'bg-blue-500 text-white border-blue-500'
+                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  {texture === 'none' ? 'Off' : `#${index}`}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}

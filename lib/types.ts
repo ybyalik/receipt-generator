@@ -101,16 +101,16 @@ export type Section =
   | DateTimeSection 
   | BarcodeSection;
 
-export type CurrencySymbol = '$' | '€' | '£' | '¥' | '₹';
 export type CurrencyFormat = 'symbol_before' | 'symbol_after' | 'symbol_after_space'; // $2.99, 2.99$, 2.99 $
 export type FontStyle = 'receipt' | 'mono' | 'handwritten'; // Font 1, Font 2, Font 3
+export type BackgroundTexture = 'none' | 'texture1' | 'texture2' | 'texture3' | 'texture4' | 'texture5';
 
 export interface TemplateSettings {
-  currency: CurrencySymbol;
+  currency: string; // Custom currency symbol/text (e.g., $, €, USD, etc.)
   currencyFormat: CurrencyFormat;
   font: FontStyle;
   textColor: string;
-  showBackground: boolean;
+  backgroundTexture: BackgroundTexture;
 }
 
 export interface Template {

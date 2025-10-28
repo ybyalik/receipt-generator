@@ -201,14 +201,35 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
     }
   };
 
+  const getBackgroundStyle = () => {
+    if (settings.backgroundTexture === 'none') {
+      return { backgroundColor: 'white' };
+    }
+    
+    const textures = {
+      texture1: 'repeating-linear-gradient(45deg, #f5f5f0 0px, #f5f5f0 10px, #e8e8e0 10px, #e8e8e0 20px)',
+      texture2: 'radial-gradient(circle at 20% 50%, rgba(0,0,0,0.05) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(0,0,0,0.05) 0%, transparent 50%)',
+      texture3: 'linear-gradient(135deg, #faf8f3 25%, transparent 25%), linear-gradient(225deg, #faf8f3 25%, transparent 25%), linear-gradient(45deg, #faf8f3 25%, transparent 25%), linear-gradient(315deg, #faf8f3 25%, #f5f2ed 25%)',
+      texture4: 'repeating-radial-gradient(circle at 0 0, transparent 0, #f5f5f0 10px), repeating-linear-gradient(#e8e8e055, #e8e8e0)',
+      texture5: 'linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px)',
+    };
+    
+    return {
+      backgroundColor: '#faf8f3',
+      backgroundImage: textures[settings.backgroundTexture as keyof typeof textures] || textures.texture1,
+      backgroundSize: settings.backgroundTexture === 'texture5' ? '20px 20px' : (settings.backgroundTexture === 'texture3' ? '40px 40px' : 'auto'),
+    };
+  };
+
   return (
     <div className="relative">
       <div 
         ref={ref}
-        className={`p-8 shadow-lg max-w-md mx-auto relative ${settings.showBackground ? 'bg-white' : 'bg-transparent'}`}
+        className="p-8 shadow-lg max-w-md mx-auto relative"
         style={{ 
           fontFamily: getFontFamily(settings.font),
-          color: settings.textColor
+          color: settings.textColor,
+          ...getBackgroundStyle()
         }}
       >
         {sections.map(renderSection)}

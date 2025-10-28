@@ -1,8 +1,8 @@
-import type { CurrencySymbol, CurrencyFormat } from './types';
+import type { CurrencyFormat } from './types';
 
 export const formatCurrency = (
   amount: number,
-  symbol: CurrencySymbol = '$',
+  symbol: string = '$',
   format: CurrencyFormat = 'symbol_before'
 ): string => {
   const formatter = new Intl.NumberFormat('en-US', {

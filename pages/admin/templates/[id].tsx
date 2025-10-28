@@ -83,7 +83,7 @@ export default function AdminTemplateEditor() {
     currencyFormat: 'symbol_before',
     font: 'mono',
     textColor: '#000000',
-    showBackground: true,
+    backgroundTexture: 'none',
   });
 
   useEffect(() => {
@@ -406,36 +406,36 @@ export default function AdminTemplateEditor() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-bold mb-4">Customize Sections</h2>
-            <p className="text-sm text-gray-600 mb-4">
-              Drag sections to reorder them
-            </p>
+            <SettingsPanel settings={settings} onUpdate={setSettings} />
             
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-            >
-              <SortableContext
-                items={sections.map(s => s.id)}
-                strategy={verticalListSortingStrategy}
+            <div className="mt-6 pt-6 border-t">
+              <h2 className="text-xl font-bold mb-4">Customize Sections</h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Drag sections to reorder them
+              </p>
+              
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
               >
-                <div className="space-y-4">
-                  {sections.map((section) => (
-                    <SortableSection
-                      key={section.id}
-                      section={section}
-                      onUpdate={updateSection}
-                      onRemove={() => removeSection(section.id)}
-                      onDuplicate={() => duplicateSection(section)}
-                    />
-                  ))}
-                </div>
-              </SortableContext>
-            </DndContext>
-            
-            <div className="mt-4 pt-4 border-t">
-              <SettingsPanel settings={settings} onUpdate={setSettings} />
+                <SortableContext
+                  items={sections.map(s => s.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="space-y-4">
+                    {sections.map((section) => (
+                      <SortableSection
+                        key={section.id}
+                        section={section}
+                        onUpdate={updateSection}
+                        onRemove={() => removeSection(section.id)}
+                        onDuplicate={() => duplicateSection(section)}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
             </div>
             
             <div className="mt-4 pt-4 border-t">
