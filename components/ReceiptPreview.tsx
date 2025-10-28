@@ -206,18 +206,60 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       return { backgroundColor: 'white' };
     }
     
-    // Realistic receipt textures - subtle wear, creases, and fold marks
+    // Realistic receipt textures matching reference examples
     const textures = {
-      // Slight crease down the middle (vertical fold)
-      texture1: 'linear-gradient(to right, transparent 49%, rgba(0,0,0,0.02) 49.5%, rgba(0,0,0,0.04) 50%, rgba(0,0,0,0.02) 50.5%, transparent 51%)',
-      // Horizontal fold marks (receipt folded in thirds)
-      texture2: 'linear-gradient(to bottom, transparent 32%, rgba(0,0,0,0.015) 33%, rgba(0,0,0,0.03) 33.5%, rgba(0,0,0,0.015) 34%, transparent 34.5%, transparent 65%, rgba(0,0,0,0.015) 66%, rgba(0,0,0,0.03) 66.5%, rgba(0,0,0,0.015) 67%, transparent 67.5%)',
-      // Slightly worn/aged with subtle staining
-      texture3: 'radial-gradient(ellipse at 20% 30%, rgba(0,0,0,0.01) 0%, transparent 40%), radial-gradient(ellipse at 80% 70%, rgba(0,0,0,0.015) 0%, transparent 35%), radial-gradient(ellipse at 50% 90%, rgba(0,0,0,0.01) 0%, transparent 30%)',
-      // Crumpled texture (multiple creases)
-      texture4: 'linear-gradient(45deg, transparent 48%, rgba(0,0,0,0.015) 49%, rgba(0,0,0,0.02) 50%, rgba(0,0,0,0.015) 51%, transparent 52%), linear-gradient(-45deg, transparent 48%, rgba(0,0,0,0.01) 49.5%, rgba(0,0,0,0.015) 50%, rgba(0,0,0,0.01) 50.5%, transparent 52%)',
-      // Edge wear and center fold combined
-      texture5: 'linear-gradient(to right, rgba(0,0,0,0.02) 0%, transparent 5%, transparent 48%, rgba(0,0,0,0.025) 50%, transparent 52%, transparent 95%, rgba(0,0,0,0.02) 100%), linear-gradient(to bottom, rgba(0,0,0,0.015) 0%, transparent 3%, transparent 97%, rgba(0,0,0,0.015) 100%)',
+      // Texture 1: Very light, minimal creases (cleanest)
+      texture1: [
+        'radial-gradient(ellipse 800px 600px at 60% 40%, rgba(0,0,0,0.008), transparent)',
+        'radial-gradient(ellipse 600px 400px at 30% 70%, rgba(0,0,0,0.006), transparent)',
+        'linear-gradient(25deg, transparent 45%, rgba(0,0,0,0.012) 48%, rgba(0,0,0,0.018) 50%, rgba(0,0,0,0.012) 52%, transparent 55%)',
+        'linear-gradient(155deg, transparent 60%, rgba(0,0,0,0.01) 63%, rgba(0,0,0,0.015) 65%, rgba(0,0,0,0.01) 67%, transparent 70%)',
+      ].join(', '),
+      
+      // Texture 2: Light wrinkles with some diagonal creases
+      texture2: [
+        'radial-gradient(ellipse 700px 500px at 50% 50%, rgba(0,0,0,0.015), transparent)',
+        'linear-gradient(30deg, transparent 30%, rgba(0,0,0,0.015) 35%, rgba(0,0,0,0.025) 38%, rgba(0,0,0,0.015) 41%, transparent 46%)',
+        'linear-gradient(145deg, transparent 55%, rgba(0,0,0,0.012) 60%, rgba(0,0,0,0.022) 63%, rgba(0,0,0,0.012) 66%, transparent 71%)',
+        'linear-gradient(-25deg, transparent 65%, rgba(0,0,0,0.01) 70%, rgba(0,0,0,0.018) 72%, rgba(0,0,0,0.01) 74%, transparent 79%)',
+        'radial-gradient(ellipse 400px 300px at 75% 25%, rgba(0,0,0,0.01), transparent)',
+      ].join(', '),
+      
+      // Texture 3: Medium crumpling with multiple wrinkles
+      texture3: [
+        'radial-gradient(ellipse 600px 450px at 45% 55%, rgba(0,0,0,0.02), transparent)',
+        'linear-gradient(35deg, transparent 20%, rgba(0,0,0,0.02) 28%, rgba(0,0,0,0.035) 32%, rgba(0,0,0,0.02) 36%, transparent 44%)',
+        'linear-gradient(120deg, transparent 45%, rgba(0,0,0,0.018) 52%, rgba(0,0,0,0.03) 56%, rgba(0,0,0,0.018) 60%, transparent 67%)',
+        'linear-gradient(-40deg, transparent 50%, rgba(0,0,0,0.015) 58%, rgba(0,0,0,0.028) 62%, rgba(0,0,0,0.015) 66%, transparent 74%)',
+        'linear-gradient(160deg, transparent 35%, rgba(0,0,0,0.012) 42%, rgba(0,0,0,0.022) 45%, rgba(0,0,0,0.012) 48%, transparent 55%)',
+        'radial-gradient(ellipse 500px 350px at 20% 80%, rgba(0,0,0,0.015), transparent)',
+      ].join(', '),
+      
+      // Texture 4: Heavy crumpling with many overlapping creases
+      texture4: [
+        'radial-gradient(ellipse 550px 400px at 50% 50%, rgba(0,0,0,0.025), transparent)',
+        'linear-gradient(25deg, transparent 15%, rgba(0,0,0,0.025) 25%, rgba(0,0,0,0.045) 30%, rgba(0,0,0,0.025) 35%, transparent 45%)',
+        'linear-gradient(115deg, transparent 30%, rgba(0,0,0,0.022) 40%, rgba(0,0,0,0.04) 45%, rgba(0,0,0,0.022) 50%, transparent 60%)',
+        'linear-gradient(-35deg, transparent 40%, rgba(0,0,0,0.02) 50%, rgba(0,0,0,0.038) 55%, rgba(0,0,0,0.02) 60%, transparent 70%)',
+        'linear-gradient(155deg, transparent 25%, rgba(0,0,0,0.018) 35%, rgba(0,0,0,0.032) 40%, rgba(0,0,0,0.018) 45%, transparent 55%)',
+        'linear-gradient(65deg, transparent 55%, rgba(0,0,0,0.015) 65%, rgba(0,0,0,0.028) 70%, rgba(0,0,0,0.015) 75%, transparent 85%)',
+        'radial-gradient(ellipse 450px 300px at 70% 30%, rgba(0,0,0,0.018), transparent)',
+        'radial-gradient(ellipse 400px 280px at 25% 75%, rgba(0,0,0,0.02), transparent)',
+      ].join(', '),
+      
+      // Texture 5: Very heavily crumpled (most wrinkled)
+      texture5: [
+        'radial-gradient(ellipse 500px 380px at 48% 52%, rgba(0,0,0,0.03), transparent)',
+        'linear-gradient(22deg, transparent 10%, rgba(0,0,0,0.028) 22%, rgba(0,0,0,0.05) 28%, rgba(0,0,0,0.028) 34%, transparent 46%)',
+        'linear-gradient(108deg, transparent 25%, rgba(0,0,0,0.025) 37%, rgba(0,0,0,0.048) 43%, rgba(0,0,0,0.025) 49%, transparent 61%)',
+        'linear-gradient(-42deg, transparent 35%, rgba(0,0,0,0.023) 47%, rgba(0,0,0,0.042) 53%, rgba(0,0,0,0.023) 59%, transparent 71%)',
+        'linear-gradient(148deg, transparent 18%, rgba(0,0,0,0.02) 30%, rgba(0,0,0,0.038) 36%, rgba(0,0,0,0.02) 42%, transparent 54%)',
+        'linear-gradient(72deg, transparent 48%, rgba(0,0,0,0.018) 60%, rgba(0,0,0,0.035) 66%, rgba(0,0,0,0.018) 72%, transparent 84%)',
+        'linear-gradient(-18deg, transparent 58%, rgba(0,0,0,0.015) 68%, rgba(0,0,0,0.03) 73%, rgba(0,0,0,0.015) 78%, transparent 88%)',
+        'radial-gradient(ellipse 420px 290px at 68% 28%, rgba(0,0,0,0.022), transparent)',
+        'radial-gradient(ellipse 380px 260px at 22% 72%, rgba(0,0,0,0.025), transparent)',
+        'radial-gradient(ellipse 350px 240px at 85% 60%, rgba(0,0,0,0.018), transparent)',
+      ].join(', '),
     };
     
     return {
