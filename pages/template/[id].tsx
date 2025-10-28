@@ -3,8 +3,9 @@ import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
 import ReceiptPreview from '../../components/ReceiptPreview';
+import SettingsPanel from '../../components/SettingsPanel';
 import { useTemplates } from '../../contexts/TemplatesContext';
-import { Section } from '../../lib/types';
+import { Section, TemplateSettings } from '../../lib/types';
 import { useAuth } from '../../contexts/AuthContext';
 import html2canvas from 'html2canvas';
 import { FiSave, FiDownload, FiRefreshCw, FiEdit2, FiPlus } from 'react-icons/fi';
@@ -77,12 +78,22 @@ export default function TemplateEditor() {
   const [templateSlug, setTemplateSlug] = useState('');
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingSlug, setIsEditingSlug] = useState(false);
+  const [settings, setSettings] = useState<TemplateSettings>({
+    currency: '$',
+    currencyFormat: 'symbol_before',
+    font: 'mono',
+    textColor: '#000000',
+    showBackground: true,
+  });
 
   useEffect(() => {
     if (template) {
       setSections(template.sections);
       setTemplateName(template.name);
       setTemplateSlug(template.slug);
+      if (template.settings) {
+        setSettings(template.settings);
+      }
     }
   }, [template]);
 
@@ -255,6 +266,7 @@ export default function TemplateEditor() {
             name: templateName,
             slug: `${newSlug}-${Date.now()}`,
             sections: sections,
+            settings: settings,
           },
         }),
       });
@@ -397,6 +409,10 @@ export default function TemplateEditor() {
             </DndContext>
             
             <div className="mt-4 pt-4 border-t">
+              <SettingsPanel settings={settings} onUpdate={setSettings} />
+            </div>
+            
+            <div className="mt-4 pt-4 border-t">
               <div className="text-sm font-medium mb-2">Add New Section</div>
               <div className="grid grid-cols-2 gap-2">
                 <button
@@ -462,7 +478,8 @@ export default function TemplateEditor() {
               
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded">
                 <ReceiptPreview 
-                  sections={sections} 
+                  sections={sections}
+                  settings={settings}
                   showWatermark={!user?.isPremium}
                   previewRef={previewRef}
                 />
