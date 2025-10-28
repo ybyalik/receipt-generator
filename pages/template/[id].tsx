@@ -76,6 +76,8 @@ export default function TemplateEditor() {
 
   const template = getTemplateBySlug(id as string);
   const [sections, setSections] = useState<Section[]>([]);
+  const [isSaved, setIsSaved] = useState(false);
+  const [checkingSaved, setCheckingSaved] = useState(false);
   const [settings, setSettings] = useState<TemplateSettings>({
     currency: '$',
     currencyFormat: 'symbol_before',
@@ -92,6 +94,31 @@ export default function TemplateEditor() {
       }
     }
   }, [template]);
+
+  // Check if user has already saved this template
+  useEffect(() => {
+    async function checkIfSaved() {
+      if (!user || !template) return;
+      
+      setCheckingSaved(true);
+      try {
+        const res = await fetch(`/api/user-templates?userId=${user.uid}`);
+        if (res.ok) {
+          const userTemplates = await res.json();
+          const alreadySaved = userTemplates.some(
+            (t: any) => t.baseTemplateId === template.id
+          );
+          setIsSaved(alreadySaved);
+        }
+      } catch (error) {
+        console.error('Failed to check saved status:', error);
+      } finally {
+        setCheckingSaved(false);
+      }
+    }
+    
+    checkIfSaved();
+  }, [user, template]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -263,6 +290,11 @@ export default function TemplateEditor() {
       router.push('/');
       return;
     }
+
+    if (isSaved) {
+      router.push('/my-templates');
+      return;
+    }
     
     const newSlug = template.slug.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     
@@ -284,6 +316,7 @@ export default function TemplateEditor() {
       
       if (res.ok) {
         showSuccess(`Template saved to your collection!`);
+        setIsSaved(true);
         router.push('/my-templates');
       } else {
         showError('Failed to save template. Please try again.');
@@ -341,16 +374,17 @@ export default function TemplateEditor() {
               </button>
               <button
                 onClick={saveTemplate}
-                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+                className={`flex items-center px-4 py-2 rounded-lg transition-colors cursor-pointer ${
+                  isSaved 
+                    ? 'bg-green-600 text-white hover:bg-green-700' 
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
+                disabled={checkingSaved}
               >
                 <FiSave className="mr-2" />
-                Save Template
+                {checkingSaved ? 'Checking...' : isSaved ? 'Saved ✓' : 'Save Template'}
               </button>
             </div>
-          </div>
-          <div className="flex items-center text-sm text-gray-600">
-            <span className="mr-2">Template ID:</span>
-            <span>/template/{template.slug}</span>
           </div>
         </div>
 

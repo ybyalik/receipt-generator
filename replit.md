@@ -84,12 +84,24 @@ Preferred communication style: Simple, everyday language.
 - Checks user email against NEXT_PUBLIC_ADMIN_EMAILS environment variable
 - Used throughout app to conditionally show admin features
 - Admin dropdown link only visible to whitelisted admin users
+- Proper loading-aware access control on admin routes (no redirect loops)
 
 **Confirmation Modals:**
 - Replaced all `confirm()` dialogs with custom modal components
 - Delete confirmation modals in admin panel, my-templates pages
 - Professional styling with clear messaging and action buttons
 - Prevents accidental destructive actions
+
+**Template Save Status:**
+- Template editor now checks if user has already saved a template
+- Button changes from "Save Template" (blue) to "Saved ✓" (green) when already saved
+- Clicking "Saved ✓" navigates to My Templates page
+- Loading state shows "Checking..." while verifying save status
+
+**UI Cleanup:**
+- Removed "Template ID" display from user-facing template editor
+- Template ID now only visible in admin template editor
+- Cleaner, more professional interface for end users
 
 **UX Improvements:**
 - Added `cursor-pointer` to all clickable elements throughout the app
