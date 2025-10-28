@@ -55,7 +55,7 @@ const Home: NextPage = () => {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
                 href="/templates"
-                className="bg-accent-500 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-md hover:bg-accent-600 hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+                className="bg-navy-700 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:bg-navy-800 hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
               >
                 Browse Templates
               </Link>
@@ -97,14 +97,14 @@ const Home: NextPage = () => {
               key={step.id}
               id={step.id}
               ref={setSectionRef(step.id)}
-              className={`text-center group transition-all duration-700 ${
+              className={`text-center transition-all duration-700 ${
                 isVisible(step.id)
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-8'
               }`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <div className="bg-gradient-to-br from-accent-100 to-accent-200 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:shadow-xl transition-all duration-300">
+              <div className="bg-gradient-to-br from-accent-100 to-accent-200 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 transition-all">
                 <step.icon className="text-4xl text-accent-600" />
               </div>
               <h3 className="text-xl font-semibold text-navy-900 mb-3">{step.title}</h3>
@@ -172,7 +172,7 @@ const Home: NextPage = () => {
                 }`}
                 style={{ transitionDelay: `${index * 80}ms` }}
               >
-                <div className="bg-gradient-to-br from-accent-500 to-accent-600 w-14 h-14 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                <div className="bg-gradient-to-br from-accent-500 to-accent-600 w-14 h-14 rounded-xl flex items-center justify-center mb-5">
                   <feature.icon className="text-2xl text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-navy-900 mb-3">{feature.title}</h3>
@@ -183,15 +183,15 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-accent-500 to-accent-700 text-white py-20">
+      <div className="bg-navy-800 text-white py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Get Started?</h2>
-          <p className="text-xl text-accent-100 mb-10 leading-relaxed">
+          <p className="text-xl text-navy-200 mb-10 leading-relaxed">
             Join thousands of users creating professional receipts every day. Start for free!
           </p>
           <Link
             href="/templates"
-            className="inline-block bg-white text-accent-600 px-10 py-4 rounded-xl text-lg font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transform transition-all"
+            className="inline-block bg-accent-500 text-white px-10 py-4 rounded-xl text-lg font-semibold shadow-xl hover:bg-accent-600 hover:shadow-2xl hover:scale-105 transform transition-all"
           >
             Create Your First Receipt
           </Link>
