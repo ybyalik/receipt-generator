@@ -1,12 +1,29 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { mockTemplates } from '../lib/mockTemplates';
 import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 
 const Admin: NextPage = () => {
+  const router = useRouter();
   const [templates, setTemplates] = useState(mockTemplates);
+
+  const handleCreateTemplate = () => {
+    alert('Create new template feature coming soon! For now, you can create templates by editing the mockTemplates.ts file.');
+  };
+
+  const handleEditTemplate = (templateId: string) => {
+    router.push(`/template/${templateId}`);
+  };
+
+  const handleDeleteTemplate = (templateId: string, templateName: string) => {
+    if (confirm(`Are you sure you want to delete "${templateName}"?`)) {
+      setTemplates(templates.filter(t => t.id !== templateId));
+      alert(`Template "${templateName}" has been deleted (this change is temporary and will reset on page refresh)`);
+    }
+  };
 
   return (
     <Layout>
@@ -17,7 +34,10 @@ const Admin: NextPage = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Admin Panel</h1>
-          <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+          <button 
+            onClick={handleCreateTemplate}
+            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
             <FiPlus className="mr-2" />
             Create New Template
           </button>
@@ -38,10 +58,18 @@ const Admin: NextPage = () => {
                   </p>
                 </div>
                 <div className="flex space-x-2">
-                  <button className="p-2 text-blue-600 hover:bg-blue-50 rounded">
+                  <button 
+                    onClick={() => handleEditTemplate(template.id)}
+                    className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    title="Edit template"
+                  >
                     <FiEdit />
                   </button>
-                  <button className="p-2 text-red-600 hover:bg-red-50 rounded">
+                  <button 
+                    onClick={() => handleDeleteTemplate(template.id, template.name)}
+                    className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+                    title="Delete template"
+                  >
                     <FiTrash2 />
                   </button>
                 </div>
