@@ -12,6 +12,7 @@ The application is fully functional with all core features implemented:
 - ✅ Template customization (/template/[slug]) with drag-and-drop interface
 - ✅ **Section management** - Add, remove, and duplicate sections when editing templates
 - ✅ **Icon-based controls** - Alignment and divider styles use icon buttons instead of dropdowns
+- ✅ **Global template settings** - Configure currency symbol/format, font style, text color, and background visibility for entire templates
 - ✅ Live receipt preview with watermark overlay
 - ✅ PNG download functionality (with html2canvas)
 - ✅ **Admin/User Role Separation**:
