@@ -4,7 +4,7 @@
 
 ReceiptGen is a Next.js-based web application that allows users to create, customize, and download professional receipts. The application provides pre-built templates for various business types (computer repair, restaurant, gas station) and offers a drag-and-drop interface for customizing receipt sections. Users can generate receipts with real-time preview, and premium users can download watermark-free versions.
 
-## Current Status (MVP Complete)
+## Current Status (MVP Complete - Database Enabled)
 
 The application is fully functional with all core features implemented:
 - ✅ Home page with hero section and feature showcase
@@ -12,7 +12,9 @@ The application is fully functional with all core features implemented:
 - ✅ Template editor (/template/[slug]) with drag-and-drop customization
 - ✅ Live receipt preview with watermark overlay
 - ✅ PNG download functionality (with html2canvas)
-- ✅ Admin panel (/admin) for template management
+- ✅ Admin panel (/admin) for template management with CRUD operations
+- ✅ **PostgreSQL database integration** - templates persist across sessions
+- ✅ **API routes** for template CRUD operations
 - ✅ Pricing page with free and premium tiers
 - ✅ Firebase authentication (optional - requires setup)
 
@@ -54,8 +56,9 @@ Preferred communication style: Simple, everyday language.
 
 **State Management**:
 - React Context API for authentication state (AuthContext)
-- Local component state with useState hooks
-- No global state management library (Redux/Zustand)
+- TemplatesContext for shared template state across pages
+- Syncs with PostgreSQL database via API routes
+- Local component state with useState hooks for UI interactions
 
 **Drag-and-Drop**: @dnd-kit library suite
 - Core, sortable, and utilities packages
@@ -82,20 +85,36 @@ Preferred communication style: Simple, everyday language.
 
 ### Data Architecture
 
+**Database**: PostgreSQL with Drizzle ORM
+- Replit-hosted PostgreSQL database (Neon-backed)
+- Schema defined in `shared/schema.ts`
+- Templates table with fields: id, name, slug, sections (JSONB), createdAt, updatedAt
+- Database operations in `server/storage.ts`
+- Migrations via `npm run db:push`
+
 **Templates**:
-- Currently uses mock data from `lib/mockTemplates.ts`
-- No database persistence implemented yet
+- Stored in PostgreSQL database with full CRUD support
+- Automatically seeded from `lib/mockTemplates.ts` on first run
 - Template structure defined by TypeScript interfaces in `lib/types.ts`
+- Unique slug for URL-friendly template access
+
+**API Routes**:
+- `/api/templates` - GET all templates, POST create template
+- `/api/templates/[id]` - GET/PUT/DELETE template by ID
+- `/api/templates/by-slug/[slug]` - GET template by slug
+- All routes handle database operations via storage layer
 
 **Section Types**:
 - Modular section-based architecture
 - Supported sections: header, custom_message, items_list, payment, date_time, barcode
 - Each section has its own configuration options and rendering logic
+- Sections stored as JSONB array in database
 
 **Data Flow**:
-- Templates loaded from mock data
-- User modifications stored in component state
-- No backend API calls for data persistence (placeholder for future implementation)
+- TemplatesContext loads templates from API on mount
+- API routes communicate with PostgreSQL via Drizzle ORM
+- User modifications saved to database via PUT requests
+- All changes persist across page refreshes and sessions
 
 ### Design Patterns
 
@@ -116,11 +135,31 @@ Preferred communication style: Simple, everyday language.
 
 ## External Dependencies
 
-### Authentication & Database
+### Database & ORM
+
+**PostgreSQL** (Replit-hosted):
+- Fully-managed PostgreSQL 16 database hosted on Neon
+- Connection via `DATABASE_URL` environment variable
+- Instant setup through Replit's database tools
+- Usage-based billing (compute time + storage)
+
+**Drizzle ORM** (v0.44.7):
+- Type-safe database queries and schema management
+- Schema definition in `shared/schema.ts`
+- Migration workflow via `drizzle-kit push`
+- PostgreSQL driver: `postgres` (v3.4.7)
+
+**Database Configuration**:
+- Connection string: `process.env.DATABASE_URL`
+- Configuration file: `drizzle.config.ts`
+- Storage layer: `server/storage.ts` (CRUD operations)
+- Environment variables automatically managed by Replit
+
+### Authentication
 
 **Firebase** (v12.4.0):
 - Firebase Authentication for Google OAuth
-- Firestore ready for future data persistence (initialized but not used)
+- Conditional initialization (gracefully handles missing credentials)
 - Configuration via environment variables:
   - `NEXT_PUBLIC_FIREBASE_API_KEY`
   - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
@@ -163,17 +202,19 @@ Preferred communication style: Simple, everyday language.
 - ESLint with Next.js core-web-vitals configuration
 - Strict mode disabled for flexibility
 
-### Missing/Future Integrations
+### Future Enhancements
 
-**Database**: Firestore initialized but not actively used
-- Template storage
-- User preferences and saved receipts
-- Premium subscription status persistence
+**User Data Persistence**:
+- User preferences and settings
+- Saved/favorite receipts
+- Premium subscription status tracking
 
-**Payment Processing**: Not implemented
+**Payment Processing**:
 - Premium upgrade flow exists in UI
-- Backend payment integration needed
+- Backend payment integration needed (Stripe recommended)
+- Subscription management
 
-**Storage**: No image/file storage
-- Logo uploads not persisted
-- Receipt downloads are client-side only
+**File Storage**:
+- Logo uploads (currently not persisted)
+- Receipt history storage
+- Image optimization and CDN integration
