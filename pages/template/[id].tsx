@@ -76,8 +76,8 @@ export default function TemplateEditor() {
 
   const template = getTemplateBySlug(id as string);
   const [sections, setSections] = useState<Section[]>([]);
-  const [isSaved, setIsSaved] = useState(false);
-  const [checkingSaved, setCheckingSaved] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [templateName, setTemplateName] = useState('');
   const [settings, setSettings] = useState<TemplateSettings>({
     currency: '$',
     currencyFormat: 'symbol_before',
@@ -92,33 +92,10 @@ export default function TemplateEditor() {
       if (template.settings) {
         setSettings(template.settings);
       }
+      // Set default name when template loads
+      setTemplateName(`My ${template.name}`);
     }
   }, [template]);
-
-  // Check if user has already saved this template
-  useEffect(() => {
-    async function checkIfSaved() {
-      if (!user || !template) return;
-      
-      setCheckingSaved(true);
-      try {
-        const res = await fetch(`/api/user-templates?userId=${user.uid}`);
-        if (res.ok) {
-          const userTemplates = await res.json();
-          const alreadySaved = userTemplates.some(
-            (t: any) => t.baseTemplateId === template.id
-          );
-          setIsSaved(alreadySaved);
-        }
-      } catch (error) {
-        console.error('Failed to check saved status:', error);
-      } finally {
-        setCheckingSaved(false);
-      }
-    }
-    
-    checkIfSaved();
-  }, [user, template]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -284,19 +261,26 @@ export default function TemplateEditor() {
     }
   };
 
+  const handleSaveClick = () => {
+    if (!user) {
+      showError('Please sign in to save templates');
+      return;
+    }
+    setShowSaveModal(true);
+  };
+
   const saveTemplate = async () => {
     if (!template || !user) {
       showError('Please sign in to save templates');
-      router.push('/');
       return;
     }
 
-    if (isSaved) {
-      router.push('/my-templates');
+    if (!templateName.trim()) {
+      showError('Please enter a template name');
       return;
     }
     
-    const newSlug = template.slug.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const newSlug = templateName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     
     try {
       const res = await fetch('/api/user-templates', {
@@ -306,7 +290,7 @@ export default function TemplateEditor() {
           userId: user.uid,
           baseTemplateId: template.id,
           template: {
-            name: `My ${template.name}`,
+            name: templateName,
             slug: `${newSlug}-${Date.now()}`,
             sections: sections,
             settings: settings,
@@ -315,8 +299,9 @@ export default function TemplateEditor() {
       });
       
       if (res.ok) {
-        showSuccess(`Template saved to your collection!`);
-        setIsSaved(true);
+        showSuccess(`Template "${templateName}" saved to your collection!`);
+        setShowSaveModal(false);
+        setTemplateName(`My ${template.name}`); // Reset for next save
         router.push('/my-templates');
       } else {
         showError('Failed to save template. Please try again.');
@@ -373,16 +358,11 @@ export default function TemplateEditor() {
                 Reset
               </button>
               <button
-                onClick={saveTemplate}
-                className={`flex items-center px-4 py-2 rounded-lg transition-colors cursor-pointer ${
-                  isSaved 
-                    ? 'bg-green-600 text-white hover:bg-green-700' 
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
-                disabled={checkingSaved}
+                onClick={handleSaveClick}
+                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 <FiSave className="mr-2" />
-                {checkingSaved ? 'Checking...' : isSaved ? 'Saved ✓' : 'Save Template'}
+                Save Template
               </button>
             </div>
           </div>
@@ -507,6 +487,46 @@ export default function TemplateEditor() {
           </div>
         </div>
       </div>
+
+      {showSaveModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <h2 className="text-2xl font-bold mb-4">Save Template</h2>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Template Name</label>
+              <input
+                type="text"
+                value={templateName}
+                onChange={(e) => setTemplateName(e.target.value)}
+                placeholder="e.g., My Computer Repair Receipt"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onKeyDown={(e) => e.key === 'Enter' && saveTemplate()}
+                autoFocus
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                Choose a name for your customized template
+              </p>
+            </div>
+            <div className="flex space-x-3">
+              <button
+                onClick={saveTemplate}
+                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => {
+                  setShowSaveModal(false);
+                  setTemplateName(`My ${template.name}`); // Reset name
+                }}
+                className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }

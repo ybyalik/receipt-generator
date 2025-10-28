@@ -92,11 +92,11 @@ Preferred communication style: Simple, everyday language.
 - Professional styling with clear messaging and action buttons
 - Prevents accidental destructive actions
 
-**Template Save Status:**
-- Template editor now checks if user has already saved a template
-- Button changes from "Save Template" (blue) to "Saved ✓" (green) when already saved
-- Clicking "Saved ✓" navigates to My Templates page
-- Loading state shows "Checking..." while verifying save status
+**Template Save Workflow:**
+- Clicking "Save Template" opens a modal where users can name their customized template
+- Default name is "My [Template Name]" but fully customizable
+- Each save creates a new copy in user's collection (allows multiple variations)
+- Modal includes input validation and keyboard shortcuts (Enter to save)
 
 **UI Cleanup:**
 - Removed "Template ID" display from user-facing template editor
