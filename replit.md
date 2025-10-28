@@ -10,6 +10,8 @@ The application is fully functional with all core features implemented:
 - ✅ Home page with hero section and feature showcase
 - ✅ Templates listing page (/templates) with 3 pre-built templates
 - ✅ Template editor (/template/[slug]) with drag-and-drop customization
+- ✅ **Section management** - Add, remove, and duplicate sections when editing templates
+- ✅ **Icon-based controls** - Alignment and divider styles use icon buttons instead of dropdowns
 - ✅ Live receipt preview with watermark overlay
 - ✅ PNG download functionality (with html2canvas)
 - ✅ Admin panel (/admin) for template management with CRUD operations
