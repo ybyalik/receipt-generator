@@ -45,6 +45,13 @@ const Admin: NextPage = () => {
           dividerStyle: 'dashed' as const,
         },
       ],
+      settings: {
+        currency: '$',
+        currencyFormat: 'symbol_before' as const,
+        font: 'mono' as const,
+        textColor: '#000000',
+        backgroundTexture: 'none' as const,
+      },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

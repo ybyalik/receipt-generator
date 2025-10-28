@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
 import ReceiptPreview from '../../components/ReceiptPreview';
-import { Section } from '../../lib/types';
+import { Section, TemplateSettings } from '../../lib/types';
 import { useAuth } from '../../contexts/AuthContext';
 import html2canvas from 'html2canvas';
 import { FiSave, FiDownload, FiRefreshCw, FiEdit2, FiPlus, FiArrowLeft } from 'react-icons/fi';
@@ -71,6 +71,13 @@ export default function MyTemplateEditor() {
 
   const [template, setTemplate] = useState<any>(null);
   const [sections, setSections] = useState<Section[]>([]);
+  const [settings, setSettings] = useState<TemplateSettings>({
+    currency: '$',
+    currencyFormat: 'symbol_before',
+    font: 'mono',
+    textColor: '#000000',
+    backgroundTexture: 'none',
+  });
   const [templateName, setTemplateName] = useState('');
   const [templateSlug, setTemplateSlug] = useState('');
   const [isEditingName, setIsEditingName] = useState(false);
@@ -90,6 +97,13 @@ export default function MyTemplateEditor() {
           const data = await res.json();
           setTemplate(data);
           setSections(data.sections);
+          setSettings(data.settings || {
+            currency: '$',
+            currencyFormat: 'symbol_before',
+            font: 'mono',
+            textColor: '#000000',
+            backgroundTexture: 'none',
+          });
           setTemplateName(data.name);
           setTemplateSlug(data.slug);
         } else {
@@ -469,7 +483,8 @@ export default function MyTemplateEditor() {
               
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded">
                 <ReceiptPreview 
-                  sections={sections} 
+                  sections={sections}
+                  settings={settings}
                   showWatermark={!user?.isPremium}
                   previewRef={previewRef}
                 />
