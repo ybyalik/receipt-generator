@@ -104,6 +104,21 @@ export default function TemplateEditor() {
     })
   );
 
+  // Show loading state while router is initializing
+  if (!router.isReady) {
+    return (
+      <Layout>
+        <div className="max-w-7xl mx-auto px-4 py-12 text-center">
+          <div className="flex items-center justify-center gap-2">
+            <FiRefreshCw className="animate-spin text-navy-600" />
+            <span className="text-gray-600">Loading template...</span>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  // Only show "not found" after router is ready and template is still null
   if (!template) {
     return (
       <Layout>
