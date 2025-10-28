@@ -332,7 +332,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               <div className="flex border rounded overflow-hidden">
                 <button
                   type="button"
-                  onClick={() => onUpdate({ ...section, paymentType: 'cash' })}
+                  onClick={() => {
+                    const updated = {
+                      ...section,
+                      paymentType: 'cash' as const,
+                      fields: paymentFields
+                    };
+                    onUpdate(updated);
+                  }}
                   className={`flex-1 px-4 py-2 font-medium transition-colors ${
                     section.paymentType === 'cash'
                       ? 'bg-gray-100 text-gray-900'
@@ -343,7 +350,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 </button>
                 <button
                   type="button"
-                  onClick={() => onUpdate({ ...section, paymentType: 'card' })}
+                  onClick={() => {
+                    const updated = {
+                      ...section,
+                      paymentType: 'card' as const,
+                      fields: paymentFields
+                    };
+                    onUpdate(updated);
+                  }}
                   className={`flex-1 px-4 py-2 font-medium transition-colors ${
                     section.paymentType === 'card'
                       ? 'bg-gray-100 text-gray-900'
