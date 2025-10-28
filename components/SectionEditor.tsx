@@ -96,7 +96,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               <textarea
                 value={section.businessDetails}
                 onChange={(e) => onUpdate({ ...section, businessDetails: e.target.value })}
-                className="w-full border rounded px-3 py-2 h-24"
+                className="w-full border rounded px-3 py-2 h-24 placeholder:text-gray-400"
                 placeholder="Business Name\nAddress\nPhone"
               />
             </div>
@@ -123,7 +123,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               <textarea
                 value={section.message}
                 onChange={(e) => onUpdate({ ...section, message: e.target.value })}
-                className="w-full border rounded px-3 py-2 h-24"
+                className="w-full border rounded px-3 py-2 h-24 placeholder:text-gray-400"
                 placeholder="Enter your custom message"
               />
             </div>
@@ -146,7 +146,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       onUpdate({ ...section, items: newItems });
                     }}
                     placeholder="Qty"
-                    className="border rounded px-2 py-1 text-sm"
+                    className="border rounded px-2 py-1 text-sm placeholder:text-gray-400"
                   />
                   <input
                     type="text"
@@ -157,7 +157,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       onUpdate({ ...section, items: newItems });
                     }}
                     placeholder="Item"
-                    className="border rounded px-2 py-1 text-sm"
+                    className="border rounded px-2 py-1 text-sm placeholder:text-gray-400"
                   />
                   <input
                     type="number"
@@ -168,7 +168,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       onUpdate({ ...section, items: newItems });
                     }}
                     placeholder="Price"
-                    className="border rounded px-2 py-1 text-sm"
+                    className="border rounded px-2 py-1 text-sm placeholder:text-gray-400"
                   />
                 </div>
               ))}
@@ -182,7 +182,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   ...section, 
                   total: { ...section.total, price: parseFloat(e.target.value) }
                 })}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-3 py-2 placeholder:text-gray-400"
               />
             </div>
           </>
@@ -213,7 +213,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       ...section,
                       card: { ...section.card!, cardNumber: e.target.value }
                     })}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border rounded px-3 py-2 placeholder:text-gray-400"
+                    placeholder="**** **** **** 1234"
                   />
                 </div>
                 <div className="mb-3">
@@ -225,7 +226,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       ...section,
                       card: { ...section.card!, cardType: e.target.value }
                     })}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border rounded px-3 py-2 placeholder:text-gray-400"
+                    placeholder="Visa, Mastercard, etc."
                   />
                 </div>
               </>
@@ -243,7 +245,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 type="text"
                 value={section.date}
                 onChange={(e) => onUpdate({ ...section, date: e.target.value })}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-3 py-2 placeholder:text-gray-400"
+                placeholder="MM/DD/YYYY HH:MM AM"
               />
             </div>
           </>
@@ -258,7 +261,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 type="text"
                 value={section.value}
                 onChange={(e) => onUpdate({ ...section, value: e.target.value })}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-3 py-2 placeholder:text-gray-400"
+                placeholder="1234567890123"
               />
             </div>
             <div className="mb-3">
