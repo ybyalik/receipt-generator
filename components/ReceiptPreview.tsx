@@ -56,7 +56,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                   />
                 </div>
               )}
-              <div className="whitespace-pre-line text-sm font-medium">
+              <div className="whitespace-pre-line text-sm font-medium text-gray-500">
                 {section.businessDetails}
               </div>
             </div>
@@ -67,7 +67,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       case 'custom_message':
         return (
           <div key={section.id} className="mb-4">
-            <div className={`text-${section.alignment} text-sm whitespace-pre-line`}>
+            <div className={`text-${section.alignment} text-sm whitespace-pre-line text-gray-500`}>
               {section.message}
             </div>
             {renderDivider(section.dividerStyle, section.dividerAtBottom)}
@@ -77,7 +77,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       case 'items_list':
         return (
           <div key={section.id} className="mb-4">
-            <div className="space-y-1 text-xs">
+            <div className="space-y-1 text-xs text-gray-500">
               {section.items.map((item, idx) => (
                 <div key={idx} className="flex justify-between">
                   <span>
@@ -106,7 +106,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       case 'payment':
         return (
           <div key={section.id} className="mb-4">
-            <div className="text-xs space-y-1">
+            <div className="text-xs space-y-1 text-gray-500">
               {section.paymentType === 'cash' && section.cash && (
                 <div className="flex justify-between">
                   <span>{section.cash.title}:</span>
@@ -149,7 +149,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       case 'date_time':
         return (
           <div key={section.id} className="mb-4">
-            <div className={`text-${section.alignment} text-xs`}>
+            <div className={`text-${section.alignment} text-xs text-gray-500`}>
               {section.date}
             </div>
             {renderDivider(section.dividerStyle, section.dividerAtBottom)}
