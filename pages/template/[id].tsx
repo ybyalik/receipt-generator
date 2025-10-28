@@ -71,7 +71,7 @@ export default function TemplateEditor() {
   const { id } = router.query;
   const { user } = useAuth();
   const previewRef = useRef<HTMLDivElement>(null);
-  const { getTemplateBySlug, updateTemplate } = useTemplates();
+  const { getTemplateBySlug, updateTemplate, loading: templatesLoading } = useTemplates();
   const { showSuccess, showError } = useToast();
 
   const template = getTemplateBySlug(id as string);
@@ -104,8 +104,8 @@ export default function TemplateEditor() {
     })
   );
 
-  // Show loading state while router is initializing
-  if (!router.isReady) {
+  // Show loading state while router is initializing or templates are loading
+  if (!router.isReady || templatesLoading) {
     return (
       <Layout>
         <div className="max-w-7xl mx-auto px-4 py-12 text-center">
@@ -118,7 +118,7 @@ export default function TemplateEditor() {
     );
   }
 
-  // Only show "not found" after router is ready and template is still null
+  // Only show "not found" after everything has loaded and template is still null
   if (!template) {
     return (
       <Layout>
