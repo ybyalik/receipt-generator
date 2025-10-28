@@ -30,15 +30,15 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
   const renderAlignmentButtons = (currentAlignment: Alignment, onChange: (alignment: Alignment) => void) => {
     return (
       <div className="mb-3">
-        <label className="block text-sm font-medium mb-1">Alignment</label>
-        <div className="flex gap-0 border border-navy-200 rounded-lg overflow-hidden w-fit">
+        <label className="block text-sm font-medium mb-1 text-navy-700">Alignment</label>
+        <div className="flex gap-0 border-2 border-navy-300 rounded-lg overflow-hidden w-fit bg-white">
           <button
             type="button"
             onClick={() => onChange('left')}
-            className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+            className={`px-4 py-2 border-r-2 border-navy-300 transition-colors ${
               currentAlignment === 'left' 
                 ? 'bg-accent-500 text-white' 
-                : 'bg-white text-navy-700 hover:bg-accent-50'
+                : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
             }`}
           >
             <FiAlignLeft size={18} />
@@ -46,10 +46,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
           <button
             type="button"
             onClick={() => onChange('center')}
-            className={`px-4 py-2 border-r border-navy-200 transition-colors ${
+            className={`px-4 py-2 border-r-2 border-navy-300 transition-colors ${
               currentAlignment === 'center' 
                 ? 'bg-accent-500 text-white' 
-                : 'bg-white text-navy-700 hover:bg-accent-50'
+                : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
             }`}
           >
             <FiAlignCenter size={18} />
@@ -60,7 +60,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
             className={`px-4 py-2 transition-colors ${
               currentAlignment === 'right' 
                 ? 'bg-accent-500 text-white' 
-                : 'bg-white text-navy-700 hover:bg-accent-50'
+                : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
             }`}
           >
             <FiAlignRight size={18} />
@@ -73,17 +73,17 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
   const renderDividerIcon = (style: DividerStyle) => {
     switch (style) {
       case 'dashed':
-        return <span className="text-lg font-bold">- - -</span>;
+        return <span className="text-lg font-bold text-navy-900">- - -</span>;
       case 'solid':
-        return <span className="text-lg font-bold">===</span>;
+        return <span className="text-lg font-bold text-navy-900">===</span>;
       case 'dotted':
-        return <span className="text-lg font-bold">...</span>;
+        return <span className="text-lg font-bold text-navy-900">...</span>;
       case 'double':
-        return <span className="text-lg font-bold">⋮⋮⋮</span>;
+        return <span className="text-lg font-bold text-navy-900">⋮⋮⋮</span>;
       case 'stars':
-        return <span className="text-lg font-bold">***</span>;
+        return <span className="text-lg font-bold text-navy-900">***</span>;
       case 'blank':
-        return <span className="text-lg font-bold">&nbsp;&nbsp;&nbsp;</span>;
+        return <span className="text-lg font-bold text-navy-300">[ ]</span>;
     }
   };
 
@@ -261,7 +261,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'dashed'
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     {renderDividerIcon('dashed')}
@@ -272,7 +272,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'solid'
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     {renderDividerIcon('solid')}
@@ -283,7 +283,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'dotted'
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     {renderDividerIcon('dotted')}
@@ -294,7 +294,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'double'
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     {renderDividerIcon('double')}
@@ -305,7 +305,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'stars'
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     {renderDividerIcon('stars')}
@@ -316,7 +316,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 transition-colors ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'blank'
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     {renderDividerIcon('blank')}
@@ -419,7 +419,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       section.totalSizeIncrease === 10
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     +10%
@@ -430,7 +430,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       section.totalSizeIncrease === 20
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     +20%
@@ -441,7 +441,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       section.totalSizeIncrease === 50
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     +50%
@@ -452,7 +452,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       section.totalSizeIncrease === 75
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     +75%
@@ -463,7 +463,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 transition-colors ${
                       section.totalSizeIncrease === 100
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     +100%
@@ -487,7 +487,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'dashed'
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     {renderDividerIcon('dashed')}
@@ -498,7 +498,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'solid'
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     {renderDividerIcon('solid')}
@@ -509,7 +509,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'dotted'
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     {renderDividerIcon('dotted')}
@@ -520,7 +520,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'double'
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     {renderDividerIcon('double')}
@@ -531,7 +531,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'stars'
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     {renderDividerIcon('stars')}
@@ -542,7 +542,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     className={`px-4 py-2 transition-colors ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'blank'
                         ? 'bg-accent-500 text-white'
-                        : 'bg-white text-navy-700 hover:bg-accent-50'
+                        : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                     }`}
                   >
                     {renderDividerIcon('blank')}
@@ -569,7 +569,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   className={`flex-1 px-4 py-2 font-medium transition-colors ${
                     section.paymentType === 'cash'
                       ? 'bg-navy-100 text-navy-900'
-                      : 'bg-white text-navy-600 hover:bg-navy-50'
+                      : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                   }`}
                 >
                   Cash
@@ -580,7 +580,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   className={`flex-1 px-4 py-2 font-medium transition-colors ${
                     section.paymentType === 'card'
                       ? 'bg-navy-100 text-navy-900'
-                      : 'bg-white text-navy-600 hover:bg-navy-50'
+                      : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                   }`}
                 >
                   Card
@@ -753,7 +753,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                     section.dividerStyle === 'dashed'
                       ? 'bg-accent-500 text-white'
-                      : 'bg-white text-navy-700 hover:bg-accent-50'
+                      : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                   }`}
                 >
                   {renderDividerIcon('dashed')}
@@ -764,7 +764,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                     section.dividerStyle === 'solid'
                       ? 'bg-accent-500 text-white'
-                      : 'bg-white text-navy-700 hover:bg-accent-50'
+                      : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                   }`}
                 >
                   {renderDividerIcon('solid')}
@@ -775,7 +775,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                     section.dividerStyle === 'dotted'
                       ? 'bg-accent-500 text-white'
-                      : 'bg-white text-navy-700 hover:bg-accent-50'
+                      : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                   }`}
                 >
                   {renderDividerIcon('dotted')}
@@ -786,7 +786,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                     section.dividerStyle === 'double'
                       ? 'bg-accent-500 text-white'
-                      : 'bg-white text-navy-700 hover:bg-accent-50'
+                      : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                   }`}
                 >
                   {renderDividerIcon('double')}
@@ -797,7 +797,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   className={`px-4 py-2 border-r border-navy-200 transition-colors ${
                     section.dividerStyle === 'stars'
                       ? 'bg-accent-500 text-white'
-                      : 'bg-white text-navy-700 hover:bg-accent-50'
+                      : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                   }`}
                 >
                   {renderDividerIcon('stars')}
@@ -808,7 +808,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   className={`px-4 py-2 transition-colors ${
                     section.dividerStyle === 'blank'
                       ? 'bg-accent-500 text-white'
-                      : 'bg-white text-navy-700 hover:bg-accent-50'
+                      : 'bg-navy-50 text-navy-900 hover:bg-navy-100'
                   }`}
                 >
                   {renderDividerIcon('blank')}

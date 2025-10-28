@@ -18,7 +18,7 @@ export default function ToggleSwitch({ checked, onChange, label }: ToggleSwitchP
         />
         <div
           className={`w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${
-            checked ? 'bg-slate-700' : 'bg-white border-2 border-slate-300'
+            checked ? 'bg-accent-500' : 'bg-navy-200 border-2 border-navy-300'
           }`}
         >
           <div
@@ -31,7 +31,7 @@ export default function ToggleSwitch({ checked, onChange, label }: ToggleSwitchP
           />
         </div>
       </div>
-      {label && <span className="ml-3 text-sm font-medium text-gray-700">{label}</span>}
+      {label && <span className="ml-3 text-sm font-medium text-navy-700">{label}</span>}
     </label>
   );
 }
