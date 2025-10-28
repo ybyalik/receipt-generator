@@ -59,8 +59,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                     onClick={() => onUpdate({ ...settings, currencyFormat: format })}
                     className={`px-4 py-2 border rounded-lg transition-all font-medium ${
                       settings.currencyFormat === format
-                        ? 'bg-accent-500 text-white border-accent-500 shadow-sm'
-                        : 'bg-white text-navy-700 border-navy-200 hover:bg-navy-50 hover:border-accent-500'
+                        ? 'bg-navy-700 text-white border-navy-700 shadow-sm'
+                        : 'bg-gray-100 text-navy-900 border-navy-200 hover:bg-gray-200 hover:border-accent-500'
                     }`}
                   >
                     {formatExample(settings.currency, format)}
@@ -78,8 +78,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 onClick={() => onUpdate({ ...settings, font: 'handwritten' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'handwritten'
-                    ? 'bg-accent-500 text-white border-accent-500 shadow-sm'
-                    : 'bg-white text-navy-700 border-navy-200 hover:bg-navy-50 hover:border-accent-500'
+                    ? 'bg-navy-700 text-white border-navy-700 shadow-sm'
+                    : 'bg-gray-100 text-navy-900 border-navy-200 hover:bg-gray-200 hover:border-accent-500'
                 }`}
                 style={{ fontFamily: 'Caveat, cursive' }}
               >
@@ -89,8 +89,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 onClick={() => onUpdate({ ...settings, font: 'mono' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'mono'
-                    ? 'bg-accent-500 text-white border-accent-500 shadow-sm'
-                    : 'bg-white text-navy-700 border-navy-200 hover:bg-navy-50 hover:border-accent-500'
+                    ? 'bg-navy-700 text-white border-navy-700 shadow-sm'
+                    : 'bg-gray-100 text-navy-900 border-navy-200 hover:bg-gray-200 hover:border-accent-500'
                 }`}
                 style={{ fontFamily: 'Courier New, monospace' }}
               >
@@ -100,8 +100,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 onClick={() => onUpdate({ ...settings, font: 'receipt' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'receipt'
-                    ? 'bg-accent-500 text-white border-accent-500 shadow-sm'
-                    : 'bg-white text-navy-700 border-navy-200 hover:bg-navy-50 hover:border-accent-500'
+                    ? 'bg-navy-700 text-white border-navy-700 shadow-sm'
+                    : 'bg-gray-100 text-navy-900 border-navy-200 hover:bg-gray-200 hover:border-accent-500'
                 }`}
                 style={{ fontFamily: 'monospace' }}
               >
@@ -134,8 +134,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                   onClick={() => onUpdate({ ...settings, backgroundTexture: texture })}
                   className={`px-4 py-2 border rounded-lg transition-all font-medium ${
                     settings.backgroundTexture === texture
-                      ? 'bg-accent-500 text-white border-accent-500 shadow-sm'
-                      : 'bg-white text-navy-700 border-navy-200 hover:bg-navy-50 hover:border-accent-500'
+                      ? 'bg-navy-700 text-white border-navy-700 shadow-sm'
+                      : 'bg-gray-100 text-navy-900 border-navy-200 hover:bg-gray-200 hover:border-accent-500'
                   }`}
                 >
                   {texture === 'none' ? 'Off' : `Texture ${index}`}
