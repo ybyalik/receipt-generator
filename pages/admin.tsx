@@ -6,13 +6,53 @@ import Layout from '../components/Layout';
 import { useTemplates } from '../contexts/TemplatesContext';
 import { useAuth } from '../contexts/AuthContext';
 import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { useToast } from '../components/ToastContainer';
 
 const Admin: NextPage = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading, isAdmin } = useAuth();
   const { templates, addTemplate, deleteTemplate } = useTemplates();
+  const { showSuccess, showError, showWarning } = useToast();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newTemplateName, setNewTemplateName] = useState('');
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string } | null>(null);
+
+  // Wait for auth to load before checking access
+  if (loading) {
+    return (
+      <Layout>
+        <Head>
+          <title>Admin - ReceiptGen</title>
+        </Head>
+        <div className="max-w-7xl mx-auto px-4 py-12 text-center">
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  // Show unauthorized message for non-authenticated or non-admin users
+  if (!user || !isAdmin()) {
+    return (
+      <Layout>
+        <Head>
+          <title>Unauthorized - ReceiptGen</title>
+        </Head>
+        <div className="max-w-7xl mx-auto px-4 py-12 text-center">
+          <h1 className="text-2xl font-bold text-red-600">Unauthorized Access</h1>
+          <p className="mt-2 text-gray-600">
+            {!user ? 'Please sign in to access this page.' : 'You need admin privileges to access this page.'}
+          </p>
+          <button
+            onClick={() => router.push('/')}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+          >
+            Go Home
+          </button>
+        </div>
+      </Layout>
+    );
+  }
 
   const handleCreateTemplate = () => {
     setShowCreateModal(true);
@@ -20,12 +60,12 @@ const Admin: NextPage = () => {
 
   const createTemplate = async () => {
     if (!newTemplateName.trim()) {
-      alert('Please enter a template name');
+      showWarning('Please enter a template name');
       return;
     }
 
     if (!user) {
-      alert('You must be logged in to create templates');
+      showError('You must be logged in to create templates');
       return;
     }
 
@@ -68,14 +108,19 @@ const Admin: NextPage = () => {
 
   const handleDeleteTemplate = async (templateId: string, templateName: string) => {
     if (!user) {
-      alert('You must be logged in to delete templates');
+      showError('You must be logged in to delete templates');
       return;
     }
 
-    if (confirm(`Are you sure you want to delete "${templateName}"?`)) {
-      await deleteTemplate(templateId, user.email);
-      alert(`Template "${templateName}" has been deleted successfully!`);
-    }
+    setDeleteConfirm({ id: templateId, name: templateName });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteConfirm || !user) return;
+    
+    await deleteTemplate(deleteConfirm.id, user.email);
+    showSuccess(`Template "${deleteConfirm.name}" has been deleted!`);
+    setDeleteConfirm(null);
   };
 
   return (
@@ -113,14 +158,14 @@ const Admin: NextPage = () => {
                 <div className="flex space-x-2">
                   <button 
                     onClick={() => handleEditTemplate(template.id)}
-                    className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors cursor-pointer"
                     title="Edit global template"
                   >
                     <FiEdit />
                   </button>
                   <button 
                     onClick={() => handleDeleteTemplate(template.id, template.name)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+                    className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
                     title="Delete template"
                   >
                     <FiTrash2 />
@@ -172,7 +217,7 @@ const Admin: NextPage = () => {
             <div className="flex space-x-3">
               <button
                 onClick={createTemplate}
-                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 Create Template
               </button>
@@ -181,7 +226,32 @@ const Admin: NextPage = () => {
                   setShowCreateModal(false);
                   setNewTemplateName('');
                 }}
-                className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+                className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <h2 className="text-2xl font-bold mb-4">Delete Template</h2>
+            <p className="text-gray-700 mb-6">
+              Are you sure you want to delete "<strong>{deleteConfirm.name}</strong>"? This action cannot be undone.
+            </p>
+            <div className="flex space-x-3">
+              <button
+                onClick={confirmDelete}
+                className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
+              >
+                Delete
+              </button>
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
               >
                 Cancel
               </button>

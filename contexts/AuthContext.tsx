@@ -13,6 +13,7 @@ interface AuthContextType {
   loading: boolean;
   signIn: () => Promise<void>;
   signOut: () => Promise<void>;
+  isAdmin: () => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -47,7 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async () => {
     if (!auth || !googleProvider) {
-      alert('Firebase authentication is not configured. Please add Firebase credentials.');
+      console.error('Firebase authentication is not configured. Please add Firebase credentials.');
       return;
     }
     try {
@@ -68,8 +69,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const isAdmin = () => {
+    if (!user?.email) return false;
+    const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',').map(e => e.trim()) || [];
+    return adminEmails.includes(user.email);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signOut, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

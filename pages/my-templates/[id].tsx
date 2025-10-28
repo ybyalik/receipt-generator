@@ -7,6 +7,7 @@ import { Section, TemplateSettings } from '../../lib/types';
 import { useAuth } from '../../contexts/AuthContext';
 import html2canvas from 'html2canvas';
 import { FiSave, FiDownload, FiRefreshCw, FiEdit2, FiPlus, FiArrowLeft } from 'react-icons/fi';
+import { useToast } from '../../components/ToastContainer';
 import {
   DndContext,
   closestCenter,
@@ -67,6 +68,7 @@ export default function MyTemplateEditor() {
   const router = useRouter();
   const { id } = router.query;
   const { user } = useAuth();
+  const { showSuccess, showError } = useToast();
   const previewRef = useRef<HTMLDivElement>(null);
 
   const [template, setTemplate] = useState<any>(null);
@@ -166,9 +168,7 @@ export default function MyTemplateEditor() {
   };
 
   const removeSection = (sectionId: string) => {
-    if (confirm('Are you sure you want to remove this section?')) {
-      setSections(sections.filter(s => s.id !== sectionId));
-    }
+    setSections(sections.filter(s => s.id !== sectionId));
   };
 
   const duplicateSection = (section: Section) => {
@@ -297,13 +297,13 @@ export default function MyTemplateEditor() {
       });
       
       if (res.ok) {
-        alert(`Template "${templateName}" has been saved successfully!`);
+        showSuccess(`Template "${templateName}" has been saved!`);
       } else {
-        alert('Failed to save template. Please try again.');
+        showError('Failed to save template. Please try again.');
       }
     } catch (error) {
       console.error('Save error:', error);
-      alert('Failed to save template. Please try again.');
+      showError('Failed to save template. Please try again.');
     }
   };
 

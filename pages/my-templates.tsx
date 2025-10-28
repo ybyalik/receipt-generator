@@ -6,12 +6,15 @@ import Layout from '../components/Layout';
 import { useAuth } from '../contexts/AuthContext';
 import { FiEdit, FiTrash2, FiPlus } from 'react-icons/fi';
 import { Template } from '../lib/types';
+import { useToast } from '../components/ToastContainer';
 
 const MyTemplates: NextPage = () => {
   const router = useRouter();
   const { user } = useAuth();
+  const { showSuccess, showError } = useToast();
   const [userTemplates, setUserTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string } | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -39,22 +42,27 @@ const MyTemplates: NextPage = () => {
   const handleDeleteTemplate = async (templateId: string, templateName: string) => {
     if (!user) return;
 
-    if (confirm(`Are you sure you want to delete "${templateName}"?`)) {
-      try {
-        const res = await fetch(`/api/user-templates/${templateId}?userId=${user.uid}`, {
-          method: 'DELETE',
-        });
+    setDeleteConfirm({ id: templateId, name: templateName });
+  };
 
-        if (res.ok) {
-          setUserTemplates(userTemplates.filter(t => t.id !== templateId));
-          alert(`Template "${templateName}" has been deleted successfully!`);
-        } else {
-          alert('Failed to delete template. Please try again.');
-        }
-      } catch (error) {
-        console.error('Delete error:', error);
-        alert('Failed to delete template. Please try again.');
+  const confirmDelete = async () => {
+    if (!deleteConfirm || !user) return;
+
+    try {
+      const res = await fetch(`/api/user-templates/${deleteConfirm.id}?userId=${user.uid}`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        setUserTemplates(userTemplates.filter(t => t.id !== deleteConfirm.id));
+        showSuccess(`Template "${deleteConfirm.name}" has been deleted!`);
+        setDeleteConfirm(null);
+      } else {
+        showError('Failed to delete template. Please try again.');
       }
+    } catch (error) {
+      console.error('Delete error:', error);
+      showError('Failed to delete template. Please try again.');
     }
   };
 
@@ -123,14 +131,14 @@ const MyTemplates: NextPage = () => {
                   <div className="flex space-x-2">
                     <button 
                       onClick={() => handleEditTemplate(template.id)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors cursor-pointer"
                       title="Edit template"
                     >
                       <FiEdit />
                     </button>
                     <button 
                       onClick={() => handleDeleteTemplate(template.id, template.name)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+                      className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
                       title="Delete template"
                     >
                       <FiTrash2 />
@@ -142,6 +150,31 @@ const MyTemplates: NextPage = () => {
           </div>
         )}
       </div>
+
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <h2 className="text-2xl font-bold mb-4">Delete Template</h2>
+            <p className="text-gray-700 mb-6">
+              Are you sure you want to delete "<strong>{deleteConfirm.name}</strong>"? This action cannot be undone.
+            </p>
+            <div className="flex space-x-3">
+              <button
+                onClick={confirmDelete}
+                className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
+              >
+                Delete
+              </button>
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };
