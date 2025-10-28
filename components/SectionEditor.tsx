@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Section, DividerStyle, Alignment } from '../lib/types';
 import { FiChevronDown, FiChevronUp, FiMove, FiTrash2, FiCopy, FiAlignLeft, FiAlignCenter, FiAlignRight } from 'react-icons/fi';
+import ToggleSwitch from './ToggleSwitch';
 
 interface SectionEditorProps {
   section: Section;
@@ -176,14 +177,20 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
           <>
             <div className="mb-3">
               <label className="block text-sm font-medium mb-2">Items</label>
+              <div className="grid grid-cols-[80px_1fr_100px_auto] gap-2 mb-2 text-xs text-gray-600 font-medium">
+                <div>Quantity</div>
+                <div>Item</div>
+                <div>Total Price</div>
+                <div></div>
+              </div>
               {section.items.map((item, idx) => (
-                <div key={idx} className="grid grid-cols-3 gap-2 mb-2">
+                <div key={idx} className="grid grid-cols-[80px_1fr_100px_auto] gap-2 mb-2">
                   <input
                     type="number"
                     value={item.quantity}
                     onChange={(e) => {
                       const newItems = [...section.items];
-                      newItems[idx].quantity = parseFloat(e.target.value);
+                      newItems[idx].quantity = parseFloat(e.target.value) || 0;
                       onUpdate({ ...section, items: newItems });
                     }}
                     placeholder="Qty"
@@ -197,7 +204,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       newItems[idx].item = e.target.value;
                       onUpdate({ ...section, items: newItems });
                     }}
-                    placeholder="Item"
+                    placeholder="Item name"
                     className="border rounded px-2 py-1 text-sm placeholder:text-gray-400"
                   />
                   <input
@@ -205,26 +212,114 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     value={item.price}
                     onChange={(e) => {
                       const newItems = [...section.items];
-                      newItems[idx].price = parseFloat(e.target.value);
+                      newItems[idx].price = parseFloat(e.target.value) || 0;
                       onUpdate({ ...section, items: newItems });
                     }}
-                    placeholder="Price"
+                    placeholder="$0.00"
                     className="border rounded px-2 py-1 text-sm placeholder:text-gray-400"
                   />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newItems = section.items.filter((_, i) => i !== idx);
+                      onUpdate({ ...section, items: newItems });
+                    }}
+                    className="text-red-600 hover:text-red-800 hover:bg-red-50 px-2 rounded transition-colors"
+                    title="Remove item"
+                  >
+                    ×
+                  </button>
                 </div>
               ))}
+              <button
+                type="button"
+                onClick={() => {
+                  const newItems = [...section.items, { quantity: 1, item: '', price: 0 }];
+                  onUpdate({ ...section, items: newItems });
+                }}
+                className="w-full border-2 border-dashed border-gray-300 rounded px-3 py-2 text-sm text-blue-600 hover:border-blue-400 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+              >
+                <span className="text-lg">⊕</span> Add line
+              </button>
             </div>
-            <div className="mb-3">
-              <label className="block text-sm font-medium mb-1">Total</label>
-              <input
-                type="number"
-                value={section.total.price}
-                onChange={(e) => onUpdate({ 
-                  ...section, 
-                  total: { ...section.total, price: parseFloat(e.target.value) }
-                })}
-                className="w-full border rounded px-3 py-2 placeholder:text-gray-400"
-              />
+            
+            <div className="mb-3 pt-3 border-t">
+              <label className="block text-sm font-medium mb-2">Total Lines</label>
+              <div className="grid grid-cols-[1fr_120px_auto] gap-2 mb-2 text-xs text-gray-600 font-medium">
+                <div>Title</div>
+                <div>Value</div>
+                <div></div>
+              </div>
+              {section.totalLines.map((line, idx) => (
+                <div key={idx} className="grid grid-cols-[1fr_120px_auto] gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={line.title}
+                    onChange={(e) => {
+                      const newLines = [...section.totalLines];
+                      newLines[idx].title = e.target.value;
+                      onUpdate({ ...section, totalLines: newLines });
+                    }}
+                    placeholder="e.g., Subtotal"
+                    className="border rounded px-2 py-1 text-sm placeholder:text-gray-400"
+                  />
+                  <input
+                    type="number"
+                    value={line.value}
+                    onChange={(e) => {
+                      const newLines = [...section.totalLines];
+                      newLines[idx].value = parseFloat(e.target.value) || 0;
+                      onUpdate({ ...section, totalLines: newLines });
+                    }}
+                    placeholder="$0.00"
+                    className="border rounded px-2 py-1 text-sm placeholder:text-gray-400"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newLines = section.totalLines.filter((_, i) => i !== idx);
+                      onUpdate({ ...section, totalLines: newLines });
+                    }}
+                    className="text-red-600 hover:text-red-800 hover:bg-red-50 px-2 rounded transition-colors"
+                    title="Remove line"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => {
+                  const newLines = [...section.totalLines, { title: '', value: 0 }];
+                  onUpdate({ ...section, totalLines: newLines });
+                }}
+                className="w-full border-2 border-dashed border-gray-300 rounded px-3 py-2 text-sm text-blue-600 hover:border-blue-400 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 mb-3"
+              >
+                <span className="text-lg">⊕</span> Add line
+              </button>
+              
+              <div className="grid grid-cols-[1fr_120px] gap-2 p-2 bg-gray-50 rounded">
+                <input
+                  type="text"
+                  value={section.total.title}
+                  onChange={(e) => onUpdate({ 
+                    ...section, 
+                    total: { ...section.total, title: e.target.value }
+                  })}
+                  placeholder="Total:"
+                  className="border rounded px-2 py-1 text-sm font-medium placeholder:text-gray-400"
+                />
+                <input
+                  type="number"
+                  value={section.total.price}
+                  onChange={(e) => onUpdate({ 
+                    ...section, 
+                    total: { ...section.total, price: parseFloat(e.target.value) || 0 }
+                  })}
+                  placeholder="$0.00"
+                  className="border rounded px-2 py-1 text-sm font-medium placeholder:text-gray-400"
+                />
+              </div>
             </div>
           </>
         );
@@ -368,15 +463,13 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
           {renderFields()}
           
           <div className="mt-4 pt-4 border-t">
-            <label className="flex items-center text-sm mb-3">
-              <input
-                type="checkbox"
+            <div className="mb-3">
+              <ToggleSwitch
                 checked={section.dividerAtBottom}
-                onChange={(e) => onUpdate({ ...section, dividerAtBottom: e.target.checked })}
-                className="mr-2"
+                onChange={(checked) => onUpdate({ ...section, dividerAtBottom: checked })}
+                label="Divider at the bottom"
               />
-              Divider at the bottom
-            </label>
+            </div>
             {section.dividerAtBottom && (
               <div className="flex gap-0 border rounded overflow-hidden w-fit">
                 <button
