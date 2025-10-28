@@ -709,9 +709,16 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
 
   return (
     <div className="border border-gray-300 rounded-xl bg-white overflow-hidden">
-      <div className={`flex items-center justify-between p-3 bg-navy-50 ${isExpanded ? 'rounded-t-xl' : 'rounded-xl'}`}>
+      <div 
+        className={`flex items-center justify-between p-3 bg-navy-50 cursor-pointer ${isExpanded ? 'rounded-t-xl' : 'rounded-xl'}`}
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
         <div className="flex items-center space-x-2">
-          <button {...dragHandleProps} className="cursor-move text-navy-400 hover:text-navy-600 transition-colors">
+          <button 
+            {...dragHandleProps} 
+            className="cursor-move text-navy-400 hover:text-navy-600 transition-colors"
+            onClick={(e) => e.stopPropagation()}
+          >
             <FiMove />
           </button>
           <div className="flex items-center space-x-2">
@@ -722,7 +729,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
         <div className="flex items-center space-x-2">
           {onDuplicate && (
             <button
-              onClick={onDuplicate}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDuplicate();
+              }}
               className="text-accent-500 hover:text-accent-600 hover:bg-accent-50 p-1 rounded-lg transition-colors cursor-pointer"
               title="Duplicate section"
             >
@@ -731,7 +741,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
           )}
           {onRemove && (
             <button
-              onClick={onRemove}
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove();
+              }}
               className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded-lg transition-colors cursor-pointer"
               title="Remove section"
             >
@@ -739,7 +752,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
             </button>
           )}
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsExpanded(!isExpanded);
+            }}
             className="text-navy-600 hover:text-navy-800 transition-colors cursor-pointer"
           >
             {isExpanded ? <FiChevronUp /> : <FiChevronDown />}
