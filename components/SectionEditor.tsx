@@ -401,6 +401,74 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               </div>
             </div>
             
+            {/* Total Size Increase controls */}
+            <div className="mb-3 pb-3 border-b">
+              <ToggleSwitch
+                checked={section.increaseTotalSize ?? false}
+                onChange={(checked) => onUpdate({ ...section, increaseTotalSize: checked, totalSizeIncrease: checked ? 20 : 0 })}
+                label='Increase "Total" number size'
+              />
+              {section.increaseTotalSize && (
+                <div className="flex gap-0 border rounded overflow-hidden w-fit mt-2">
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, totalSizeIncrease: 10 })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      section.totalSizeIncrease === 10
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    +10%
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, totalSizeIncrease: 20 })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      section.totalSizeIncrease === 20
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    +20%
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, totalSizeIncrease: 50 })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      section.totalSizeIncrease === 50
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    +50%
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, totalSizeIncrease: 75 })}
+                    className={`px-4 py-2 border-r transition-colors ${
+                      section.totalSizeIncrease === 75
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    +75%
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ ...section, totalSizeIncrease: 100 })}
+                    className={`px-4 py-2 transition-colors ${
+                      section.totalSizeIncrease === 100
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    +100%
+                  </button>
+                </div>
+              )}
+            </div>
+            
             {/* Divider after Total controls */}
             <div className="mb-3">
               <ToggleSwitch

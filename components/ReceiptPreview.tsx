@@ -116,7 +116,14 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                     <span>${line.value.toFixed(2)}</span>
                   </div>
                 ))}
-                <div className="flex justify-between font-bold mt-2">
+                <div 
+                  className="flex justify-between font-bold mt-2"
+                  style={
+                    section.increaseTotalSize && section.totalSizeIncrease
+                      ? { fontSize: `${12 * (1 + section.totalSizeIncrease / 100)}px` }
+                      : undefined
+                  }
+                >
                   <span>{section.total.title}:</span>
                   <span>${section.total.price.toFixed(2)}</span>
                 </div>

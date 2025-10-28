@@ -44,6 +44,9 @@ export interface ItemsListSection {
     title: string;
     price: number;
   };
+  // Total size increase
+  increaseTotalSize?: boolean;
+  totalSizeIncrease?: number; // Percentage: 10, 20, 50, 75, 100
   // Divider after items (before total lines)
   dividerAfterItems: boolean;
   dividerAfterItemsStyle: DividerStyle;
