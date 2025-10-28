@@ -1,4 +1,4 @@
-export type DividerStyle = 'none' | 'solid' | 'dashed' | 'dotted' | 'double';
+export type DividerStyle = 'dashed' | 'solid' | 'dotted' | 'double' | 'stars' | 'blank';
 
 export type Alignment = 'left' | 'center' | 'right';
 

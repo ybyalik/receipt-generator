@@ -18,16 +18,25 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
   const ref = previewRef || internalRef;
 
   const renderDivider = (style: string, show: boolean) => {
-    if (!show || style === 'none') return null;
+    if (!show) return null;
     
-    const styles = {
-      solid: 'border-t border-gray-400',
-      dashed: 'border-t border-dashed border-gray-400',
-      dotted: 'border-t border-dotted border-gray-400',
-      double: 'border-t-4 border-double border-gray-400',
+    if (style === 'blank') {
+      return <div className="my-3" />;
+    }
+    
+    const textDividers = {
+      dashed: '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -',
+      solid: '=================================================',
+      dotted: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .',
+      double: '⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮',
+      stars: '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *',
     };
 
-    return <div className={`my-2 ${styles[style as keyof typeof styles] || ''}`} />;
+    return (
+      <div className="my-2 text-center text-gray-400 text-xs overflow-hidden">
+        {textDividers[style as keyof typeof textDividers] || ''}
+      </div>
+    );
   };
 
   const renderSection = (section: Section) => {
