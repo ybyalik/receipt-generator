@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { useTemplates } from '../contexts/TemplatesContext';
+import { useAuth } from '../contexts/AuthContext';
 import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 
 const Admin: NextPage = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const { templates, addTemplate, deleteTemplate } = useTemplates();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newTemplateName, setNewTemplateName] = useState('');
@@ -19,6 +21,11 @@ const Admin: NextPage = () => {
   const createTemplate = async () => {
     if (!newTemplateName.trim()) {
       alert('Please enter a template name');
+      return;
+    }
+
+    if (!user) {
+      alert('You must be logged in to create templates');
       return;
     }
 
@@ -42,7 +49,7 @@ const Admin: NextPage = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    const createdTemplate = await addTemplate(newTemplate);
+    const createdTemplate = await addTemplate(newTemplate, user.email);
     setNewTemplateName('');
     setShowCreateModal(false);
     router.push(`/admin/templates/${createdTemplate.id}`);
@@ -53,8 +60,13 @@ const Admin: NextPage = () => {
   };
 
   const handleDeleteTemplate = async (templateId: string, templateName: string) => {
+    if (!user) {
+      alert('You must be logged in to delete templates');
+      return;
+    }
+
     if (confirm(`Are you sure you want to delete "${templateName}"?`)) {
-      await deleteTemplate(templateId);
+      await deleteTemplate(templateId, user.email);
       alert(`Template "${templateName}" has been deleted successfully!`);
     }
   };

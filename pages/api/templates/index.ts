@@ -1,15 +1,34 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAllTemplates, createTemplate } from '../../../server/storage';
+import { isAdmin } from '../../../lib/auth';
+import { mockTemplates } from '../../../lib/mockTemplates';
+
+let seeded = false;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method === 'GET') {
-      const templates = await getAllTemplates();
+      let templates = await getAllTemplates();
+      
+      if (templates.length === 0 && !seeded) {
+        seeded = true;
+        for (const mockTemplate of mockTemplates) {
+          await createTemplate(mockTemplate);
+        }
+        templates = await getAllTemplates();
+      }
+      
       return res.status(200).json(templates);
     }
     
     if (req.method === 'POST') {
-      const newTemplate = await createTemplate(req.body);
+      const { userEmail, ...templateData } = req.body;
+      
+      if (!isAdmin(userEmail)) {
+        return res.status(403).json({ error: 'Unauthorized: Admin access required' });
+      }
+      
+      const newTemplate = await createTemplate(templateData);
       return res.status(201).json(newTemplate);
     }
     

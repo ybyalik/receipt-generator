@@ -3,11 +3,10 @@ import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
 import ReceiptPreview from '../../components/ReceiptPreview';
-import { useTemplates } from '../../contexts/TemplatesContext';
 import { Section } from '../../lib/types';
 import { useAuth } from '../../contexts/AuthContext';
 import html2canvas from 'html2canvas';
-import { FiSave, FiDownload, FiRefreshCw, FiEdit2, FiPlus } from 'react-icons/fi';
+import { FiSave, FiDownload, FiRefreshCw, FiEdit2, FiPlus, FiArrowLeft } from 'react-icons/fi';
 import {
   DndContext,
   closestCenter,
@@ -64,27 +63,50 @@ function SortableSection({
   );
 }
 
-export default function TemplateEditor() {
+export default function MyTemplateEditor() {
   const router = useRouter();
   const { id } = router.query;
   const { user } = useAuth();
   const previewRef = useRef<HTMLDivElement>(null);
-  const { getTemplateBySlug, updateTemplate } = useTemplates();
 
-  const template = getTemplateBySlug(id as string);
+  const [template, setTemplate] = useState<any>(null);
   const [sections, setSections] = useState<Section[]>([]);
   const [templateName, setTemplateName] = useState('');
   const [templateSlug, setTemplateSlug] = useState('');
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingSlug, setIsEditingSlug] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (template) {
-      setSections(template.sections);
-      setTemplateName(template.name);
-      setTemplateSlug(template.slug);
+    if (!user) {
+      router.push('/');
+      return;
     }
-  }, [template]);
+
+    async function loadTemplate() {
+      try {
+        const res = await fetch(`/api/user-templates/${id}?userId=${user.uid}`);
+        if (res.ok) {
+          const data = await res.json();
+          setTemplate(data);
+          setSections(data.sections);
+          setTemplateName(data.name);
+          setTemplateSlug(data.slug);
+        } else {
+          router.push('/my-templates');
+        }
+      } catch (error) {
+        console.error('Failed to load template:', error);
+        router.push('/my-templates');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (id && user) {
+      loadTemplate();
+    }
+  }, [id, user, router]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -92,6 +114,16 @@ export default function TemplateEditor() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  if (!user || loading) {
+    return (
+      <Layout>
+        <div className="max-w-7xl mx-auto px-4 py-12 text-center">
+          <h1 className="text-2xl font-bold">Loading...</h1>
+        </div>
+      </Layout>
+    );
+  }
 
   if (!template) {
     return (
@@ -235,31 +267,23 @@ export default function TemplateEditor() {
   };
 
   const saveTemplate = async () => {
-    if (!template || !user) {
-      router.push('/');
-      return;
-    }
-    
-    const newSlug = templateSlug.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    if (!template || !user) return;
     
     try {
-      const res = await fetch('/api/user-templates', {
-        method: 'POST',
+      const res = await fetch(`/api/user-templates/${template.id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: user.uid,
-          baseTemplateId: template.id,
-          template: {
+          updates: {
             name: templateName,
-            slug: `${newSlug}-${Date.now()}`,
             sections: sections,
           },
         }),
       });
       
       if (res.ok) {
-        alert(`Template "${templateName}" has been saved to your collection!`);
-        router.push('/my-templates');
+        alert(`Template "${templateName}" has been saved successfully!`);
       } else {
         alert('Failed to save template. Please try again.');
       }
@@ -297,11 +321,19 @@ export default function TemplateEditor() {
   return (
     <Layout>
       <Head>
-        <title>{template.name} - ReceiptGen</title>
+        <title>{template.name} - My Templates - ReceiptGen</title>
       </Head>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-6">
+          <button
+            onClick={() => router.push('/my-templates')}
+            className="flex items-center text-gray-600 hover:text-gray-900 mb-4"
+          >
+            <FiArrowLeft className="mr-2" />
+            Back to My Templates
+          </button>
+          
           <div className="flex items-center justify-between mb-2">
             {isEditingName ? (
               <input
@@ -338,29 +370,6 @@ export default function TemplateEditor() {
                 Save Template
               </button>
             </div>
-          </div>
-          <div className="flex items-center text-sm text-gray-600">
-            <span className="mr-2">URL:</span>
-            {isEditingSlug ? (
-              <input
-                type="text"
-                value={templateSlug}
-                onChange={(e) => setTemplateSlug(e.target.value)}
-                onBlur={() => setIsEditingSlug(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setIsEditingSlug(false)}
-                className="border-b border-blue-500 focus:outline-none px-1"
-                autoFocus
-              />
-            ) : (
-              <span 
-                className="cursor-pointer hover:text-blue-600 transition-colors flex items-center"
-                onClick={() => setIsEditingSlug(true)}
-                title="Click to edit URL slug"
-              >
-                /template/{templateSlug}
-                <FiEdit2 className="ml-1 w-3 h-3" />
-              </span>
-            )}
           </div>
         </div>
 

@@ -4,25 +4,32 @@
 
 ReceiptGen is a Next.js-based web application that allows users to create, customize, and download professional receipts. The application provides pre-built templates for various business types (computer repair, restaurant, gas station) and offers a drag-and-drop interface for customizing receipt sections. Users can generate receipts with real-time preview, and premium users can download watermark-free versions.
 
-## Current Status (MVP Complete - Database Enabled)
+## Current Status (MVP Complete - Admin/User System Implemented)
 
 The application is fully functional with all core features implemented:
 - ✅ Home page with hero section and feature showcase
 - ✅ Templates listing page (/templates) with 3 pre-built templates
-- ✅ Template editor (/template/[slug]) with drag-and-drop customization
+- ✅ Template customization (/template/[slug]) with drag-and-drop interface
 - ✅ **Section management** - Add, remove, and duplicate sections when editing templates
 - ✅ **Icon-based controls** - Alignment and divider styles use icon buttons instead of dropdowns
 - ✅ Live receipt preview with watermark overlay
 - ✅ PNG download functionality (with html2canvas)
-- ✅ Admin panel (/admin) for template management with CRUD operations
-- ✅ **PostgreSQL database integration** - templates persist across sessions
-- ✅ **API routes** for template CRUD operations
+- ✅ **Admin/User Role Separation**:
+  - Admin panel (/admin) for managing global templates (create/edit/delete)
+  - Admin-only template editor (/admin/templates/[id]) for global template modifications
+  - User template customization (/template/[slug]) - saves to personal collection
+  - "My Templates" page (/my-templates) for user's saved templates
+  - Role-based access control via email whitelist
+- ✅ **PostgreSQL database integration** - dual-table architecture:
+  - `templates` table for global templates (admin-managed)
+  - `user_templates` table for user customizations
+- ✅ **API routes** with role-based access control
 - ✅ Pricing page with free and premium tiers
 - ✅ Firebase authentication (optional - requires setup)
 
-## Next Steps
+## Setup Instructions
 
-To enable authentication:
+### Enable Firebase Authentication:
 1. Create a Firebase project at https://console.firebase.google.com/
 2. Enable Google authentication in Firebase Console
 3. Add your Replit domain to Firebase authorized domains
@@ -30,6 +37,18 @@ To enable authentication:
    - NEXT_PUBLIC_FIREBASE_API_KEY
    - NEXT_PUBLIC_FIREBASE_PROJECT_ID
    - NEXT_PUBLIC_FIREBASE_APP_ID
+
+### Configure Admin Access:
+1. Add admin email addresses to your secrets:
+   - NEXT_PUBLIC_ADMIN_EMAILS (comma-separated list)
+   - Example: "admin@example.com,manager@example.com"
+2. Only users with these emails can create/edit/delete global templates
+
+### Security Note:
+⚠️ **Current Limitation**: User template APIs use client-provided userId. In production, implement proper server-side authentication:
+- Use Firebase Admin SDK to verify ID tokens server-side
+- Derive userId from verified session instead of trusting client input
+- Add authentication middleware to all user-templates endpoints
 
 ## User Preferences
 
@@ -81,8 +100,12 @@ Preferred communication style: Simple, everyday language.
 - Premium status tracked in user object (not yet persisted to database)
 
 **Access Control**:
-- Admin panel requires authenticated user
-- Template customization available to all users
+- **Admin Role**: Email-based whitelist (NEXT_PUBLIC_ADMIN_EMAILS)
+  - Only admins can create/edit/delete global templates
+  - Access admin panel and admin template editor
+- **User Role**: All authenticated users
+  - Can customize global templates and save to personal collection
+  - Cannot modify global templates
 - Download restrictions based on premium status (watermark logic)
 
 ### Data Architecture
@@ -90,7 +113,9 @@ Preferred communication style: Simple, everyday language.
 **Database**: PostgreSQL with Drizzle ORM
 - Replit-hosted PostgreSQL database (Neon-backed)
 - Schema defined in `shared/schema.ts`
-- Templates table with fields: id, name, slug, sections (JSONB), createdAt, updatedAt
+- **Dual-table architecture**:
+  - `templates` table: Global templates (admin-managed)
+  - `user_templates` table: User customizations (user-scoped)
 - Database operations in `server/storage.ts`
 - Migrations via `npm run db:push`
 
@@ -101,9 +126,13 @@ Preferred communication style: Simple, everyday language.
 - Unique slug for URL-friendly template access
 
 **API Routes**:
-- `/api/templates` - GET all templates, POST create template
-- `/api/templates/[id]` - GET/PUT/DELETE template by ID
-- `/api/templates/by-slug/[slug]` - GET template by slug
+- **Global Templates** (Admin-protected):
+  - `/api/templates` - GET all templates (public), POST create template (admin-only)
+  - `/api/templates/[id]` - GET template (public), PUT/DELETE (admin-only with userEmail verification)
+  - `/api/templates/by-slug/[slug]` - GET template by slug (public)
+- **User Templates** (User-scoped):
+  - `/api/user-templates` - GET user's templates, POST create user template
+  - `/api/user-templates/[id]` - GET/PUT/DELETE user template (scoped to userId)
 - All routes handle database operations via storage layer
 
 **Section Types**:
@@ -113,10 +142,15 @@ Preferred communication style: Simple, everyday language.
 - Sections stored as JSONB array in database
 
 **Data Flow**:
-- TemplatesContext loads templates from API on mount
-- API routes communicate with PostgreSQL via Drizzle ORM
-- User modifications saved to database via PUT requests
-- All changes persist across page refreshes and sessions
+- **Admin Flow**:
+  - Admin edits global templates at `/admin/templates/[id]`
+  - Saves update global templates in `templates` table
+  - Changes affect all users viewing that template
+- **User Flow**:
+  - User customizes template at `/template/[slug]` (loads from global templates)
+  - "Save Template" creates copy in `user_templates` table
+  - User edits saved templates at `/my-templates/[id]`
+  - Changes only affect that user's personal collection
 
 ### Design Patterns
 

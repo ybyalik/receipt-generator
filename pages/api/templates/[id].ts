@@ -19,13 +19,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     
     if (req.method === 'PUT') {
-      const { userEmail } = req.body;
+      const { userEmail, ...templateData } = req.body;
       
       if (!isAdmin(userEmail)) {
         return res.status(403).json({ error: 'Unauthorized: Admin access required' });
       }
       
-      const updated = await updateTemplate(id, req.body);
+      const updated = await updateTemplate(id, templateData);
       if (!updated) {
         return res.status(404).json({ error: 'Template not found' });
       }
