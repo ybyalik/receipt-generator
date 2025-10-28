@@ -266,11 +266,11 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 label="Divider after Items"
               />
               {section.dividerAfterItems && (
-                <div className="flex gap-0 border border-gray-300 rounded-lg overflow-hidden w-fit mt-2">
+                <div className="flex flex-nowrap gap-0 border border-gray-300 rounded-lg overflow-hidden w-fit mt-2">
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'dashed' })}
-                    className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                    className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'dashed'
                         ? 'bg-gray-100 text-gray-900'
                         : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -281,7 +281,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'solid' })}
-                    className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                    className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'solid'
                         ? 'bg-gray-100 text-gray-900'
                         : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -292,7 +292,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'dotted' })}
-                    className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                    className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'dotted'
                         ? 'bg-gray-100 text-gray-900'
                         : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -303,7 +303,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'double' })}
-                    className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                    className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'double'
                         ? 'bg-gray-100 text-gray-900'
                         : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -314,7 +314,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'stars' })}
-                    className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                    className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'stars'
                         ? 'bg-gray-100 text-gray-900'
                         : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -325,7 +325,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterItemsStyle: 'blank' })}
-                    className={`px-4 py-2 transition-colors cursor-pointer ${
+                    className={`px-3 py-2 transition-colors cursor-pointer ${
                       (section.dividerAfterItemsStyle ?? section.dividerStyle) === 'blank'
                         ? 'bg-gray-100 text-gray-900'
                         : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -492,11 +492,11 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 label="Divider after Total"
               />
               {(section.dividerAfterTotal ?? section.dividerAtBottom) && (
-                <div className="flex gap-0 border border-gray-300 rounded-lg overflow-hidden w-fit mt-2">
+                <div className="flex flex-nowrap gap-0 border border-gray-300 rounded-lg overflow-hidden w-fit mt-2">
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'dashed' })}
-                    className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                    className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'dashed'
                         ? 'bg-gray-100 text-gray-900'
                         : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -507,7 +507,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'solid' })}
-                    className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                    className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'solid'
                         ? 'bg-gray-100 text-gray-900'
                         : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -518,7 +518,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'dotted' })}
-                    className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                    className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'dotted'
                         ? 'bg-gray-100 text-gray-900'
                         : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -529,7 +529,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'double' })}
-                    className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                    className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'double'
                         ? 'bg-gray-100 text-gray-900'
                         : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -540,7 +540,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'stars' })}
-                    className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                    className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'stars'
                         ? 'bg-gray-100 text-gray-900'
                         : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -551,7 +551,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <button
                     type="button"
                     onClick={() => onUpdate({ ...section, dividerAfterTotalStyle: 'blank' })}
-                    className={`px-4 py-2 transition-colors cursor-pointer ${
+                    className={`px-3 py-2 transition-colors cursor-pointer ${
                       (section.dividerAfterTotalStyle ?? section.dividerStyle) === 'blank'
                         ? 'bg-gray-100 text-gray-900'
                         : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -761,11 +761,11 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 />
               </div>
               {section.dividerAtBottom && (
-              <div className="flex gap-0 border border-gray-300 rounded-lg overflow-hidden w-fit">
+              <div className="flex flex-nowrap gap-0 border border-gray-300 rounded-lg overflow-hidden w-fit">
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, dividerStyle: 'dashed' })}
-                  className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                  className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                     section.dividerStyle === 'dashed'
                       ? 'bg-gray-100 text-gray-900'
                       : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -776,7 +776,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, dividerStyle: 'solid' })}
-                  className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                  className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                     section.dividerStyle === 'solid'
                       ? 'bg-gray-100 text-gray-900'
                       : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -787,7 +787,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, dividerStyle: 'dotted' })}
-                  className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                  className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                     section.dividerStyle === 'dotted'
                       ? 'bg-gray-100 text-gray-900'
                       : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -798,7 +798,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, dividerStyle: 'double' })}
-                  className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                  className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                     section.dividerStyle === 'double'
                       ? 'bg-gray-100 text-gray-900'
                       : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -809,7 +809,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, dividerStyle: 'stars' })}
-                  className={`px-4 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
+                  className={`px-3 py-2 border-r border-gray-300 transition-colors cursor-pointer ${
                     section.dividerStyle === 'stars'
                       ? 'bg-gray-100 text-gray-900'
                       : 'bg-white text-gray-900 hover:bg-gray-50'
@@ -820,7 +820,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, dividerStyle: 'blank' })}
-                  className={`px-4 py-2 transition-colors cursor-pointer ${
+                  className={`px-3 py-2 transition-colors cursor-pointer ${
                     section.dividerStyle === 'blank'
                       ? 'bg-gray-100 text-gray-900'
                       : 'bg-white text-gray-900 hover:bg-gray-50'
