@@ -65,7 +65,7 @@ The application includes a full-featured blog at `/blog` with the following capa
 - Rich text editing with Tiptap WYSIWYG editor
 - Toggle between visual and HTML editing modes
 - Draft/Published status management
-- Featured image support
+- Featured image upload with live preview (supports PNG, JPG, GIF up to 10MB)
 - Automatic slug generation from titles
 - Automatic timestamp tracking (created, updated, published)
 

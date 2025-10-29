@@ -87,6 +87,10 @@ web_modules/
 .next
 out
 
+# Uploaded blog images
+public/blog-images/*
+!public/blog-images/.gitkeep
+
 # Nuxt.js build / generate output
 .nuxt
 dist

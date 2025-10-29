@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import TiptapEditor from '../../components/TiptapEditor';
 import type { BlogPost } from '../../shared/schema';
-import { FiEdit2, FiTrash2, FiPlus, FiX } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiPlus, FiX, FiUpload, FiImage } from 'react-icons/fi';
+import Image from 'next/image';
 
 export default function AdminBlog() {
   const { user, isAdmin, loading: authLoading } = useAuth();
@@ -17,6 +18,7 @@ export default function AdminBlog() {
   const [content, setContent] = useState('');
   const [featuredImage, setFeaturedImage] = useState('');
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !isAdmin) {
@@ -111,6 +113,29 @@ export default function AdminBlog() {
     }
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setUploading(true);
+    try {
+      const res = await fetch('/api/blog/upload-image', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      setFeaturedImage(data.url);
+    } catch (error) {
+      console.error('Failed to upload image:', error);
+      alert('Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   if (authLoading || loading) {
     return (
       <Layout>
@@ -166,14 +191,46 @@ export default function AdminBlog() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700">Featured Image URL</label>
-                  <input
-                    type="text"
-                    value={featuredImage}
-                    onChange={(e) => setFeaturedImage(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2"
-                    placeholder="https://example.com/image.jpg"
-                  />
+                  <label className="block text-sm font-medium mb-2 text-gray-700">Featured Image</label>
+                  
+                  <div className="flex items-start gap-4">
+                    <div className="flex-1">
+                      <label className="flex items-center justify-center w-full px-4 py-8 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-navy-500 hover:bg-gray-50 transition-colors">
+                        <div className="text-center">
+                          <FiUpload className="mx-auto h-12 w-12 text-gray-400" />
+                          <p className="mt-2 text-sm text-gray-600">
+                            {uploading ? 'Uploading...' : 'Click to upload image'}
+                          </p>
+                          <p className="mt-1 text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                          disabled={uploading}
+                        />
+                      </label>
+                    </div>
+                    
+                    {featuredImage && (
+                      <div className="w-48 h-32 relative border border-gray-300 rounded-lg overflow-hidden">
+                        <Image
+                          src={featuredImage}
+                          alt="Preview"
+                          fill
+                          className="object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setFeaturedImage('')}
+                          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                        >
+                          <FiX size={16} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div>
