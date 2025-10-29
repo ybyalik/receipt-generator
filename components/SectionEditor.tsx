@@ -104,64 +104,74 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
       case 'header':
         return (
           <>
-            <div className="flex items-start justify-between gap-4 mb-3">
-              <div className="flex-1">
-                <label className="block text-sm font-medium mb-1">Logo</label>
-                <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-blue-400 hover:bg-blue-50 transition-all">
-                  <div className="flex items-center gap-3">
-                    {section.logo && (
-                      <div className="relative flex-shrink-0">
-                        <Image 
-                          src={section.logo} 
-                          alt="Logo preview" 
-                          width={section.logoSize || 64}
-                          height={section.logoSize || 64}
-                          className="object-contain border border-gray-300 rounded-lg bg-white"
-                          unoptimized
-                        />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <label className="cursor-pointer">
-                        <div className="flex flex-col items-center justify-center text-center">
-                          <div className="text-blue-600 font-medium text-sm mb-1">
-                            {section.logo ? 'Change Logo' : 'Click to Upload Logo'}
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            PNG, JPG, or SVG
-                          </div>
-                        </div>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              const reader = new FileReader();
-                              reader.onloadend = () => {
-                                onUpdate({ ...section, logo: reader.result as string });
-                              };
-                              reader.readAsDataURL(file);
-                            }
-                          }}
-                          className="hidden"
-                  />
-                  />
-                      </label>
-                      {section.logo && (
-                        <button
-                          type="button"
-                          onClick={() => onUpdate({ ...section, logo: undefined })}
-                          className="mt-2 text-xs text-red-600 hover:text-red-800 transition-colors cursor-pointer block"
-                        >
-                          Remove Logo
-                        </button>
-                      )}
+            {renderAlignmentButtons(section.alignment, (alignment) => onUpdate({ ...section, alignment }))}
+            <div className="mb-3">
+              <label className="block text-sm font-medium mb-1">Logo</label>
+              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-3 hover:border-blue-400 hover:bg-blue-50 transition-all">
+                <div className="flex items-center gap-3">
+                  {section.logo && (
+                    <div className="relative flex-shrink-0">
+                      <Image 
+                        src={section.logo} 
+                        alt="Logo preview" 
+                        width={section.logoSize || 64}
+                        height={section.logoSize || 64}
+                        className="object-contain border border-gray-300 rounded-lg bg-white"
+                        unoptimized
+                      />
                     </div>
+                  )}
+                  <div className="flex-1">
+                    <label className="cursor-pointer">
+                      <div className="flex flex-col items-center justify-center text-center py-2">
+                        <div className="text-blue-600 font-medium text-sm mb-1">
+                          {section.logo ? 'Change Logo' : 'Click to Upload Logo'}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          PNG, JPG, or SVG
+                        </div>
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              onUpdate({ ...section, logo: reader.result as string });
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        className="hidden"
+                      />
+                    </label>
+                    {section.logo && (
+                      <button
+                        type="button"
+                        onClick={() => onUpdate({ ...section, logo: undefined })}
+                        className="mt-2 text-xs text-red-600 hover:text-red-800 transition-colors cursor-pointer block text-center w-full"
+                      >
+                        Remove Logo
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
-              {renderAlignmentButtons(section.alignment, (alignment) => onUpdate({ ...section, alignment }))}
+              {section.logo && (
+                <div className="mt-2">
+                  <label className="block text-xs text-gray-600 mb-1">Logo Size: {section.logoSize}px</label>
+                  <input
+                    type="range"
+                    min="30"
+                    max="100"
+                    value={section.logoSize}
+                    onChange={(e) => onUpdate({ ...section, logoSize: parseInt(e.target.value) })}
+                    className="w-full"
+                  />
+                </div>
+              )}
             </div>
             <div className="mb-3">
               <label className="block text-sm font-medium mb-1">Business Details</label>
@@ -170,17 +180,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 onChange={(e) => onUpdate({ ...section, businessDetails: e.target.value })}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 h-24 placeholder:text-gray-400"
                 placeholder="Business Name\nAddress\nPhone"
-              />
-            </div>
-            <div className="mb-3">
-              <label className="block text-sm font-medium mb-1">Logo Size: {section.logoSize}px</label>
-              <input
-                type="range"
-                min="30"
-                max="100"
-                value={section.logoSize}
-                onChange={(e) => onUpdate({ ...section, logoSize: parseInt(e.target.value) })}
-                className="w-full"
               />
             </div>
           </>
