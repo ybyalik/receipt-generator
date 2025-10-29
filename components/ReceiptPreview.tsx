@@ -380,7 +380,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                     <div
                       key={colIndex}
                       className="text-gray-400 font-semibold transform rotate-[-45deg] whitespace-nowrap"
-                      style={{ fontSize: '1.5rem', opacity: 0.25 }}
+                      style={{ fontSize: '1.5rem', opacity: 0.02 }}
                     >
                       Sample
                     </div>
