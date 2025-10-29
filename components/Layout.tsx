@@ -48,6 +48,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <Link href="/blog" className="text-navy-600 hover:text-accent-500 font-semibold transition-colors">
                 Blog
               </Link>
+              <Link href="/ai" className="text-navy-600 hover:text-accent-500 font-semibold transition-colors">
+                AI Generator
+              </Link>
               <Link href="/contact" className="text-navy-600 hover:text-accent-500 font-semibold transition-colors">
                 Contact
               </Link>
