@@ -75,6 +75,28 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
             <label className="block text-sm font-medium mb-2 text-navy-700">Font Style</label>
             <div className="flex gap-2 flex-wrap">
               <button
+                onClick={() => onUpdate({ ...settings, font: 'mono' })}
+                className={`px-6 py-2 border rounded-lg transition-all ${
+                  settings.font === 'mono'
+                    ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
+                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
+                }`}
+                style={{ fontFamily: 'Courier New, monospace' }}
+              >
+                Monospace
+              </button>
+              <button
+                onClick={() => onUpdate({ ...settings, font: 'receipt' })}
+                className={`px-6 py-2 border rounded-lg transition-all ${
+                  settings.font === 'receipt'
+                    ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
+                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
+                }`}
+                style={{ fontFamily: 'monospace' }}
+              >
+                Receipt
+              </button>
+              <button
                 onClick={() => onUpdate({ ...settings, font: 'courier' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
                   settings.font === 'courier'

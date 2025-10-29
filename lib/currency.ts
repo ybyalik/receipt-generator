@@ -35,6 +35,10 @@ export const formatCurrency = (
 
 export const getFontFamily = (font: string): string => {
   switch (font) {
+    case 'mono':
+      return "'Courier New', Courier, monospace";
+    case 'receipt':
+      return "monospace";
     case 'courier':
       return "'Courier New', Courier, monospace";
     case 'consolas':
@@ -48,6 +52,10 @@ export const getFontFamily = (font: string): string => {
 
 export const getFontSize = (font: string): string => {
   switch (font) {
+    case 'mono':
+      return '12px';
+    case 'receipt':
+      return '12px';
     case 'courier':
       return '10pt';
     case 'consolas':
@@ -55,6 +63,6 @@ export const getFontSize = (font: string): string => {
     case 'ocr-b':
       return '10pt';
     default:
-      return '10pt';
+      return '12px';
   }
 };

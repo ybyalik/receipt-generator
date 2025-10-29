@@ -326,7 +326,10 @@ export default function TemplateEditor() {
     }
 
     if (previewRef.current) {
-      const canvas = await html2canvas(previewRef.current);
+      const canvas = await html2canvas(previewRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+      });
       const link = document.createElement('a');
       link.download = `${template.name}.png`;
       link.href = canvas.toDataURL();
@@ -336,7 +339,10 @@ export default function TemplateEditor() {
 
   const downloadWithWatermark = async () => {
     if (previewRef.current) {
-      const canvas = await html2canvas(previewRef.current);
+      const canvas = await html2canvas(previewRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+      });
       const link = document.createElement('a');
       link.download = `${template.name}-sample.png`;
       link.href = canvas.toDataURL();
