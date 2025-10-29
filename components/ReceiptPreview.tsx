@@ -277,12 +277,18 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
     };
   };
 
+  const getReceiptWidth = () => {
+    const width = settings.receiptWidth || '80mm';
+    return width === '57mm' ? '216px' : '300px';
+  };
+
   return (
     <div className="relative">
       <div 
         ref={ref}
-        className="p-8 shadow-lg max-w-md mx-auto relative"
+        className="p-8 shadow-lg mx-auto relative"
         style={{ 
+          maxWidth: getReceiptWidth(),
           fontFamily: getFontFamily(settings.font),
           color: settings.textColor,
           ...getBackgroundStyle()

@@ -104,6 +104,7 @@ export type Section =
 export type CurrencyFormat = 'symbol_before' | 'symbol_after' | 'symbol_after_space'; // $2.99, 2.99$, 2.99 $
 export type FontStyle = 'receipt' | 'mono' | 'handwritten'; // Font 1, Font 2, Font 3
 export type BackgroundTexture = 'none' | 'texture1' | 'texture2' | 'texture3' | 'texture4' | 'texture5';
+export type ReceiptWidth = '57mm' | '80mm'; // 2.25" small receipts | 3.125" standard POS
 
 export interface TemplateSettings {
   currency: string; // Custom currency symbol/text (e.g., $, €, USD, etc.)
@@ -111,6 +112,7 @@ export interface TemplateSettings {
   font: FontStyle;
   textColor: string;
   backgroundTexture: BackgroundTexture;
+  receiptWidth?: ReceiptWidth; // Optional for backward compatibility
 }
 
 export interface Template {
