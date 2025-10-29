@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
-import Layout from '@/components/Layout';
-import ReceiptPreview from '@/components/ReceiptPreview';
-import SectionEditor from '@/components/SectionEditor';
-import SettingsPanel from '@/components/SettingsPanel';
-import { FiDownload, FiSave } from 'react-icons/fi';
-import type { Section, TemplateSettings } from '@/lib/types';
+import Layout from '../components/Layout';
+import ReceiptPreview from '../components/ReceiptPreview';
+import SectionEditor from '../components/SectionEditor';
+import SettingsPanel from '../components/SettingsPanel';
+import { FiDownload } from 'react-icons/fi';
+import type { Section, TemplateSettings } from '../lib/types';
 import html2canvas from 'html2canvas';
-import { useRef } from 'react';
 
 export default function AIResult() {
   const router = useRouter();

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import Layout from '@/components/Layout';
+import Layout from '../components/Layout';
 import { FiUpload, FiLoader, FiCheck, FiAlertCircle } from 'react-icons/fi';
-import type { Section, TemplateSettings } from '@/lib/types';
+import type { Section, TemplateSettings } from '../lib/types';
 
 export default function AIReceiptGenerator() {
   const router = useRouter();
