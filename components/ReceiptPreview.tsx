@@ -193,7 +193,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                       JsBarcode(svg, barcodeValue, {
                         format: 'CODE128',
                         width: section.size,
-                        height: 50,
+                        height: section.length || 50,
                         displayValue: false,
                       });
                     } catch (e) {

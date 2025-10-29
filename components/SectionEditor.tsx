@@ -678,7 +678,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
         return (
           <>
             <div className="mb-3">
-              <label className="block text-sm font-medium mb-1">Size: {section.size}</label>
+              <label className="block text-sm font-medium mb-1">Width: {section.size}</label>
               <input
                 type="range"
                 min="1"
@@ -686,6 +686,18 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 step="0.5"
                 value={section.size}
                 onChange={(e) => onUpdate({ ...section, size: parseFloat(e.target.value) })}
+                className="w-full"
+              />
+            </div>
+            <div className="mb-3">
+              <label className="block text-sm font-medium mb-1">Height: {section.length}</label>
+              <input
+                type="range"
+                min="30"
+                max="100"
+                step="5"
+                value={section.length}
+                onChange={(e) => onUpdate({ ...section, length: parseFloat(e.target.value) })}
                 className="w-full"
               />
             </div>
