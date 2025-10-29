@@ -17,6 +17,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'OCRB Receipt';
+  src: url('/fonts/ocrb-receipt.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   /* Override oklch colors with hex values for html2canvas compatibility */
   /* Only standard Tailwind colors - custom colors (navy, accent) are defined in tailwind.config.js */
