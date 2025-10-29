@@ -129,16 +129,17 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                     <span>{formatCurrency(line.value, settings.currency, settings.currencyFormat)}</span>
                   </div>
                 ))}
-                <div 
-                  className="flex justify-between font-bold mt-2"
-                  style={
-                    section.increaseTotalSize && section.totalSizeIncrease
-                      ? { fontSize: `${12 * (1 + section.totalSizeIncrease / 100)}px` }
-                      : undefined
-                  }
-                >
+                <div className="flex justify-between font-bold mt-2">
                   <span>{section.total.title}</span>
-                  <span>{formatCurrency(section.total.price, settings.currency, settings.currencyFormat)}</span>
+                  <span
+                    style={
+                      section.increaseTotalSize && section.totalSizeIncrease
+                        ? { fontSize: `${12 * (1 + section.totalSizeIncrease / 100)}px` }
+                        : undefined
+                    }
+                  >
+                    {formatCurrency(section.total.price, settings.currency, settings.currencyFormat)}
+                  </span>
                 </div>
               </div>
             </div>
