@@ -157,12 +157,21 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
           : (section.cardFields || []);
         
         // Helper to format payment field values
-        const formatPaymentValue = (value: string) => {
-          // Check if the value is a number
-          const numValue = parseFloat(value);
-          if (!isNaN(numValue)) {
-            return formatCurrency(numValue, settings.currency, settings.currencyFormat);
+        const formatPaymentValue = (title: string, value: string) => {
+          // Only format as currency if it's actually a currency field
+          const currencyFields = ['Cash Tendered', 'Change', 'Amount', 'Total', 'Subtotal'];
+          const isCurrencyField = currencyFields.some(cf => title.toLowerCase().includes(cf.toLowerCase()));
+          
+          if (isCurrencyField) {
+            // Remove dollar signs and parse
+            const cleanValue = value.replace(/[$,]/g, '');
+            const numValue = parseFloat(cleanValue);
+            if (!isNaN(numValue)) {
+              return formatCurrency(numValue, settings.currency, settings.currencyFormat);
+            }
           }
+          
+          // For non-currency fields, return as-is
           return value;
         };
         
@@ -173,7 +182,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                 <div key={idx} className="flex justify-between">
                   <span>{field.title}:</span>
                   <span className={idx === paymentFields.length - 1 ? 'font-bold' : ''}>
-                    {formatPaymentValue(field.value)}
+                    {formatPaymentValue(field.title, field.value)}
                   </span>
                 </div>
               ))}
