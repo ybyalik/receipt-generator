@@ -75,6 +75,16 @@ export default function AIReceiptGenerator() {
         textColor: '#000000',
       };
 
+      // Safely parse numeric values from AI response
+      const parseNumber = (value: any): number => {
+        if (typeof value === 'number') return value;
+        if (typeof value === 'string') {
+          const parsed = parseFloat(value);
+          return isNaN(parsed) ? 0 : parsed;
+        }
+        return 0;
+      };
+
       // Header section
       const headerLines: string[] = [];
       if (aiData.businessName) headerLines.push(aiData.businessName);
@@ -133,16 +143,6 @@ export default function AIReceiptGenerator() {
 
       // Payment section
       const paymentFields: Array<{ title: string; value: string }> = [];
-      
-      // Safely parse numeric values from AI response
-      const parseNumber = (value: any): number => {
-        if (typeof value === 'number') return value;
-        if (typeof value === 'string') {
-          const parsed = parseFloat(value);
-          return isNaN(parsed) ? 0 : parsed;
-        }
-        return 0;
-      };
       
       if (aiData.subtotal !== undefined) {
         paymentFields.push({ title: 'Subtotal', value: parseNumber(aiData.subtotal).toFixed(2) });
