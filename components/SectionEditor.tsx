@@ -755,7 +755,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               <input
                 type="range"
                 min="0.5"
-                max="10"
+                max="4"
                 step="0.1"
                 value={section.size}
                 onChange={(e) => onUpdate({ ...section, size: parseFloat(e.target.value) })}
