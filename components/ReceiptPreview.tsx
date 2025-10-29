@@ -123,7 +123,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
               
               {/* Total lines section */}
               <div className={`space-y-1 ${(section.dividerAfterItems) ? 'mt-2' : 'border-t border-gray-300 mt-2 pt-2'}`}>
-                {section.totalLines.map((line, idx) => (
+                {section.totalLines?.map((line, idx) => (
                   <div key={idx} className="flex justify-between">
                     <span>{line.title}</span>
                     <span>{formatCurrency(line.value, settings.currency, settings.currencyFormat)}</span>

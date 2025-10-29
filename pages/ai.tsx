@@ -136,6 +136,7 @@ export default function AIReceiptGenerator() {
             description: item.description || '',
             price: parseNumber(item.price || 0),
           })),
+          totalLines: [],
           dividerStyle: 'dashed',
           dividerAtBottom: true,
         });
