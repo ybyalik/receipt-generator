@@ -317,9 +317,14 @@ export default function AIReceiptGenerator() {
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-navy-900 mb-4">
-              AI Receipt Generator
-            </h1>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <h1 className="text-4xl font-bold text-navy-900">
+                AI Receipt Generator
+              </h1>
+              <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-semibold rounded-full">
+                BETA
+              </span>
+            </div>
             <p className="text-lg text-gray-600">
               Upload a receipt image and let AI automatically create a matching template
             </p>
