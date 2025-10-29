@@ -1,8 +1,9 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { templates, userTemplates } from '../shared/schema';
+import { templates, userTemplates, users } from '../shared/schema';
 import type { Template as ReceiptTemplate, Section } from '../lib/types';
-import { eq, and } from 'drizzle-orm';
+import type { User, NewUser } from '../shared/schema';
+import { eq, and, like, or } from 'drizzle-orm';
 
 const connectionString = process.env.DATABASE_URL!;
 const client = postgres(connectionString);
@@ -196,5 +197,72 @@ export async function deleteUserTemplate(id: string, userId: string): Promise<bo
   const result = await db.delete(userTemplates)
     .where(and(eq(userTemplates.id, parseInt(id)), eq(userTemplates.userId, userId)))
     .returning();
+  return result.length > 0;
+}
+
+// User management functions
+export async function getUserByFirebaseUid(firebaseUid: string): Promise<User | null> {
+  const result = await db.select().from(users).where(eq(users.firebaseUid, firebaseUid));
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function getUserById(id: number): Promise<User | null> {
+  const result = await db.select().from(users).where(eq(users.id, id));
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function getAllUsers(searchQuery?: string): Promise<User[]> {
+  if (searchQuery) {
+    const result = await db.select().from(users).where(
+      or(
+        like(users.email, `%${searchQuery}%`),
+        like(users.displayName, `%${searchQuery}%`)
+      )
+    );
+    return result;
+  }
+  const result = await db.select().from(users);
+  return result;
+}
+
+export async function createUser(userData: NewUser): Promise<User> {
+  const result = await db.insert(users).values(userData).returning();
+  return result[0];
+}
+
+export async function updateUser(id: number, updates: Partial<User>): Promise<User | null> {
+  const result = await db.update(users)
+    .set({
+      ...updates,
+      updatedAt: new Date(),
+    })
+    .where(eq(users.id, id))
+    .returning();
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function updateUserSubscription(
+  firebaseUid: string,
+  subscriptionData: {
+    stripeCustomerId?: string;
+    stripeSubscriptionId?: string;
+    subscriptionPlan?: string;
+    subscriptionStatus?: string;
+    subscriptionEndsAt?: Date;
+    isPremium?: boolean;
+  }
+): Promise<User | null> {
+  const result = await db.update(users)
+    .set({
+      ...subscriptionData,
+      updatedAt: new Date(),
+    })
+    .where(eq(users.firebaseUid, firebaseUid))
+    .returning();
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function deleteUser(id: number): Promise<boolean> {
+  const result = await db.delete(users).where(eq(users.id, id)).returning();
   return result.length > 0;
 }

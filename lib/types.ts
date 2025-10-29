@@ -140,4 +140,9 @@ export interface User {
   displayName: string | null;
   photoURL: string | null;
   isPremium: boolean;
+  stripeCustomerId?: string | null;
+  stripeSubscriptionId?: string | null;
+  subscriptionPlan?: string | null;
+  subscriptionStatus?: string | null;
+  subscriptionEndsAt?: Date | null;
 }

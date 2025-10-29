@@ -28,15 +28,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
-        setUser({
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          displayName: firebaseUser.displayName,
-          photoURL: firebaseUser.photoURL,
-          isPremium: false,
-        });
+        try {
+          const response = await fetch('/api/users/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              firebaseUid: firebaseUser.uid,
+              email: firebaseUser.email,
+              displayName: firebaseUser.displayName,
+              photoURL: firebaseUser.photoURL,
+            }),
+          });
+          
+          if (response.ok) {
+            const dbUser = await response.json();
+            setUser({
+              uid: firebaseUser.uid,
+              email: firebaseUser.email,
+              displayName: firebaseUser.displayName,
+              photoURL: firebaseUser.photoURL,
+              isPremium: dbUser.isPremium || false,
+              stripeCustomerId: dbUser.stripeCustomerId,
+              stripeSubscriptionId: dbUser.stripeSubscriptionId,
+              subscriptionPlan: dbUser.subscriptionPlan,
+              subscriptionStatus: dbUser.subscriptionStatus,
+              subscriptionEndsAt: dbUser.subscriptionEndsAt ? new Date(dbUser.subscriptionEndsAt) : null,
+            });
+          } else {
+            setUser({
+              uid: firebaseUser.uid,
+              email: firebaseUser.email,
+              displayName: firebaseUser.displayName,
+              photoURL: firebaseUser.photoURL,
+              isPremium: false,
+            });
+          }
+        } catch (error) {
+          console.error('Error syncing user:', error);
+          setUser({
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            displayName: firebaseUser.displayName,
+            photoURL: firebaseUser.photoURL,
+            isPremium: false,
+          });
+        }
       } else {
         setUser(null);
       }
