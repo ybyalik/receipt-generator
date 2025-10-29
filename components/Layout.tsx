@@ -35,6 +35,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <Link href="/templates" className="text-navy-600 hover:text-accent-500 font-medium transition-colors">
                 Templates
               </Link>
+              <Link href="/pricing" className="text-navy-600 hover:text-accent-500 font-medium transition-colors">
+                Pricing
+              </Link>
             </div>
             <div className="flex items-center space-x-4">
               {user ? (
