@@ -1,9 +1,9 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { templates, userTemplates, users } from '../shared/schema';
+import { templates, userTemplates, users, blogPosts } from '../shared/schema';
 import type { Template as ReceiptTemplate, Section } from '../lib/types';
-import type { User, NewUser } from '../shared/schema';
-import { eq, and, like, or } from 'drizzle-orm';
+import type { User, NewUser, BlogPost, NewBlogPost } from '../shared/schema';
+import { eq, and, like, or, desc } from 'drizzle-orm';
 
 const connectionString = process.env.DATABASE_URL!;
 const client = postgres(connectionString);
@@ -264,5 +264,57 @@ export async function updateUserSubscription(
 
 export async function deleteUser(id: number): Promise<boolean> {
   const result = await db.delete(users).where(eq(users.id, id)).returning();
+  return result.length > 0;
+}
+
+// Blog Posts Functions
+export async function getAllBlogPosts(): Promise<BlogPost[]> {
+  const result = await db.select().from(blogPosts).orderBy(desc(blogPosts.createdAt));
+  return result;
+}
+
+export async function getPublishedBlogPosts(): Promise<BlogPost[]> {
+  const result = await db.select().from(blogPosts)
+    .where(eq(blogPosts.status, 'published'))
+    .orderBy(desc(blogPosts.publishedAt));
+  return result;
+}
+
+export async function getBlogPostById(id: number): Promise<BlogPost | null> {
+  const result = await db.select().from(blogPosts).where(eq(blogPosts.id, id));
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+  const result = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug));
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createBlogPost(post: NewBlogPost): Promise<BlogPost> {
+  const result = await db.insert(blogPosts).values({
+    ...post,
+    publishedAt: post.status === 'published' ? new Date() : null,
+  }).returning();
+  return result[0];
+}
+
+export async function updateBlogPost(id: number, updates: Partial<NewBlogPost>): Promise<BlogPost | null> {
+  const currentPost = await getBlogPostById(id);
+  const wasPublished = currentPost?.status === 'published';
+  const isNowPublished = updates.status === 'published';
+  
+  const result = await db.update(blogPosts)
+    .set({
+      ...updates,
+      updatedAt: new Date(),
+      publishedAt: !wasPublished && isNowPublished ? new Date() : currentPost?.publishedAt,
+    })
+    .where(eq(blogPosts.id, id))
+    .returning();
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function deleteBlogPost(id: number): Promise<boolean> {
+  const result = await db.delete(blogPosts).where(eq(blogPosts.id, id)).returning();
   return result.length > 0;
 }
