@@ -101,7 +101,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         My Templates
                       </Link>
 
-                      {user.isPremium && (
+                      {user.stripeCustomerId && (
                         <button
                           onClick={async () => {
                             setIsDropdownOpen(false);
