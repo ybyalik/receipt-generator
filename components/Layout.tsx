@@ -46,8 +46,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const navLinks = [
     { href: '/templates', label: 'Templates' },
-    { href: '/blog', label: 'Blog' },
     { href: '/ai', label: 'AI Generator' },
+    { href: '/blog', label: 'Blog' },
     { href: '/contact', label: 'Contact' },
   ];
 
