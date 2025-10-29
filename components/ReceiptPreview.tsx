@@ -31,9 +31,9 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
     // Special handling for double (two rows of dots)
     if (style === 'double') {
       return (
-        <div className="my-2 text-center overflow-hidden leading-tight">
-          <div className="whitespace-nowrap">• • • • • • • • • • • • • • • • • • • • • • • • • • • • • • •</div>
-          <div className="whitespace-nowrap">• • • • • • • • • • • • • • • • • • • • • • • • • • • • • • •</div>
+        <div className="my-2 text-center overflow-hidden" style={{ lineHeight: '0.5' }}>
+          <div className="whitespace-nowrap">••••••••••••••••••••••••••••••</div>
+          <div className="whitespace-nowrap">••••••••••••••••••••••••••••••</div>
         </div>
       );
     }

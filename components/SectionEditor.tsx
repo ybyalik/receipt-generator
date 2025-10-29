@@ -91,9 +91,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
       case 'solid':
         return <span className="text-lg font-bold text-navy-900">===</span>;
       case 'dotted':
-        return <span className="text-lg font-bold text-navy-900">...</span>;
+        return <span className="text-lg font-bold text-navy-900">• • •</span>;
       case 'double':
-        return <span className="text-lg font-bold text-navy-900">⋮⋮⋮</span>;
+        return (
+          <div className="flex flex-col gap-0 leading-none text-lg font-bold text-navy-900">
+            <div>• • •</div>
+            <div>• • •</div>
+          </div>
+        );
       case 'stars':
         return <span className="text-lg font-bold text-navy-900">***</span>;
       case 'blank':
