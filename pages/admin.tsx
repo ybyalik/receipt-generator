@@ -177,7 +177,15 @@ const Admin: NextPage = () => {
         </div>
 
         <div className="mt-8 bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Available Section Types</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Available Section Types</h2>
+            <button
+              onClick={() => router.push('/admin/section-templates')}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer"
+            >
+              <FiEdit /> Manage Section Defaults
+            </button>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { name: 'Header', desc: 'Business logo and details' },

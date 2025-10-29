@@ -9,6 +9,7 @@ import { Section, TemplateSettings } from '../../../lib/types';
 import { useAuth } from '../../../contexts/AuthContext';
 import { FiSave, FiRefreshCw, FiEdit2, FiPlus, FiArrowLeft } from 'react-icons/fi';
 import { useToast } from '../../../components/ToastContainer';
+import { getSectionDefault } from '../../../lib/sectionDefaults';
 import {
   DndContext,
   closestCenter,
@@ -208,93 +209,15 @@ export default function AdminTemplateEditor() {
     setSections(newSections);
   };
 
-  const addSection = (type: Section['type']) => {
+  const addSection = async (type: Section['type']) => {
     const newId = `${type}-${Date.now()}`;
-    let newSection: Section;
-
-    switch (type) {
-      case 'header':
-        newSection = {
-          type: 'header',
-          id: newId,
-          alignment: 'center',
-          logoSize: 50,
-          businessDetails: 'Your Business Name\nYour Address\nCity, State ZIP',
-          dividerAtBottom: true,
-          dividerStyle: 'dashed',
-        };
-        break;
-      case 'custom_message':
-        newSection = {
-          type: 'custom_message',
-          id: newId,
-          alignment: 'center',
-          message: 'Thank you for your business!',
-          dividerAtBottom: true,
-          dividerStyle: 'dashed',
-        };
-        break;
-      case 'items_list':
-        newSection = {
-          type: 'items_list',
-          id: newId,
-          items: [
-            { quantity: 1, item: 'Item 1', price: 10.00 },
-          ],
-          totalLines: [
-            { title: 'Subtotal:', value: 10.00 },
-          ],
-          tax: { title: 'Tax:', value: 0.80 },
-          total: { title: 'Total:', price: 10.80 },
-          dividerAfterItems: false,
-          dividerAfterItemsStyle: 'dashed',
-          dividerAfterTotal: true,
-          dividerAfterTotalStyle: 'dashed',
-        };
-        break;
-      case 'payment':
-        newSection = {
-          type: 'payment',
-          id: newId,
-          paymentType: 'card',
-          cashFields: [
-            { title: 'Cash Tendered', value: '$100.00' },
-            { title: 'Change', value: '$0.00' },
-          ],
-          cardFields: [
-            { title: 'Card number', value: '**** **** **** 1234' },
-            { title: 'Card type', value: 'Visa' },
-            { title: 'Card entry', value: 'Chip' },
-            { title: 'Date/time', value: new Date().toLocaleString() },
-            { title: 'Reference #', value: 'REF123456789' },
-            { title: 'Status', value: 'APPROVED' },
-          ],
-          dividerAtBottom: true,
-          dividerStyle: 'dashed',
-        };
-        break;
-      case 'date_time':
-        newSection = {
-          type: 'date_time',
-          id: newId,
-          alignment: 'left',
-          date: new Date().toLocaleString(),
-          dividerAtBottom: true,
-          dividerStyle: 'dashed',
-        };
-        break;
-      case 'barcode':
-        newSection = {
-          type: 'barcode',
-          id: newId,
-          size: 2,
-          length: 13,
-          value: '1234567890123',
-          dividerAtBottom: true,
-          dividerStyle: 'dashed',
-        };
-        break;
-    }
+    const defaultData = await getSectionDefault(type);
+    
+    const newSection: Section = {
+      type,
+      id: newId,
+      ...defaultData,
+    } as Section;
 
     setSections([...sections, newSection]);
   };
