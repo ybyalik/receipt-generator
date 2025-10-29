@@ -127,12 +127,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <footer className="bg-navy-900 text-white py-8 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center space-y-6">
-            <div className="flex items-center space-x-8">
-              <Link href="/contact" className="text-white hover:text-gray-300 transition-colors font-medium">
-                Contact
-              </Link>
-            </div>
-            
             <div className="flex justify-center">
               <Image 
                 src="/logo-footer.png" 
@@ -141,6 +135,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 height={60} 
                 style={{ width: 'auto', height: '60px' }}
               />
+            </div>
+            
+            <div className="flex items-center space-x-8">
+              <Link href="/contact" className="text-white hover:text-gray-300 transition-colors font-medium">
+                Contact
+              </Link>
             </div>
             
             <div className="text-center space-y-2">
