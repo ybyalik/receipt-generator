@@ -119,7 +119,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   onClick={signIn}
                   className="bg-accent-500 text-white px-6 py-2 rounded-lg hover:bg-accent-600 font-semibold transition-all hover:shadow-md cursor-pointer"
                 >
-                  Sign In
+                  Register/Login
                 </button>
               )}
             </div>
