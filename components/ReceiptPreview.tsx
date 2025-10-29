@@ -217,22 +217,24 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
         const barcodeValue = section.value || '1234567890123';
         return (
           <div key={section.id} className="mb-4">
-            <div className="w-full overflow-hidden">
+            <div className="w-full flex justify-center">
               <svg
                 ref={(svg) => {
                   if (svg && barcodeValue) {
                     try {
                       JsBarcode(svg, barcodeValue, {
                         format: 'CODE128',
-                        width: section.size,
+                        width: section.size || 2,
                         height: section.length || 50,
                         displayValue: false,
+                        margin: 0,
                       });
                     } catch (e) {
                       console.error('Barcode generation error:', e);
                     }
                   }
                 }}
+                className="w-full"
                 style={{ maxWidth: '100%', height: 'auto' }}
               />
             </div>
