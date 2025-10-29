@@ -19,6 +19,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({ content, onChange }) => {
   const [htmlContent, setHtmlContent] = useState(content);
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit,
       Link.configure({
