@@ -30,6 +30,12 @@ export default function AdminUsers() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editForm, setEditForm] = useState({
+    displayName: '',
+    email: '',
+    subscriptionEndsAt: '',
+  });
 
   const fetchUsers = useCallback(async (search?: string) => {
     if (!user?.email) return;
@@ -111,6 +117,39 @@ export default function AdminUsers() {
       }
 
       showSuccess(`User ${!currentStatus ? 'granted' : 'revoked'} premium access`);
+      fetchUsers(searchQuery);
+    } catch (error: any) {
+      showError(error.message || 'Failed to update user');
+    }
+  };
+
+  const handleEditUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user?.email || !editingUser) return;
+
+    try {
+      const updates: any = {
+        userEmail: user.email,
+        displayName: editForm.displayName,
+        email: editForm.email,
+      };
+
+      if (editForm.subscriptionEndsAt) {
+        updates.subscriptionEndsAt = new Date(editForm.subscriptionEndsAt);
+      }
+
+      const response = await fetch(`/api/admin/users/${editingUser.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update user');
+      }
+
+      showSuccess('User updated successfully');
+      setEditingUser(null);
       fetchUsers(searchQuery);
     } catch (error: any) {
       showError(error.message || 'Failed to update user');
@@ -231,7 +270,9 @@ export default function AdminUsers() {
                       </td>
                       <td className="py-4 px-4">
                         <span className="text-navy-700 capitalize">
-                          {userData.subscriptionPlan || 'Free'}
+                          {userData.isPremium && !userData.subscriptionPlan 
+                            ? 'Manual Premium' 
+                            : userData.subscriptionPlan || 'Free'}
                         </span>
                       </td>
                       <td className="py-4 px-4">
@@ -255,6 +296,22 @@ export default function AdminUsers() {
                       </td>
                       <td className="py-4 px-4">
                         <div className="flex gap-2">
+                          <button
+                            onClick={() => {
+                              setEditingUser(userData);
+                              setEditForm({
+                                displayName: userData.displayName || '',
+                                email: userData.email,
+                                subscriptionEndsAt: userData.subscriptionEndsAt 
+                                  ? new Date(userData.subscriptionEndsAt).toISOString().split('T')[0]
+                                  : '',
+                              });
+                            }}
+                            className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors cursor-pointer"
+                            title="Edit User"
+                          >
+                            <FiEdit2 />
+                          </button>
                           <button
                             onClick={() => togglePremium(userData.id, userData.isPremium)}
                             className={`p-2 rounded-lg transition-colors cursor-pointer ${
@@ -283,6 +340,69 @@ export default function AdminUsers() {
           </div>
         </div>
       </div>
+
+      {editingUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6">
+            <h3 className="text-xl font-bold text-navy-900 mb-4">Edit User</h3>
+            <form onSubmit={handleEditUser}>
+              <div className="space-y-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-navy-700 mb-2">
+                    Display Name
+                  </label>
+                  <input
+                    type="text"
+                    value={editForm.displayName}
+                    onChange={(e) => setEditForm({ ...editForm, displayName: e.target.value })}
+                    className="w-full px-4 py-2 border border-navy-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500"
+                    placeholder="Enter display name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-navy-700 mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={editForm.email}
+                    onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                    className="w-full px-4 py-2 border border-navy-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500"
+                    placeholder="Enter email"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-navy-700 mb-2">
+                    Subscription Ends At (Optional)
+                  </label>
+                  <input
+                    type="date"
+                    value={editForm.subscriptionEndsAt}
+                    onChange={(e) => setEditForm({ ...editForm, subscriptionEndsAt: e.target.value })}
+                    className="w-full px-4 py-2 border border-navy-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-3 justify-end">
+                <button
+                  type="button"
+                  onClick={() => setEditingUser(null)}
+                  className="px-4 py-2 bg-navy-100 text-navy-700 rounded-lg hover:bg-navy-200 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors cursor-pointer"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
