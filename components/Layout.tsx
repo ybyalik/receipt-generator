@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../contexts/AuthContext';
-import { FiUser, FiLogOut, FiChevronDown, FiSettings, FiHeart } from 'react-icons/fi';
+import { FiUser, FiLogOut, FiChevronDown, FiSettings, FiHeart, FiUsers } from 'react-icons/fi';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -59,14 +59,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       </div>
                       
                       {isAdmin() && (
-                        <Link
-                          href="/admin"
-                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-navy-50 transition-colors cursor-pointer"
-                          onClick={() => setIsDropdownOpen(false)}
-                        >
-                          <FiSettings className="mr-3 w-4 h-4" />
-                          Admin Panel
-                        </Link>
+                        <>
+                          <Link
+                            href="/admin"
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-navy-50 transition-colors cursor-pointer"
+                            onClick={() => setIsDropdownOpen(false)}
+                          >
+                            <FiSettings className="mr-3 w-4 h-4" />
+                            Admin Panel
+                          </Link>
+                          <Link
+                            href="/admin/users"
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-navy-50 transition-colors cursor-pointer"
+                            onClick={() => setIsDropdownOpen(false)}
+                          >
+                            <FiUsers className="mr-3 w-4 h-4" />
+                            Users
+                          </Link>
+                        </>
                       )}
                       
                       <Link
