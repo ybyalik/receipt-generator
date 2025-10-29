@@ -31,21 +31,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: `Price ID not configured for ${plan} plan. Please contact support.` });
     }
 
-    if (user.stripeSubscriptionId) {
-      const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId, {
-        expand: ['latest_invoice.payment_intent'],
-      });
-
-      if (subscription.status === 'active' || subscription.status === 'trialing') {
-        const latestInvoice = subscription.latest_invoice as Stripe.Invoice & {
-          payment_intent?: Stripe.PaymentIntent;
-        };
-        const paymentIntent = latestInvoice.payment_intent;
-        
-        return res.status(200).json({
-          subscriptionId: subscription.id,
-          clientSecret: paymentIntent?.client_secret,
+    // Only check existing subscription if user is actually premium
+    if (user.isPremium && user.stripeSubscriptionId) {
+      try {
+        const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId, {
+          expand: ['latest_invoice.payment_intent'],
         });
+
+        if (subscription.status === 'active' || subscription.status === 'trialing') {
+          const latestInvoice = subscription.latest_invoice as Stripe.Invoice & {
+            payment_intent?: Stripe.PaymentIntent;
+          };
+          const paymentIntent = latestInvoice.payment_intent;
+          
+          return res.status(200).json({
+            subscriptionId: subscription.id,
+            clientSecret: paymentIntent?.client_secret,
+          });
+        }
+      } catch (error) {
+        // If subscription doesn't exist in Stripe, continue to create a new one
+        console.error('Error retrieving subscription:', error);
       }
     }
 
