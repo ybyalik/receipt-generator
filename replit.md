@@ -56,7 +56,19 @@ The architecture emphasizes component composition, including higher-order `Layou
 -   **JsBarcode** (v3.12.1): For generating barcode graphics.
 -   **date-fns** (v4.1.0): For date formatting and manipulation.
 
+### Email Service
+
+-   **Resend** (v4.0.0): Transactional email service for contact form submissions. Configured via Replit integration for secure API key management. Emails sent from/to `contact@receiptgenerator.net`.
+
 ## Recent Updates (October 29, 2025)
+
+### Contact Form Integration with Resend
+The contact form now uses the Resend.com API for professional email handling:
+- **API Integration**: Contact form submissions are sent via `/api/contact` endpoint using Resend
+- **Email Delivery**: Emails sent from/to `contact@receiptgenerator.net` with user's email as reply-to
+- **User Experience**: Real-time feedback with loading states, success messages, and error handling
+- **Security**: API key managed through Replit's secure connection system
+- **Technical**: Uses Replit's connection credentials with automatic token rotation
 
 ### Date & Time Field Enhancement
 The Date & Time section now includes:

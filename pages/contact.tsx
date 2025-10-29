@@ -10,23 +10,39 @@ export default function Contact() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
     
-    const mailtoLink = `mailto:contact@receiptgenerator.net?subject=${encodeURIComponent(
-      formData.subject
-    )}&body=${encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
-    )}`;
-    
-    window.location.href = mailtoLink;
-    setSubmitted(true);
-    
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
+
+      setSubmitted(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
-      setSubmitted(false);
-    }, 3000);
+      
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 5000);
+    } catch (err) {
+      console.error('Error submitting form:', err);
+      setError('Failed to send message. Please try again or email us directly at contact@receiptgenerator.net');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -61,7 +77,15 @@ export default function Contact() {
             {submitted && (
               <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                 <p className="text-green-800 text-center">
-                  Your email client should open shortly. Thank you for contacting us!
+                  Thank you for contacting us! We'll get back to you soon.
+                </p>
+              </div>
+            )}
+
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-800 text-center">
+                  {error}
                 </p>
               </div>
             )}
@@ -133,10 +157,11 @@ export default function Contact() {
 
               <button
                 type="submit"
-                className="w-full bg-navy-600 text-white px-6 py-3 rounded-lg hover:bg-navy-700 transition-colors font-semibold flex items-center justify-center gap-2"
+                disabled={isSubmitting}
+                className="w-full bg-navy-600 text-white px-6 py-3 rounded-lg hover:bg-navy-700 transition-colors font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FiSend className="w-5 h-5" />
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>
