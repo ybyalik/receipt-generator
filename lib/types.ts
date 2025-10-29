@@ -138,6 +138,7 @@ export interface Template {
   slug: string;
   sections: Section[];
   settings: TemplateSettings;
+  seoContent?: string | null;
   createdAt: string;
   updatedAt: string;
 }

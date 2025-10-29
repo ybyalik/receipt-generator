@@ -74,7 +74,7 @@ export default function AIReceiptGenerator() {
         font: aiData.font || 'mono',
         currency: detectedCurrency,
         currencyFormat: 'symbol_before',
-        width: '80mm',
+        receiptWidth: '80mm',
         backgroundTexture: 'none',
         textColor: '#000000',
       };
@@ -120,7 +120,7 @@ export default function AIReceiptGenerator() {
           alignment: aiData.textAlignment || 'center',
           logo: '',
           logoSize: 64,
-          lines: headerLines,
+          businessDetails: headerLines.join('\n'),
           dividerStyle: 'dashed',
           dividerAtBottom: true,
         });
@@ -132,7 +132,7 @@ export default function AIReceiptGenerator() {
           id: 'transaction-details',
           type: 'custom_message',
           alignment: 'left',
-          lines: aiData.transactionDetails,
+          message: aiData.transactionDetails.join('\n'),
           dividerStyle: 'dashed',
           dividerAtBottom: true,
         });
@@ -148,7 +148,7 @@ export default function AIReceiptGenerator() {
           id: 'receipt-title',
           type: 'custom_message',
           alignment: aiData.textAlignment || 'center',
-          lines: titleLines,
+          message: titleLines.join('\n'),
           dividerStyle: 'dashed',
           dividerAtBottom: true,
         });
@@ -166,15 +166,16 @@ export default function AIReceiptGenerator() {
         sections.push({
           id: 'items',
           type: 'items_list',
-          alignment: 'left',
-          showQuantity: true,
           items: aiData.items.map((item: any, idx: number) => ({
-            id: `item-${idx}`,
             quantity: parseNumber(item.quantity || 1),
-            description: item.description || '',
+            item: item.description || item.name || `Item ${idx + 1}`,
             price: parseNumber(item.price || 0),
           })),
           totalLines: [],
+          tax: {
+            title: 'Tax',
+            value: 0,
+          },
           total: {
             title: 'Total',
             price: itemsTotal,
@@ -284,7 +285,7 @@ export default function AIReceiptGenerator() {
           id: 'footer',
           type: 'custom_message',
           alignment: 'center',
-          lines: footerLines,
+          message: footerLines.join('\n'),
           dividerStyle: 'blank',
           dividerAtBottom: false,
         });

@@ -51,7 +51,14 @@ export const blogPosts = pgTable('blog_posts', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
-export type Template = typeof templates.$inferSelect;
+// Base inferred types
+type TemplateBase = typeof templates.$inferSelect;
+
+// Extended Template type with seoContent included explicitly
+export type Template = TemplateBase & {
+  seoContent?: string | null;
+};
+
 export type NewTemplate = typeof templates.$inferInsert;
 export type UserTemplate = typeof userTemplates.$inferSelect;
 export type NewUserTemplate = typeof userTemplates.$inferInsert;

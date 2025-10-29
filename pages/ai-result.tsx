@@ -20,7 +20,7 @@ export default function AIResult() {
     font: 'mono',
     currency: 'USD',
     currencyFormat: 'symbol_before',
-    width: '80mm',
+    receiptWidth: '80mm',
     backgroundTexture: 'none',
     textColor: '#000000',
   });
@@ -203,7 +203,7 @@ export default function AIResult() {
                     onUpdate={(updated) => {
                       setSections(sections.map((s) => (s.id === section.id ? updated : s)));
                     }}
-                    onDelete={() => {
+                    onRemove={() => {
                       setSections(sections.filter((s) => s.id !== section.id));
                     }}
                     onDuplicate={() => {
