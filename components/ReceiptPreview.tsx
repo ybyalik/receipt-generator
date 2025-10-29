@@ -42,7 +42,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
     };
 
     return (
-      <div className="my-2 text-center text-gray-400 text-xs overflow-hidden whitespace-nowrap">
+      <div className="my-2 text-center text-gray-400 overflow-hidden whitespace-nowrap">
         {textDividers[style as keyof typeof textDividers] || ''}
       </div>
     );
