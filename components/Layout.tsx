@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '../contexts/AuthContext';
 import { FiUser, FiLogOut, FiChevronDown, FiSettings, FiHeart, FiUsers } from 'react-icons/fi';
 
@@ -29,8 +30,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center space-x-8">
-              <Link href="/" className="text-2xl font-bold text-navy-900 tracking-tight">
-                ReceiptGen
+              <Link href="/" className="flex items-center">
+                <Image 
+                  src="/logo.png" 
+                  alt="Receipt Generator" 
+                  width={150} 
+                  height={50} 
+                  style={{ width: 'auto', height: '40px' }}
+                  priority
+                />
               </Link>
               <Link href="/templates" className="text-navy-600 hover:text-accent-500 font-medium transition-colors">
                 Templates
