@@ -156,7 +156,7 @@ const MyTemplates: NextPage = () => {
           <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
             <h2 className="text-2xl font-bold mb-4">Delete Template</h2>
             <p className="text-gray-700 mb-6">
-              Are you sure you want to delete "<strong>{deleteConfirm.name}</strong>"? This action cannot be undone.
+              Are you sure you want to delete &quot;<strong>{deleteConfirm.name}</strong>&quot;? This action cannot be undone.
             </p>
             <div className="flex space-x-3">
               <button
