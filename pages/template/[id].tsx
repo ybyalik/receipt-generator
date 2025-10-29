@@ -75,7 +75,7 @@ export default function TemplateEditor() {
   const { getTemplateBySlug, updateTemplate, loading: templatesLoading } = useTemplates();
   const { showSuccess, showError } = useToast();
 
-  const template = getTemplateBySlug(id as string);
+  const [template, setTemplate] = useState<any>(null);
   const [sections, setSections] = useState<Section[]>([]);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [templateName, setTemplateName] = useState('');
@@ -88,9 +88,30 @@ export default function TemplateEditor() {
   });
 
   useEffect(() => {
+    // Fetch fresh template data when slug changes
+    if (id && router.isReady) {
+      const cachedTemplate = getTemplateBySlug(id as string);
+      if (cachedTemplate) {
+        setTemplate(cachedTemplate);
+      }
+      
+      // Also fetch from API to ensure we have the latest data
+      fetch(`/api/templates`)
+        .then(res => res.json())
+        .then(templates => {
+          const freshTemplate = templates.find((t: any) => t.slug === id);
+          if (freshTemplate) {
+            setTemplate(freshTemplate);
+          }
+        })
+        .catch(err => console.error('Failed to fetch template:', err));
+    }
+  }, [id, router.isReady, getTemplateBySlug]);
+
+  useEffect(() => {
     if (template) {
       // Backfill empty barcode values
-      const sectionsWithBarcodeValues = template.sections.map(section => {
+      const sectionsWithBarcodeValues = template.sections.map((section: any) => {
         if (section.type === 'barcode' && (!section.value || section.value === '')) {
           return { ...section, value: '1234567890123' };
         }
