@@ -215,17 +215,19 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
 
       case 'barcode':
         const barcodeValue = section.value || '1234567890123';
+        const barcodeWidth = section.size || 2;
+        const barcodeHeight = section.length || 50;
         return (
           <div key={section.id} className="mb-4">
-            <div className="w-full flex justify-center">
+            <div className="relative -mx-4 px-2">
               <svg
                 ref={(svg) => {
                   if (svg && barcodeValue) {
                     try {
                       JsBarcode(svg, barcodeValue, {
                         format: 'CODE128',
-                        width: section.size || 2,
-                        height: section.length || 50,
+                        width: barcodeWidth,
+                        height: barcodeHeight,
                         displayValue: false,
                         margin: 0,
                       });
@@ -235,7 +237,10 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                   }
                 }}
                 className="w-full"
-                style={{ maxWidth: '100%', height: 'auto' }}
+                style={{ 
+                  display: 'block',
+                  height: `${barcodeHeight}px`
+                }}
               />
             </div>
             {renderDivider(section.dividerStyle, section.dividerAtBottom)}

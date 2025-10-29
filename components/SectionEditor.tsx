@@ -754,28 +754,31 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               <label className="block text-sm font-medium mb-1">Bar Thickness: {section.size || 2}</label>
               <input
                 type="range"
-                min="1"
-                max="5"
+                min="1.5"
+                max="4"
                 step="0.1"
                 value={section.size || 2}
                 onChange={(e) => onUpdate({ ...section, size: parseFloat(e.target.value) })}
                 className="w-full"
               />
               <p className="text-xs text-gray-500 mt-1">
-                Higher values make the barcode extend wider
+                Higher values make individual bars thicker and reduce gaps
               </p>
             </div>
             <div className="mb-3">
-              <label className="block text-sm font-medium mb-1">Height: {section.length || 50}px</label>
+              <label className="block text-sm font-medium mb-1">Height: {section.length || 60}px</label>
               <input
                 type="range"
-                min="20"
-                max="200"
+                min="40"
+                max="120"
                 step="5"
-                value={section.length || 50}
+                value={section.length || 60}
                 onChange={(e) => onUpdate({ ...section, length: parseFloat(e.target.value) })}
                 className="w-full"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Controls the vertical size of the barcode
+              </p>
             </div>
           </>
         );
