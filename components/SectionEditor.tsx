@@ -903,7 +903,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
   };
 
   return (
-    <div className="border border-gray-300 rounded-xl bg-white overflow-hidden">
+    <div className="border border-gray-300 rounded-xl bg-white overflow-hidden min-w-0">
       <div 
         className={`flex items-center justify-between p-3 bg-navy-50 cursor-pointer ${isExpanded ? 'rounded-t-xl' : 'rounded-xl'}`}
         onClick={() => setIsExpanded(!isExpanded)}
