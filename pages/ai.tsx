@@ -66,9 +66,13 @@ export default function AIReceiptGenerator() {
 
       // Convert AI data to template structure
       const sections: Section[] = [];
+      
+      // Detect currency from amounts or use USD as default
+      const detectedCurrency = aiData.amounts?.currency || aiData.currency || 'USD';
+      
       const settings: Partial<TemplateSettings> = {
         font: aiData.font || 'mono',
-        currency: aiData.currency || 'USD',
+        currency: detectedCurrency,
         currencyFormat: 'symbol_before',
         width: '80mm',
         backgroundTexture: 'none',
@@ -79,45 +83,72 @@ export default function AIReceiptGenerator() {
       const parseNumber = (value: any): number => {
         if (typeof value === 'number') return value;
         if (typeof value === 'string') {
-          const parsed = parseFloat(value);
+          const parsed = parseFloat(value.replace(/[^0-9.-]/g, ''));
           return isNaN(parsed) ? 0 : parsed;
         }
         return 0;
       };
 
-      // Header section
+      // Header section - use businessLines for complete info
       const headerLines: string[] = [];
       if (aiData.businessName) headerLines.push(aiData.businessName);
-      if (aiData.address) {
+      
+      // Add ALL business lines (branch, address, etc.)
+      if (aiData.businessLines && Array.isArray(aiData.businessLines)) {
+        headerLines.push(...aiData.businessLines);
+      } else if (aiData.address) {
         const addressLines = aiData.address.split('\n');
         headerLines.push(...addressLines);
       }
-      if (aiData.phone) headerLines.push(aiData.phone);
-      if (aiData.email) headerLines.push(aiData.email);
-      if (aiData.website) headerLines.push(aiData.website);
+      
+      // Only add contact info if not already in businessLines
+      if (aiData.phone && !headerLines.some(line => line.includes(aiData.phone))) {
+        headerLines.push(aiData.phone);
+      }
+      if (aiData.email && !headerLines.some(line => line.includes(aiData.email))) {
+        headerLines.push(aiData.email);
+      }
+      if (aiData.website && !headerLines.some(line => line.includes(aiData.website))) {
+        headerLines.push(aiData.website);
+      }
 
-      sections.push({
-        id: 'header',
-        type: 'header',
-        alignment: aiData.textAlignment || 'center',
-        logo: '',
-        logoSize: 64,
-        lines: headerLines,
-        dividerStyle: 'dashed',
-        dividerAtBottom: true,
-      });
+      // Only add header if we have content
+      if (headerLines.length > 0) {
+        sections.push({
+          id: 'header',
+          type: 'header',
+          alignment: aiData.textAlignment || 'center',
+          logo: '',
+          logoSize: 64,
+          lines: headerLines,
+          dividerStyle: 'dashed',
+          dividerAtBottom: true,
+        });
+      }
 
-      // Custom message (receipt title and number)
+      // Transaction details section (for bank receipts, payment terminals, etc.)
+      if (aiData.transactionDetails && Array.isArray(aiData.transactionDetails) && aiData.transactionDetails.length > 0) {
+        sections.push({
+          id: 'transaction-details',
+          type: 'custom_message',
+          alignment: 'left',
+          lines: aiData.transactionDetails,
+          dividerStyle: 'dashed',
+          dividerAtBottom: true,
+        });
+      }
+
+      // Receipt title section
       if (aiData.receiptTitle || aiData.receiptNumber) {
-        const customLines: string[] = [];
-        if (aiData.receiptTitle) customLines.push(aiData.receiptTitle);
-        if (aiData.receiptNumber) customLines.push(`Receipt #: ${aiData.receiptNumber}`);
+        const titleLines: string[] = [];
+        if (aiData.receiptTitle) titleLines.push(aiData.receiptTitle);
+        if (aiData.receiptNumber) titleLines.push(`#${aiData.receiptNumber}`);
         
         sections.push({
-          id: 'custom-msg',
+          id: 'receipt-title',
           type: 'custom_message',
           alignment: aiData.textAlignment || 'center',
-          lines: customLines,
+          lines: titleLines,
           dividerStyle: 'dashed',
           dividerAtBottom: true,
         });
@@ -153,39 +184,62 @@ export default function AIReceiptGenerator() {
         });
       }
 
-      // Payment section
+      // Payment section - handle both old and new structure
       const paymentFields: Array<{ title: string; value: string }> = [];
       
-      if (aiData.subtotal !== undefined) {
-        paymentFields.push({ title: 'Subtotal', value: parseNumber(aiData.subtotal).toFixed(2) });
+      // Use new amounts structure if available
+      const amounts = aiData.amounts || aiData;
+      
+      if (amounts.subtotal !== undefined && amounts.subtotal !== null) {
+        paymentFields.push({ title: 'Subtotal', value: parseNumber(amounts.subtotal).toFixed(2) });
       }
-      if (aiData.tax !== undefined) {
+      if (amounts.tax !== undefined && amounts.tax !== null) {
         paymentFields.push({ 
-          title: aiData.taxRate ? `Tax (${aiData.taxRate})` : 'Tax', 
-          value: parseNumber(aiData.tax).toFixed(2) 
+          title: amounts.taxRate ? `Tax (${amounts.taxRate})` : 'Tax', 
+          value: parseNumber(amounts.tax).toFixed(2) 
         });
       }
-      if (aiData.total !== undefined) {
-        paymentFields.push({ title: 'Total', value: parseNumber(aiData.total).toFixed(2) });
+      if (amounts.total !== undefined && amounts.total !== null) {
+        paymentFields.push({ title: 'Total', value: parseNumber(amounts.total).toFixed(2) });
       }
 
-      if (aiData.paymentMethod === 'card') {
-        if (aiData.cardType) {
-          paymentFields.push({ title: 'Card Type', value: aiData.cardType });
+      // Handle payment info from new structure
+      const paymentInfo = aiData.paymentInfo || {};
+      const isCardPayment = paymentInfo.method === 'card' || aiData.paymentMethod === 'card';
+      
+      if (isCardPayment) {
+        if (paymentInfo.cardType || aiData.cardType) {
+          paymentFields.push({ title: 'Card Type', value: paymentInfo.cardType || aiData.cardType });
         }
-        if (aiData.cardLast4) {
-          paymentFields.push({ title: 'Card', value: `****${aiData.cardLast4}` });
+        if (paymentInfo.cardNumber || aiData.cardLast4) {
+          paymentFields.push({ title: 'Card', value: paymentInfo.cardNumber || `****${aiData.cardLast4}` });
         }
-        paymentFields.push({ title: 'Status', value: 'Approved' });
+        if (paymentInfo.amount) {
+          paymentFields.push({ title: 'Amount', value: parseNumber(paymentInfo.amount).toFixed(2) });
+        }
       }
 
+      // Add approval info if available
+      if (aiData.approvalInfo && Array.isArray(aiData.approvalInfo) && aiData.approvalInfo.length > 0) {
+        aiData.approvalInfo.forEach((info: string) => {
+          // Try to split "Status: Approved" style entries
+          if (info.includes(':')) {
+            const [key, value] = info.split(':').map((s: string) => s.trim());
+            paymentFields.push({ title: key, value: value });
+          } else {
+            paymentFields.push({ title: 'Status', value: info });
+          }
+        });
+      }
+
+      // Only add payment section if we have fields
       if (paymentFields.length > 0) {
         sections.push({
           id: 'payment',
           type: 'payment',
-          paymentType: aiData.paymentMethod === 'card' ? 'card' : 'cash',
-          cardFields: aiData.paymentMethod === 'card' ? paymentFields : [],
-          cashFields: aiData.paymentMethod === 'cash' ? paymentFields : [],
+          paymentType: isCardPayment ? 'card' : 'cash',
+          cardFields: isCardPayment ? paymentFields : [],
+          cashFields: !isCardPayment ? paymentFields : [],
           dividerStyle: 'dashed',
           dividerAtBottom: true,
         });
@@ -217,13 +271,20 @@ export default function AIReceiptGenerator() {
         });
       }
 
-      // Footer message
-      if (aiData.footerMessage) {
+      // Footer section - handle both old footerMessage and new footerLines
+      const footerLines: string[] = [];
+      if (aiData.footerLines && Array.isArray(aiData.footerLines)) {
+        footerLines.push(...aiData.footerLines);
+      } else if (aiData.footerMessage) {
+        footerLines.push(aiData.footerMessage);
+      }
+      
+      if (footerLines.length > 0) {
         sections.push({
           id: 'footer',
           type: 'custom_message',
           alignment: 'center',
-          lines: [aiData.footerMessage],
+          lines: footerLines,
           dividerStyle: 'blank',
           dividerAtBottom: false,
         });

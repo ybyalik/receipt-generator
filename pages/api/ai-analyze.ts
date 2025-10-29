@@ -76,32 +76,53 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           content: [
             {
               type: 'text',
-              text: `Analyze this receipt image and extract ALL visible information. Return a JSON object with:
+              text: `You are an OCR expert. Extract EVERY piece of text from this receipt image. This could be a retail receipt, bank receipt, ATM receipt, invoice, etc.
+
+CRITICAL INSTRUCTIONS:
+1. Extract ALL visible text - leave nothing out
+2. Preserve the exact text as shown (don't normalize or clean it up)
+3. If there are transaction IDs, reference numbers, batch numbers - include them ALL
+4. If it's a payment receipt, include ALL the card/payment details
+5. Only omit a field if it's completely absent from the image
+
+Return a JSON object with these fields (omit only if truly not visible):
+
 {
-  "businessName": "store/business name",
-  "address": "full address (each line separated by newline)",
-  "phone": "phone number if visible",
-  "email": "email if visible",
-  "website": "website if visible",
-  "receiptTitle": "receipt title (e.g., 'Sales Receipt', 'Invoice')",
-  "receiptNumber": "receipt/invoice number",
-  "date": "date in ISO format (YYYY-MM-DDTHH:mm:ss)",
-  "items": [{"description": "item name/description", "quantity": 1, "price": 0.00}],
-  "subtotal": 0.00,
-  "tax": 0.00,
-  "taxRate": "8.25%",
-  "total": 0.00,
-  "paymentMethod": "cash" or "card",
-  "cardType": "visa/mastercard/etc if visible",
-  "cardLast4": "last 4 digits if visible",
+  "businessName": "exact business/bank name as shown",
+  "businessLines": ["line 1", "line 2", "line 3"] - ALL lines from top section including branch, location, IDs, etc.,
+  "receiptTitle": "SALE, TRANSACTION, PURCHASE, etc - whatever it says",
+  "transactionDetails": ["HOST:BBL HOST", "TID:S018993", etc] - ALL transaction IDs, reference numbers, batch numbers, trace numbers visible,
+  "receiptNumber": "receipt/transaction number if visible",
+  "date": "date in ISO format (YYYY-MM-DDTHH:mm:ss) if visible",
+  "items": [{"description": "item description", "quantity": 1, "price": 0.00}] - for retail receipts with itemized purchases,
+  "paymentInfo": {
+    "method": "cash" or "card",
+    "cardType": "VISA/MASTERCARD/etc",
+    "cardNumber": "last 4 digits or masked number as shown (e.g., ****5983)",
+    "amount": "amount charged"
+  },
+  "amounts": {
+    "subtotal": 0.00,
+    "tax": 0.00,
+    "taxRate": "8.25%",
+    "total": 0.00,
+    "currency": "THB/USD/EUR etc - detect from image"
+  },
+  "approvalInfo": ["Approved", "AUTH:123456", etc] - approval codes, status,
+  "footerLines": ["Thank you", "No refund", "Customer copy", etc] - ALL footer text,
   "barcode": "barcode number if visible",
-  "footerMessage": "thank you message or other footer text",
-  "font": "mono" (use mono for most receipts, receipt for thermal style),
-  "textAlignment": "left" or "center" (how most text is aligned),
-  "currency": "USD" (default to USD unless specified)
+  "font": "mono" or "receipt",
+  "textAlignment": "left" or "center"
 }
 
-Be thorough - extract every piece of text you see. If a field is not visible, omit it from the JSON.`,
+EXAMPLES OF GOOD EXTRACTION:
+- If you see "HOST:BBL HOST" → include in transactionDetails
+- If you see "BATCH:000008" → include in transactionDetails  
+- If you see "REF NO:0000110342233" → include in transactionDetails
+- If you see "132/1 T.NONGPAKANG A.MUA CHIANGMAI" → include in businessLines
+- If you see "*** NO REFUND ***" → include in footerLines
+
+Extract EVERYTHING. This is for a receipt generator, so completeness is critical.`,
             },
             {
               type: 'image_url',
