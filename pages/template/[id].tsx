@@ -71,6 +71,7 @@ export default function TemplateEditor() {
   const { id } = router.query;
   const { user } = useAuth();
   const previewRef = useRef<HTMLDivElement>(null);
+  const watermarkPreviewRef = useRef<HTMLDivElement>(null);
   const { getTemplateBySlug, updateTemplate, loading: templatesLoading } = useTemplates();
   const { showSuccess, showError } = useToast();
 
@@ -338,8 +339,8 @@ export default function TemplateEditor() {
   };
 
   const downloadWithWatermark = async () => {
-    if (previewRef.current) {
-      const canvas = await html2canvas(previewRef.current, {
+    if (watermarkPreviewRef.current) {
+      const canvas = await html2canvas(watermarkPreviewRef.current, {
         backgroundColor: '#ffffff',
         scale: 2,
       });
@@ -534,6 +535,16 @@ export default function TemplateEditor() {
           </div>
         </div>
       )}
+
+      {/* Hidden watermarked preview for secure sample downloads */}
+      <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }}>
+        <ReceiptPreview 
+          sections={sections}
+          settings={settings}
+          showWatermark={true}
+          previewRef={watermarkPreviewRef}
+        />
+      </div>
     </Layout>
   );
 }
