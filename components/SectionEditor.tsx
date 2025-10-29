@@ -358,15 +358,15 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               )}
             </div>
             
-            <div className="mb-3">
+            <div className="mb-3 min-w-0">
               <label className="block text-sm font-medium mb-2">Total Lines</label>
-              <div className="grid grid-cols-[1fr_120px_auto] gap-2 mb-2 text-xs text-navy-600 font-medium">
+              <div className="grid grid-cols-[1fr_120px_auto] gap-2 mb-2 text-xs text-navy-600 font-medium min-w-0">
                 <div>Title</div>
                 <div>Value</div>
                 <div></div>
               </div>
               {section.totalLines.map((line, idx) => (
-                <div key={idx} className="grid grid-cols-[1fr_120px_auto] gap-2 mb-2">
+                <div key={idx} className="grid grid-cols-[1fr_120px_auto] gap-2 mb-2 min-w-0">
                   <input
                     type="text"
                     value={line.title}
@@ -413,7 +413,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <span className="text-lg">⊕</span> Add line
               </button>
               
-              <div className="grid grid-cols-[1fr_120px] gap-2 p-2 bg-navy-50 rounded-lg">
+              <div className="grid grid-cols-[1fr_120px] gap-2 p-2 bg-navy-50 rounded-lg min-w-0">
                 <input
                   type="text"
                   value={section.total.title}
@@ -621,14 +621,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               </div>
             </div>
             
-            <div className="mb-3">
-              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 mb-2 text-xs text-navy-600 font-medium">
+            <div className="mb-3 min-w-0">
+              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 mb-2 text-xs text-navy-600 font-medium min-w-0">
                 <div>Title</div>
                 <div>Value</div>
                 <div></div>
               </div>
               {currentFields.map((field, idx) => (
-                <div key={idx} className="grid grid-cols-[1fr_1fr_auto] gap-2 mb-2">
+                <div key={idx} className="grid grid-cols-[1fr_1fr_auto] gap-2 mb-2 min-w-0">
                   <input
                     type="text"
                     value={field.title}
