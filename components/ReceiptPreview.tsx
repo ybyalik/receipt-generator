@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import Image from 'next/image';
 import { Section, TemplateSettings } from '../lib/types';
 import { formatCurrency, getFontFamily, getFontSize } from '../lib/currency';
-import JsBarcode from 'jsbarcode';
+import bwipjs from 'bwip-js';
 import { format } from 'date-fns';
 
 interface ReceiptPreviewProps {
@@ -220,16 +220,21 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
         return (
           <div key={section.id} className="mb-4">
             <div className="relative -mx-4 px-2">
-              <svg
-                ref={(svg) => {
-                  if (svg && barcodeValue) {
+              <canvas
+                ref={(canvas) => {
+                  if (canvas && barcodeValue) {
                     try {
-                      JsBarcode(svg, barcodeValue, {
-                        format: 'CODE128',
-                        width: barcodeWidth,
-                        height: barcodeHeight,
-                        displayValue: false,
-                        margin: 0,
+                      // Use bwip-js with inkspread to thicken bars without enlarging gaps
+                      // Inkspread adds pixels to bar width while keeping spacing constant
+                      const inkspread = Math.max(0, (barcodeWidth - 2) * 0.5);
+                      (bwipjs as any).toCanvas(canvas, {
+                        bcid: 'code128',
+                        text: barcodeValue,
+                        scale: barcodeWidth,
+                        height: barcodeHeight / 10,
+                        includetext: false,
+                        backgroundcolor: 'ffffff',
+                        inkspread: inkspread,
                       });
                     } catch (e) {
                       console.error('Barcode generation error:', e);
@@ -239,7 +244,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                 className="w-full"
                 style={{ 
                   display: 'block',
-                  height: `${barcodeHeight}px`
+                  height: 'auto'
                 }}
               />
             </div>
