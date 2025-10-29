@@ -45,6 +45,8 @@ export const getFontFamily = (font: string): string => {
       return "'Consolas', 'Monaco', monospace";
     case 'ocr-b':
       return "'OCR A Extended', 'Lucida Console', monospace";
+    case 'custom':
+      return "'Custom Receipt', 'Courier New', monospace";
     default:
       return "'Courier New', Courier, monospace";
   }
@@ -62,6 +64,8 @@ export const getFontSize = (font: string): string => {
       return '11pt';
     case 'ocr-b':
       return '10pt';
+    case 'custom':
+      return '11pt';
     default:
       return '12px';
   }
