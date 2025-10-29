@@ -110,18 +110,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     const latestInvoice = subscription.latest_invoice as Stripe.Invoice & {
-      payment_intent?: Stripe.PaymentIntent;
+      payment_intent?: string | Stripe.PaymentIntent;
     };
-    const paymentIntent = latestInvoice.payment_intent;
+    console.log('Latest invoice:', JSON.stringify(latestInvoice, null, 2));
+    
+    let paymentIntentClientSecret: string | null = null;
 
-    if (!paymentIntent?.client_secret) {
+    if (typeof latestInvoice === 'object' && latestInvoice !== null && latestInvoice.payment_intent) {
+      const paymentIntent = latestInvoice.payment_intent;
+      
+      if (typeof paymentIntent === 'string') {
+        // Payment intent is just an ID, need to retrieve it
+        const retrievedPaymentIntent = await stripe.paymentIntents.retrieve(paymentIntent);
+        paymentIntentClientSecret = retrievedPaymentIntent.client_secret;
+      } else if (paymentIntent && typeof paymentIntent === 'object') {
+        // Payment intent is expanded
+        paymentIntentClientSecret = paymentIntent.client_secret;
+      }
+    }
+
+    if (!paymentIntentClientSecret) {
       console.error('No client secret found for subscription:', subscription.id);
+      console.error('Subscription object:', JSON.stringify(subscription, null, 2));
       return res.status(500).json({ error: 'Failed to get payment client secret' });
     }
 
     return res.status(200).json({
       subscriptionId: subscription.id,
-      clientSecret: paymentIntent.client_secret,
+      clientSecret: paymentIntentClientSecret,
     });
   } catch (error: any) {
     console.error('Error creating subscription:', error);
