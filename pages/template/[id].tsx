@@ -463,13 +463,15 @@ export default function TemplateEditor() {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">Live Preview</h2>
                 <div className="flex space-x-2">
-                  <button
-                    onClick={downloadWithWatermark}
-                    className="flex items-center px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
-                  >
-                    <FiDownload className="mr-2" />
-                    Download Sample
-                  </button>
+                  {!user?.isPremium && (
+                    <button
+                      onClick={downloadWithWatermark}
+                      className="flex items-center px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
+                    >
+                      <FiDownload className="mr-2" />
+                      Download Sample
+                    </button>
+                  )}
                   <button
                     onClick={downloadReceipt}
                     className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
