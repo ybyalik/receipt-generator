@@ -1,14 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
+import AuthModal from '../components/AuthModal';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../components/ToastContainer';
 
 export default function Checkout() {
   const router = useRouter();
-  const { user, loading, signIn } = useAuth();
+  const { user, loading } = useAuth();
   const { showError } = useToast();
   const { plan } = router.query;
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     if (loading) return;
@@ -20,8 +22,8 @@ export default function Checkout() {
     }
 
     if (!user) {
-      // Trigger sign-in immediately without showing intermediate screen
-      signIn();
+      // Show auth modal for logged-out users
+      setShowAuthModal(true);
       return;
     }
 
@@ -55,7 +57,7 @@ export default function Checkout() {
     };
 
     createCheckoutSession();
-  }, [user, loading, plan, router, showError, signIn]);
+  }, [user, loading, plan, router, showError]);
 
   return (
     <Layout>
@@ -67,6 +69,14 @@ export default function Checkout() {
           </p>
         </div>
       </div>
+      
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => {
+          setShowAuthModal(false);
+          router.push('/pricing');
+        }} 
+      />
     </Layout>
   );
 }
