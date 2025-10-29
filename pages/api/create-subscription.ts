@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import Stripe from 'stripe';
 import { stripe, STRIPE_PRICE_IDS, PricingPlan } from '../../lib/stripe';
 import { getUserByFirebaseUid, updateUserSubscription } from '../../server/storage';
 
@@ -36,21 +35,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
 
-        // Only return existing subscription if it's actually active/trialing AND user is premium
+        // Return error if user already has an active subscription
         if (user.isPremium && (subscription.status === 'active' || subscription.status === 'trialing')) {
-          const expandedSubscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId, {
-            expand: ['latest_invoice.payment_intent'],
-          });
-          
-          const latestInvoice = expandedSubscription.latest_invoice as Stripe.Invoice & {
-            payment_intent?: Stripe.PaymentIntent;
-          };
-          const paymentIntent = latestInvoice.payment_intent;
-          
-          return res.status(200).json({
-            subscriptionId: expandedSubscription.id,
-            clientSecret: paymentIntent?.client_secret,
-          });
+          return res.status(400).json({ error: 'You already have an active subscription' });
         }
         
         // Cancel incomplete or old subscriptions for non-premium users
@@ -91,56 +78,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    const subscription = await stripe.subscriptions.create({
+    // Create a Checkout Session instead of directly creating a subscription
+    const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      items: [{ price: priceId }],
-      payment_behavior: 'default_incomplete',
-      payment_settings: { save_default_payment_method: 'on_subscription' },
-      expand: ['latest_invoice.payment_intent'],
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: 'subscription',
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}/my-templates?success=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}/pricing?canceled=true`,
       metadata: {
         firebaseUid: user.firebaseUid,
         plan,
       },
+      subscription_data: {
+        metadata: {
+          firebaseUid: user.firebaseUid,
+          plan,
+        },
+      },
     });
-
-    await updateUserSubscription(user.firebaseUid, {
-      stripeSubscriptionId: subscription.id,
-      subscriptionPlan: plan,
-      subscriptionStatus: subscription.status,
-    });
-
-    const latestInvoice = subscription.latest_invoice as Stripe.Invoice & {
-      payment_intent?: string | Stripe.PaymentIntent;
-    };
-    console.log('Latest invoice:', JSON.stringify(latestInvoice, null, 2));
-    
-    let paymentIntentClientSecret: string | null = null;
-
-    if (typeof latestInvoice === 'object' && latestInvoice !== null && latestInvoice.payment_intent) {
-      const paymentIntent = latestInvoice.payment_intent;
-      
-      if (typeof paymentIntent === 'string') {
-        // Payment intent is just an ID, need to retrieve it
-        const retrievedPaymentIntent = await stripe.paymentIntents.retrieve(paymentIntent);
-        paymentIntentClientSecret = retrievedPaymentIntent.client_secret;
-      } else if (paymentIntent && typeof paymentIntent === 'object') {
-        // Payment intent is expanded
-        paymentIntentClientSecret = paymentIntent.client_secret;
-      }
-    }
-
-    if (!paymentIntentClientSecret) {
-      console.error('No client secret found for subscription:', subscription.id);
-      console.error('Subscription object:', JSON.stringify(subscription, null, 2));
-      return res.status(500).json({ error: 'Failed to get payment client secret' });
-    }
 
     return res.status(200).json({
-      subscriptionId: subscription.id,
-      clientSecret: paymentIntentClientSecret,
+      sessionId: session.id,
+      url: session.url,
     });
   } catch (error: any) {
-    console.error('Error creating subscription:', error);
+    console.error('Error creating checkout session:', error);
     return res.status(500).json({ error: error.message || 'Internal server error' });
   }
 }
