@@ -788,14 +788,12 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
       case 'two_columns':
         return (
           <>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-3">
               {/* Column 1 */}
               <div className="border border-gray-200 rounded-lg p-3">
-                <div className="flex items-center justify-between mb-3">
-                  <label className="block text-sm font-semibold">Column 1</label>
-                </div>
+                <label className="block text-sm font-semibold mb-2">Column 1</label>
                 {section.column1.map((field, index) => (
-                  <div key={index} className="mb-2 flex gap-2">
+                  <div key={index} className="mb-2 flex gap-1.5 items-center">
                     <input
                       type="text"
                       value={field.title}
@@ -805,7 +803,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                         onUpdate({ ...section, column1: newColumn1 });
                       }}
                       placeholder="Label"
-                      className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
+                      className="w-[90px] border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                     <input
                       type="text"
@@ -816,37 +814,36 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                         onUpdate({ ...section, column1: newColumn1 });
                       }}
                       placeholder="Value"
-                      className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
+                      className="w-[90px] border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                     <button
                       onClick={() => {
                         const newColumn1 = section.column1.filter((_, i) => i !== index);
                         onUpdate({ ...section, column1: newColumn1 });
                       }}
-                      className="text-red-600 hover:text-red-800 p-1"
+                      className="text-red-600 hover:text-red-800 p-1 flex-shrink-0"
                     >
-                      <FiTrash2 size={16} />
+                      <FiTrash2 size={14} />
                     </button>
                   </div>
                 ))}
                 <button
+                  type="button"
                   onClick={() => {
                     const newColumn1 = [...section.column1, { title: '', value: '' }];
                     onUpdate({ ...section, column1: newColumn1 });
                   }}
-                  className="text-sm text-accent-600 hover:text-accent-700 flex items-center gap-1 mt-2"
+                  className="w-full border-2 border-dashed border-gray-300 rounded-lg px-3 py-2 text-sm text-accent-500 hover:border-accent-600 hover:bg-accent-50 transition-colors flex items-center justify-center gap-2 cursor-pointer mt-2"
                 >
-                  <span className="text-lg">+</span> Add line
+                  <span className="text-lg">⊕</span> Add line
                 </button>
               </div>
 
               {/* Column 2 */}
               <div className="border border-gray-200 rounded-lg p-3">
-                <div className="flex items-center justify-between mb-3">
-                  <label className="block text-sm font-semibold">Column 2</label>
-                </div>
+                <label className="block text-sm font-semibold mb-2">Column 2</label>
                 {section.column2.map((field, index) => (
-                  <div key={index} className="mb-2 flex gap-2">
+                  <div key={index} className="mb-2 flex gap-1.5 items-center">
                     <input
                       type="text"
                       value={field.title}
@@ -856,7 +853,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                         onUpdate({ ...section, column2: newColumn2 });
                       }}
                       placeholder="Label"
-                      className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
+                      className="w-[90px] border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                     <input
                       type="text"
@@ -867,27 +864,28 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                         onUpdate({ ...section, column2: newColumn2 });
                       }}
                       placeholder="Value"
-                      className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
+                      className="w-[90px] border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                     <button
                       onClick={() => {
                         const newColumn2 = section.column2.filter((_, i) => i !== index);
                         onUpdate({ ...section, column2: newColumn2 });
                       }}
-                      className="text-red-600 hover:text-red-800 p-1"
+                      className="text-red-600 hover:text-red-800 p-1 flex-shrink-0"
                     >
-                      <FiTrash2 size={16} />
+                      <FiTrash2 size={14} />
                     </button>
                   </div>
                 ))}
                 <button
+                  type="button"
                   onClick={() => {
                     const newColumn2 = [...section.column2, { title: '', value: '' }];
                     onUpdate({ ...section, column2: newColumn2 });
                   }}
-                  className="text-sm text-accent-600 hover:text-accent-700 flex items-center gap-1 mt-2"
+                  className="w-full border-2 border-dashed border-gray-300 rounded-lg px-3 py-2 text-sm text-accent-500 hover:border-accent-600 hover:bg-accent-50 transition-colors flex items-center justify-center gap-2 cursor-pointer mt-2"
                 >
-                  <span className="text-lg">+</span> Add line
+                  <span className="text-lg">⊕</span> Add line
                 </button>
               </div>
             </div>

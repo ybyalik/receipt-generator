@@ -418,7 +418,7 @@ export default function TemplateEditor() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(600px,1fr)_500px] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[380px_minmax(0,1fr)] gap-8">
           <div className="bg-white rounded-lg shadow p-6">
             <SettingsPanel settings={settings} onUpdate={setSettings} />
             
@@ -454,7 +454,7 @@ export default function TemplateEditor() {
             
             <div className="mt-4 pt-4 border-t">
               <div className="text-sm font-medium mb-2">Add New Section</div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => addSection('header')}
                   className="px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 hover:border-gray-400 transition-all cursor-pointer text-left"
@@ -501,7 +501,7 @@ export default function TemplateEditor() {
             </div>
           </div>
 
-          <div className="sticky top-8">
+          <div className="sticky top-8 max-w-[700px] mx-auto">
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">Live Preview</h2>
