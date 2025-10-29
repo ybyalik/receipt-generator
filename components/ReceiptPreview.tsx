@@ -28,15 +28,11 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       return <div className="my-3" />;
     }
     
-    // Use CSS border for dotted only
-    if (style === 'dotted') {
-      return <div className="my-2 border-t border-dotted border-gray-400" />;
-    }
-    
-    // Use text for dashed, solid (===), double (⋮⋮⋮), and stars (***)
+    // Use text for all divider styles
     const textDividers = {
       dashed: '-------------------------------------------',
       solid: '===========================================',
+      dotted: '• • • • • • • • • • • • • • • • • • • • • • • • • • • • • • •',
       double: '⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮',
       stars: '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *',
     };
