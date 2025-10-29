@@ -292,6 +292,10 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
           maxWidth: getReceiptWidth(),
           fontFamily: getFontFamily(settings.font),
           color: settings.textColor,
+          wordWrap: 'break-word',
+          overflowWrap: 'break-word',
+          wordBreak: 'break-word',
+          overflow: 'hidden',
           ...getBackgroundStyle()
         }}
       >
