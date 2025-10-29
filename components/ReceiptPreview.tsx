@@ -182,7 +182,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
               {paymentFields.map((field, idx) => (
                 <div key={idx} className="flex justify-between">
                   <span>{field.title}:</span>
-                  <span className={idx === paymentFields.length - 1 ? 'font-bold' : ''}>
+                  <span>
                     {formatPaymentValue(field.title, field.value)}
                   </span>
                 </div>

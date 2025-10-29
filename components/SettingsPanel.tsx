@@ -105,7 +105,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 }`}
                 style={{ fontFamily: 'Courier New, monospace', fontSize: '10pt' }}
               >
-                Courier New 10pt
+                Courier New
               </button>
               <button
                 onClick={() => onUpdate({ ...settings, font: 'consolas' })}
@@ -116,7 +116,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 }`}
                 style={{ fontFamily: 'Consolas, Monaco, monospace', fontSize: '11pt' }}
               >
-                Consolas 11pt
+                Consolas
               </button>
               <button
                 onClick={() => onUpdate({ ...settings, font: 'custom' })}
