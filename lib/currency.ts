@@ -35,13 +35,26 @@ export const formatCurrency = (
 
 export const getFontFamily = (font: string): string => {
   switch (font) {
-    case 'handwritten':
-      return "'Caveat', cursive";
-    case 'mono':
+    case 'courier':
       return "'Courier New', Courier, monospace";
-    case 'receipt':
-      return "monospace";
+    case 'consolas':
+      return "'Consolas', 'Monaco', monospace";
+    case 'ocr-b':
+      return "'OCR-B', 'Courier New', monospace";
     default:
-      return "monospace";
+      return "'Courier New', Courier, monospace";
+  }
+};
+
+export const getFontSize = (font: string): string => {
+  switch (font) {
+    case 'courier':
+      return '10pt';
+    case 'consolas':
+      return '11pt';
+    case 'ocr-b':
+      return '10pt';
+    default:
+      return '10pt';
   }
 };

@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import Image from 'next/image';
 import { Section, TemplateSettings } from '../lib/types';
-import { formatCurrency, getFontFamily } from '../lib/currency';
+import { formatCurrency, getFontFamily, getFontSize } from '../lib/currency';
 import JsBarcode from 'jsbarcode';
 import { format } from 'date-fns';
 
@@ -124,7 +124,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
               <div className={`space-y-1 ${(section.dividerAfterItems) ? 'mt-2' : 'border-t border-gray-300 mt-2 pt-2'}`}>
                 {section.totalLines.map((line, idx) => (
                   <div key={idx} className="flex justify-between">
-                    <span>{line.title}:</span>
+                    <span>{line.title}</span>
                     <span>{formatCurrency(line.value, settings.currency, settings.currencyFormat)}</span>
                   </div>
                 ))}
@@ -136,7 +136,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                       : undefined
                   }
                 >
-                  <span>{section.total.title}:</span>
+                  <span>{section.total.title}</span>
                   <span>{formatCurrency(section.total.price, settings.currency, settings.currencyFormat)}</span>
                 </div>
               </div>
@@ -291,6 +291,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
         style={{ 
           maxWidth: getReceiptWidth(),
           fontFamily: getFontFamily(settings.font),
+          fontSize: getFontSize(settings.font),
           color: settings.textColor,
           wordWrap: 'break-word',
           overflowWrap: 'break-word',

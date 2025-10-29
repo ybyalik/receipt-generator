@@ -75,37 +75,37 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
             <label className="block text-sm font-medium mb-2 text-navy-700">Font Style</label>
             <div className="flex gap-2 flex-wrap">
               <button
-                onClick={() => onUpdate({ ...settings, font: 'handwritten' })}
+                onClick={() => onUpdate({ ...settings, font: 'courier' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
-                  settings.font === 'handwritten'
+                  settings.font === 'courier'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                     : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                 }`}
-                style={{ fontFamily: 'Caveat, cursive' }}
+                style={{ fontFamily: 'Courier New, monospace', fontSize: '10pt' }}
               >
-                Handwritten
+                Courier New 10pt
               </button>
               <button
-                onClick={() => onUpdate({ ...settings, font: 'mono' })}
+                onClick={() => onUpdate({ ...settings, font: 'consolas' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
-                  settings.font === 'mono'
+                  settings.font === 'consolas'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                     : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                 }`}
-                style={{ fontFamily: 'Courier New, monospace' }}
+                style={{ fontFamily: 'Consolas, Monaco, monospace', fontSize: '11pt' }}
               >
-                Monospace
+                Consolas 11pt
               </button>
               <button
-                onClick={() => onUpdate({ ...settings, font: 'receipt' })}
+                onClick={() => onUpdate({ ...settings, font: 'ocr-b' })}
                 className={`px-6 py-2 border rounded-lg transition-all ${
-                  settings.font === 'receipt'
+                  settings.font === 'ocr-b'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                     : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
                 }`}
-                style={{ fontFamily: 'monospace' }}
+                style={{ fontFamily: 'OCR-B, Courier New, monospace', fontSize: '10pt' }}
               >
-                Receipt
+                OCR-B 10pt
               </button>
             </div>
           </div>

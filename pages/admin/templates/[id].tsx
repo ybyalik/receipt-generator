@@ -82,7 +82,7 @@ export default function AdminTemplateEditor() {
   const [settings, setSettings] = useState<TemplateSettings>({
     currency: '$',
     currencyFormat: 'symbol_before',
-    font: 'mono',
+    font: 'courier',
     textColor: '#000000',
     backgroundTexture: 'none',
   });

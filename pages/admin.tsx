@@ -88,7 +88,7 @@ const Admin: NextPage = () => {
       settings: {
         currency: '$',
         currencyFormat: 'symbol_before' as const,
-        font: 'mono' as const,
+        font: 'courier' as const,
         textColor: '#000000',
         backgroundTexture: 'none' as const,
       },
