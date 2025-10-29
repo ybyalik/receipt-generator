@@ -43,8 +43,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <Link href="/templates" className="text-navy-600 hover:text-accent-500 font-medium transition-colors">
                 Templates
               </Link>
-              <Link href="/pricing" className="text-navy-600 hover:text-accent-500 font-medium transition-colors">
-                Pricing
+              <Link href="/blog" className="text-navy-600 hover:text-accent-500 font-medium transition-colors">
+                Blog
+              </Link>
+              <Link href="/contact" className="text-navy-600 hover:text-accent-500 font-medium transition-colors">
+                Contact
               </Link>
             </div>
             <div className="flex items-center space-x-4">
@@ -138,6 +141,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
             
             <div className="flex items-center space-x-8">
+              <Link href="/blog" className="text-white hover:text-gray-300 transition-colors font-medium">
+                Blog
+              </Link>
               <Link href="/contact" className="text-white hover:text-gray-300 transition-colors font-medium">
                 Contact
               </Link>
