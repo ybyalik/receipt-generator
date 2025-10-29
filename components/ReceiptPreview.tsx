@@ -129,7 +129,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
                     <span>{formatCurrency(line.value, settings.currency, settings.currencyFormat)}</span>
                   </div>
                 ))}
-                <div className="flex justify-between font-bold mt-2">
+                <div className="flex justify-between mt-2">
                   <span>{section.total.title}</span>
                   <span
                     style={
