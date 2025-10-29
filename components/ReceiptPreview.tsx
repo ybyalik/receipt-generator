@@ -35,7 +35,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
     
     // Use text for dashed, solid (===), double (⋮⋮⋮), and stars (***)
     const textDividers = {
-      dashed: '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -',
+      dashed: '-------------------------------------------',
       solid: '===========================================',
       double: '⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮',
       stars: '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *',
