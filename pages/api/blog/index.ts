@@ -2,6 +2,13 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAllBlogPosts, getPublishedBlogPosts, createBlogPost } from '../../../server/storage';
 import type { BlogPost } from '../../../shared/schema';
 
+// Helper function to check if user is admin (MVP-level check)
+function isAdmin(email: string | null | undefined): boolean {
+  if (!email) return false;
+  const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',').map(e => e.trim()) || [];
+  return adminEmails.includes(email);
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -18,6 +25,11 @@ export default async function handler(
       res.status(500).json({ error: 'Failed to fetch blog posts' });
     }
   } else if (req.method === 'POST') {
+    // Check admin authorization for creating posts
+    const { userEmail } = req.body;
+    if (!isAdmin(userEmail)) {
+      return res.status(403).json({ error: 'Unauthorized: Admin access required' });
+    }
     try {
       const { title, content, featuredImage, status } = req.body;
       

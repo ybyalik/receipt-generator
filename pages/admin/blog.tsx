@@ -67,14 +67,26 @@ export default function AdminBlog() {
         await fetch(`/api/blog/${editingPost.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, content, featuredImage, status }),
+          body: JSON.stringify({ 
+            title, 
+            content, 
+            featuredImage, 
+            status,
+            userEmail: user?.email 
+          }),
         });
       } else {
         // Create new post
         await fetch('/api/blog', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, content, featuredImage, status }),
+          body: JSON.stringify({ 
+            title, 
+            content, 
+            featuredImage, 
+            status,
+            userEmail: user?.email 
+          }),
         });
       }
       setShowEditor(false);
@@ -88,7 +100,11 @@ export default function AdminBlog() {
     if (!confirm('Are you sure you want to delete this blog post?')) return;
     
     try {
-      await fetch(`/api/blog/${id}`, { method: 'DELETE' });
+      await fetch(`/api/blog/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userEmail: user?.email }),
+      });
       fetchPosts();
     } catch (error) {
       console.error('Failed to delete blog post:', error);

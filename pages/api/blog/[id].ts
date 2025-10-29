@@ -1,6 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getBlogPostById, updateBlogPost, deleteBlogPost } from '../../../server/storage';
 
+// Helper function to check if user is admin (MVP-level check)
+function isAdmin(email: string | null | undefined): boolean {
+  if (!email) return false;
+  const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',').map(e => e.trim()) || [];
+  return adminEmails.includes(email);
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -24,6 +31,12 @@ export default async function handler(
       res.status(500).json({ error: 'Failed to fetch blog post' });
     }
   } else if (req.method === 'PUT') {
+    // Check admin authorization for updating posts
+    const { userEmail } = req.body;
+    if (!isAdmin(userEmail)) {
+      return res.status(403).json({ error: 'Unauthorized: Admin access required' });
+    }
+    
     try {
       const { title, content, featuredImage, status } = req.body;
       
@@ -49,6 +62,12 @@ export default async function handler(
       res.status(500).json({ error: 'Failed to update blog post' });
     }
   } else if (req.method === 'DELETE') {
+    // Check admin authorization for deleting posts
+    const { userEmail } = req.body;
+    if (!isAdmin(userEmail)) {
+      return res.status(403).json({ error: 'Unauthorized: Admin access required' });
+    }
+    
     try {
       const deleted = await deleteBlogPost(postId);
       if (!deleted) {
