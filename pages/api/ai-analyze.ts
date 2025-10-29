@@ -14,18 +14,48 @@ const openai = new OpenAI({
   baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
 });
 
+const ALLOWED_MIMETYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const form = formidable({});
+    const form = formidable({
+      maxFileSize: MAX_FILE_SIZE,
+      filter: (part) => {
+        return part.mimetype && ALLOWED_MIMETYPES.includes(part.mimetype);
+      },
+    });
+    
     const [fields, files] = await form.parse(req);
 
     const file = files.image?.[0];
     if (!file) {
       return res.status(400).json({ error: 'No image provided' });
+    }
+
+    // Additional server-side validation
+    if (!file.mimetype || !ALLOWED_MIMETYPES.includes(file.mimetype)) {
+      // Clean up the file
+      try {
+        fs.unlinkSync(file.filepath);
+      } catch (e) {
+        // Ignore cleanup errors
+      }
+      return res.status(400).json({ error: 'Invalid file type. Only images are allowed.' });
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      // Clean up the file
+      try {
+        fs.unlinkSync(file.filepath);
+      } catch (e) {
+        // Ignore cleanup errors
+      }
+      return res.status(400).json({ error: 'File too large. Maximum size is 10MB.' });
     }
 
     // Read the image file and convert to base64

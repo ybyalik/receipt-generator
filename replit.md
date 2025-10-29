@@ -62,6 +62,20 @@ The architecture emphasizes component composition, including higher-order `Layou
 
 ## Recent Updates (October 29, 2025)
 
+### AI Receipt Generator
+New AI-powered feature that automatically creates receipt templates from uploaded images:
+- **Upload Page** (`/ai`): User interface for uploading receipt images (PNG, JPG, GIF up to 10MB)
+- **OpenAI Vision Integration**: Uses GPT-4o vision API via Replit AI Integrations gateway (no personal API key needed, charged to Replit credits)
+- **Automatic Template Generation**: AI analyzes receipt images and extracts all visible data (business info, items, prices, payment details, barcodes, etc.)
+- **Template Mapping**: Converts AI response to complete receipt template structure with sections, settings, and pre-filled data
+- **Editor Page** (`/ai-result`): Full template editor allowing users to customize the AI-generated template before downloading
+- **Security**: Server-side validation for file size (10MB max), file type (images only), with proper error handling and cleanup
+- **Data Safety**: Robust numeric parsing to handle various AI response formats without crashes
+- **Session Persistence**: Template data persists through page refreshes until explicitly downloaded or user returns to AI page
+- **Navigation**: "AI Generator" link added to main navigation
+
+## Recent Updates (October 29, 2025)
+
 ### Contact Form Integration with Resend
 The contact form now uses the Resend.com API for professional email handling:
 - **API Integration**: Contact form submissions are sent via `/api/contact` endpoint using Resend

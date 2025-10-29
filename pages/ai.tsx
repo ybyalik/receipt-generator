@@ -122,9 +122,9 @@ export default function AIReceiptGenerator() {
           showQuantity: true,
           items: aiData.items.map((item: any, idx: number) => ({
             id: `item-${idx}`,
-            quantity: item.quantity || 1,
+            quantity: parseNumber(item.quantity || 1),
             description: item.description || '',
-            price: item.price || 0,
+            price: parseNumber(item.price || 0),
           })),
           dividerStyle: 'dashed',
           dividerAtBottom: true,
@@ -134,17 +134,27 @@ export default function AIReceiptGenerator() {
       // Payment section
       const paymentFields: Array<{ title: string; value: string }> = [];
       
+      // Safely parse numeric values from AI response
+      const parseNumber = (value: any): number => {
+        if (typeof value === 'number') return value;
+        if (typeof value === 'string') {
+          const parsed = parseFloat(value);
+          return isNaN(parsed) ? 0 : parsed;
+        }
+        return 0;
+      };
+      
       if (aiData.subtotal !== undefined) {
-        paymentFields.push({ title: 'Subtotal', value: aiData.subtotal.toFixed(2) });
+        paymentFields.push({ title: 'Subtotal', value: parseNumber(aiData.subtotal).toFixed(2) });
       }
       if (aiData.tax !== undefined) {
         paymentFields.push({ 
           title: aiData.taxRate ? `Tax (${aiData.taxRate})` : 'Tax', 
-          value: aiData.tax.toFixed(2) 
+          value: parseNumber(aiData.tax).toFixed(2) 
         });
       }
       if (aiData.total !== undefined) {
-        paymentFields.push({ title: 'Total', value: aiData.total.toFixed(2) });
+        paymentFields.push({ title: 'Total', value: parseNumber(aiData.total).toFixed(2) });
       }
 
       if (aiData.paymentMethod === 'card') {

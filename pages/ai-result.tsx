@@ -36,8 +36,8 @@ export default function AIResult() {
       setSettings(templateData.settings || settings);
       setLoading(false);
       
-      // Clear sessionStorage
-      sessionStorage.removeItem('ai-generated-template');
+      // Keep in sessionStorage until user explicitly leaves or saves
+      // This allows page refresh without losing work
     } catch (error) {
       console.error('Failed to load template:', error);
       router.push('/ai');
@@ -57,10 +57,19 @@ export default function AIResult() {
       link.download = `ai-receipt-${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
+      
+      // Clear sessionStorage after successful download
+      sessionStorage.removeItem('ai-generated-template');
     } catch (error) {
       console.error('Download failed:', error);
       alert('Failed to download receipt');
     }
+  };
+
+  const handleBackToAI = () => {
+    // Clear stored template when user explicitly goes back
+    sessionStorage.removeItem('ai-generated-template');
+    router.push('/ai');
   };
 
   if (loading) {
@@ -77,13 +86,21 @@ export default function AIResult() {
     <Layout>
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-[1400px] mx-auto px-4">
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-navy-900 mb-2">
-              AI-Generated Receipt Template
-            </h1>
-            <p className="text-gray-600">
-              Review and customize your automatically generated receipt
-            </p>
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-navy-900 mb-2">
+                AI-Generated Receipt Template
+              </h1>
+              <p className="text-gray-600">
+                Review and customize your automatically generated receipt
+              </p>
+            </div>
+            <button
+              onClick={handleBackToAI}
+              className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              ← Back to AI Generator
+            </button>
           </div>
 
           <div className="grid lg:grid-cols-[minmax(0,6fr)_minmax(0,4fr)] gap-6">
