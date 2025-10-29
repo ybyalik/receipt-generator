@@ -26,6 +26,10 @@ externalPort = 3001
 localPort = 38937
 externalPort = 3000
 
+[[ports]]
+localPort = 39435
+externalPort = 3002
+
 [agent]
 expertMode = true
 integrations = ["resend:1.0.0"]

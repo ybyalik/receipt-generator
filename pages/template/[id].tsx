@@ -418,7 +418,7 @@ export default function TemplateEditor() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[380px_minmax(0,1fr)] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[460px_minmax(0,1fr)] gap-8">
           <div className="bg-white rounded-lg shadow p-6">
             <SettingsPanel settings={settings} onUpdate={setSettings} />
             
