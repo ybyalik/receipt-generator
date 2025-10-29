@@ -186,7 +186,7 @@ export default function AIResult() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,6fr)_minmax(0,4fr)] gap-8">
-          <div className="bg-white rounded-lg shadow p-6 min-w-0 overflow-x-auto">
+          <div className="bg-white rounded-lg shadow p-6 min-w-0 overflow-x-auto order-2 lg:order-1">
             <SettingsPanel settings={settings} onUpdate={setSettings} />
             
             <div className="mt-6 pt-6 border-t">
@@ -221,7 +221,7 @@ export default function AIResult() {
             </div>
           </div>
 
-          <div className="lg:sticky lg:top-8">
+          <div className="lg:sticky lg:top-8 order-1 lg:order-2">
             <div className="bg-white rounded-lg shadow p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                 <h2 className="text-lg sm:text-xl font-bold">Live Preview</h2>
