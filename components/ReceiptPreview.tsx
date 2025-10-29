@@ -181,14 +181,15 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
         );
 
       case 'barcode':
+        const barcodeValue = section.value || '1234567890123';
         return (
           <div key={section.id} className="mb-4">
             <div className="flex justify-center">
               <svg
                 ref={(svg) => {
-                  if (svg) {
+                  if (svg && barcodeValue) {
                     try {
-                      JsBarcode(svg, section.value, {
+                      JsBarcode(svg, barcodeValue, {
                         format: 'CODE128',
                         width: section.size,
                         height: 50,

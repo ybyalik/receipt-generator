@@ -98,7 +98,14 @@ export default function MyTemplateEditor() {
         if (res.ok) {
           const data = await res.json();
           setTemplate(data);
-          setSections(data.sections);
+          // Backfill empty barcode values
+          const sectionsWithBarcodeValues = data.sections.map((section: Section) => {
+            if (section.type === 'barcode' && (!section.value || section.value === '')) {
+              return { ...section, value: '1234567890123' };
+            }
+            return section;
+          });
+          setSections(sectionsWithBarcodeValues);
           setSettings(data.settings || {
             currency: '$',
             currencyFormat: 'symbol_before',

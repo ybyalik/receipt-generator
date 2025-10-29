@@ -91,7 +91,14 @@ export default function AdminTemplateEditor() {
 
   useEffect(() => {
     if (template) {
-      setSections(template.sections);
+      // Backfill empty barcode values
+      const sectionsWithBarcodeValues = template.sections.map(section => {
+        if (section.type === 'barcode' && (!section.value || section.value === '')) {
+          return { ...section, value: '1234567890123' };
+        }
+        return section;
+      });
+      setSections(sectionsWithBarcodeValues);
       setTemplateName(template.name);
       setTemplateSlug(template.slug);
       if (template.settings) {
