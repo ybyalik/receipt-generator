@@ -43,10 +43,13 @@ export default function AdminUsers() {
   }, [user, loading, isAdmin, router]);
 
   const fetchUsers = async (search?: string) => {
+    if (!user?.email) return;
+    
     try {
-      const url = search 
-        ? `/api/admin/users?search=${encodeURIComponent(search)}`
-        : '/api/admin/users';
+      const params = new URLSearchParams({ userEmail: user.email });
+      if (search) params.append('search', search);
+      
+      const url = `/api/admin/users?${params.toString()}`;
       
       const response = await fetch(url);
       
@@ -69,9 +72,13 @@ export default function AdminUsers() {
   };
 
   const handleDeleteUser = async (userId: number) => {
+    if (!user?.email) return;
+    
     try {
       const response = await fetch(`/api/admin/users/${userId}`, {
         method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userEmail: user.email }),
       });
 
       if (!response.ok) {
@@ -87,11 +94,16 @@ export default function AdminUsers() {
   };
 
   const togglePremium = async (userId: number, currentStatus: boolean) => {
+    if (!user?.email) return;
+    
     try {
       const response = await fetch(`/api/admin/users/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isPremium: !currentStatus }),
+        body: JSON.stringify({ 
+          userEmail: user.email,
+          isPremium: !currentStatus 
+        }),
       });
 
       if (!response.ok) {

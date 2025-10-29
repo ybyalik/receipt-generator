@@ -1,11 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getUserById, updateUser, deleteUser } from '../../../../server/storage';
+import { requireAdminEmail } from '../../../../server/auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
 
   if (!id || Array.isArray(id)) {
     return res.status(400).json({ error: 'Invalid user ID' });
+  }
+
+  if (!requireAdminEmail(req, res)) {
+    return;
   }
 
   const userId = parseInt(id);
