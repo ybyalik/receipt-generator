@@ -49,6 +49,8 @@ export const getFontFamily = (font: string): string => {
       return "'Custom Receipt', 'Courier New', monospace";
     case 'bit':
       return "'BIT Receipt', 'Courier New', monospace";
+    case 'c12':
+      return "'C12 Receipt', 'Courier New', monospace";
     default:
       return "'Courier New', Courier, monospace";
   }
@@ -70,6 +72,8 @@ export const getFontSize = (font: string): string => {
       return '11pt';
     case 'bit':
       return '10pt';
+    case 'c12':
+      return '11pt';
     default:
       return '12px';
   }
