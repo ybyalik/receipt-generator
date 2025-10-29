@@ -114,9 +114,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     };
     const paymentIntent = latestInvoice.payment_intent;
 
+    if (!paymentIntent?.client_secret) {
+      console.error('No client secret found for subscription:', subscription.id);
+      return res.status(500).json({ error: 'Failed to get payment client secret' });
+    }
+
     return res.status(200).json({
       subscriptionId: subscription.id,
-      clientSecret: paymentIntent?.client_secret,
+      clientSecret: paymentIntent.client_secret,
     });
   } catch (error: any) {
     console.error('Error creating subscription:', error);
