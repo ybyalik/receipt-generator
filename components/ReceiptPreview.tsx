@@ -302,17 +302,17 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
         }}
       >
         {sections.map(renderSection)}
-      </div>
-      {showWatermark && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div 
-            className="text-gray-300 font-bold transform rotate-[-45deg]"
-            style={{ fontSize: '4rem', opacity: 0.3 }}
-          >
-            SAMPLE
+        {showWatermark && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div 
+              className="text-gray-300 font-bold transform rotate-[-45deg]"
+              style={{ fontSize: '4rem', opacity: 0.3 }}
+            >
+              SAMPLE
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
