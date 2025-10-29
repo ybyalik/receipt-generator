@@ -25,7 +25,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
     <div className="border border-gray-300 rounded-xl bg-white mb-6 shadow-sm">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-4 hover:bg-navy-50 transition-colors rounded-t-xl"
+        className="w-full flex items-center justify-between p-4 hover:bg-navy-50 transition-colors rounded-xl"
       >
         <div className="flex items-center gap-3">
           <FiSettings className="text-accent-500" />
