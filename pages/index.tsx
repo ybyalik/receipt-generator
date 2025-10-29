@@ -55,13 +55,13 @@ const Home: NextPage = () => {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
                 href="/templates"
-                className="bg-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
+                className="bg-accent-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-accent-700 transition-all shadow-lg hover:shadow-xl cursor-pointer"
               >
                 Browse Templates
               </Link>
               <Link
                 href="/pricing"
-                className="bg-white text-gray-900 border-2 border-gray-300 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-50 hover:border-blue-500 transition-all cursor-pointer"
+                className="bg-white text-navy-900 border-2 border-navy-200 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-navy-50 hover:border-accent-500 transition-all shadow-md cursor-pointer"
               >
                 View Pricing
               </Link>
@@ -70,9 +70,10 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h2 className="text-4xl font-bold text-center text-navy-900 mb-16">How It Works</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="bg-gradient-to-br from-white via-accent-50/30 to-navy-50/50 py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold text-center text-navy-900 mb-16">How It Works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {[
             {
               id: 'step-1',
@@ -111,6 +112,7 @@ const Home: NextPage = () => {
               <p className="text-navy-600 leading-relaxed">{step.description}</p>
             </div>
           ))}
+          </div>
         </div>
       </div>
 
@@ -183,15 +185,15 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      <div className="bg-navy-800 text-white py-20">
+      <div className="bg-gradient-to-br from-navy-900 via-navy-800 to-accent-900 text-white py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Get Started?</h2>
-          <p className="text-xl text-navy-200 mb-10 leading-relaxed">
+          <p className="text-xl text-white/90 mb-10 leading-relaxed">
             Join thousands of users creating professional receipts every day. Start for free!
           </p>
           <Link
             href="/templates"
-            className="inline-block bg-white text-navy-900 px-10 py-4 rounded-xl text-lg font-semibold hover:bg-gray-50 transition-colors cursor-pointer shadow-lg"
+            className="inline-block bg-accent-500 text-white px-10 py-4 rounded-xl text-lg font-semibold hover:bg-accent-600 transition-all cursor-pointer shadow-xl hover:shadow-2xl hover:scale-105"
           >
             Create Your First Receipt
           </Link>
