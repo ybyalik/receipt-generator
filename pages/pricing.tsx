@@ -91,29 +91,16 @@ const Pricing: NextPage = () => {
                   </li>
                 ))}
               </ul>
-              {user ? (
-                <Link
-                  href={`/checkout?plan=${plan.name.toLowerCase()}`}
-                  className={`block w-full text-center px-6 py-3 rounded-xl font-semibold transition-all hover:shadow-lg cursor-pointer ${
-                    plan.popular
-                      ? 'bg-accent-500 text-white hover:bg-accent-600'
-                      : 'bg-navy-100 text-navy-700 hover:bg-navy-200'
-                  }`}
-                >
-                  {plan.popular ? 'Upgrade to Premium' : 'Select Plan'}
-                </Link>
-              ) : (
-                <button
-                  onClick={signIn}
-                  className={`w-full px-6 py-3 rounded-xl font-semibold transition-all hover:shadow-lg cursor-pointer ${
-                    plan.popular
-                      ? 'bg-accent-500 text-white hover:bg-accent-600'
-                      : 'bg-navy-100 text-navy-700 hover:bg-navy-200'
-                  }`}
-                >
-                  Sign In to Subscribe
-                </button>
-              )}
+              <Link
+                href={`/checkout?plan=${plan.name.toLowerCase()}`}
+                className={`block w-full text-center px-6 py-3 rounded-xl font-semibold transition-all hover:shadow-lg cursor-pointer ${
+                  plan.popular
+                    ? 'bg-accent-500 text-white hover:bg-accent-600'
+                    : 'bg-navy-100 text-navy-700 hover:bg-navy-200'
+                }`}
+              >
+                Select Plan
+              </Link>
             </div>
           ))}
         </div>
