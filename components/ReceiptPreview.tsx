@@ -28,10 +28,7 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       return <div className="my-3" />;
     }
     
-    // Use CSS borders for solid, dashed, dotted (cleaner and responsive)
-    if (style === 'solid') {
-      return <div className="my-2 border-t border-gray-400" />;
-    }
+    // Use CSS borders for dashed and dotted
     if (style === 'dashed') {
       return <div className="my-2 border-t border-dashed border-gray-400" />;
     }
@@ -39,8 +36,9 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       return <div className="my-2 border-t border-dotted border-gray-400" />;
     }
     
-    // Use text for double and stars (special characters)
+    // Use text for solid (===), double (⋮⋮⋮), and stars (***)
     const textDividers = {
+      solid: '===========================================',
       double: '⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮',
       stars: '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *',
     };
