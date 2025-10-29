@@ -31,27 +31,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: `Price ID not configured for ${plan} plan. Please contact support.` });
     }
 
-    // Only check existing subscription if user is actually premium
-    if (user.isPremium && user.stripeSubscriptionId) {
+    // Check for existing active subscription
+    if (user.stripeSubscriptionId) {
       try {
-        const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId, {
-          expand: ['latest_invoice.payment_intent'],
-        });
+        const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
 
-        if (subscription.status === 'active' || subscription.status === 'trialing') {
-          const latestInvoice = subscription.latest_invoice as Stripe.Invoice & {
+        // Only return existing subscription if it's actually active/trialing AND user is premium
+        if (user.isPremium && (subscription.status === 'active' || subscription.status === 'trialing')) {
+          const expandedSubscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId, {
+            expand: ['latest_invoice.payment_intent'],
+          });
+          
+          const latestInvoice = expandedSubscription.latest_invoice as Stripe.Invoice & {
             payment_intent?: Stripe.PaymentIntent;
           };
           const paymentIntent = latestInvoice.payment_intent;
           
           return res.status(200).json({
-            subscriptionId: subscription.id,
+            subscriptionId: expandedSubscription.id,
             clientSecret: paymentIntent?.client_secret,
           });
         }
+        
+        // Cancel incomplete or old subscriptions for non-premium users
+        if (!user.isPremium && (subscription.status === 'incomplete' || subscription.status === 'incomplete_expired' || subscription.status === 'canceled' || subscription.status === 'past_due')) {
+          await stripe.subscriptions.cancel(subscription.id);
+          await updateUserSubscription(user.firebaseUid, {
+            stripeSubscriptionId: null,
+            subscriptionStatus: null,
+            subscriptionPlan: null,
+          });
+        }
       } catch (error) {
-        // If subscription doesn't exist in Stripe, continue to create a new one
+        // If subscription doesn't exist in Stripe, clear it from database
         console.error('Error retrieving subscription:', error);
+        await updateUserSubscription(user.firebaseUid, {
+          stripeSubscriptionId: null,
+          subscriptionStatus: null,
+          subscriptionPlan: null,
+        });
       }
     }
 
