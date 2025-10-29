@@ -578,10 +578,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, paymentType: 'cash' as const })}
-                  className={`flex-1 px-4 py-2 font-medium transition-colors ${
+                  className={`flex-1 px-4 py-2 font-medium transition-colors cursor-pointer ${
                     section.paymentType === 'cash'
-                      ? 'bg-gray-100 text-gray-900'
-                      : 'bg-white text-gray-900 hover:bg-gray-50'
+                      ? 'bg-accent-600 text-white border-accent-600'
+                      : 'bg-white text-gray-700 hover:bg-accent-50'
                   }`}
                 >
                   Cash
@@ -589,10 +589,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <button
                   type="button"
                   onClick={() => onUpdate({ ...section, paymentType: 'card' as const })}
-                  className={`flex-1 px-4 py-2 font-medium transition-colors ${
+                  className={`flex-1 px-4 py-2 font-medium transition-colors cursor-pointer ${
                     section.paymentType === 'card'
-                      ? 'bg-gray-100 text-gray-900'
-                      : 'bg-white text-gray-900 hover:bg-gray-50'
+                      ? 'bg-accent-600 text-white border-accent-600'
+                      : 'bg-white text-gray-700 hover:bg-accent-50'
                   }`}
                 >
                   Card
