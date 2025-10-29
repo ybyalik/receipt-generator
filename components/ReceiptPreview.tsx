@@ -106,11 +106,11 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
               {/* Items list */}
               <div className="space-y-1">
                 {section.items.map((item, idx) => (
-                  <div key={idx} className="flex justify-between">
-                    <span>
+                  <div key={idx} className="flex justify-between gap-2">
+                    <span className="flex-1 min-w-0 break-words">
                       {item.quantity} x {item.item}
                     </span>
-                    <span>{formatCurrency(item.price, settings.currency, settings.currencyFormat)}</span>
+                    <span className="flex-shrink-0 whitespace-nowrap">{formatCurrency(item.price, settings.currency, settings.currencyFormat)}</span>
                   </div>
                 ))}
               </div>
