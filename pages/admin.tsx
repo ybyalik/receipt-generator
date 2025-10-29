@@ -132,13 +132,21 @@ const Admin: NextPage = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Admin Panel</h1>
-          <button 
-            onClick={handleCreateTemplate}
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <FiPlus className="mr-2" />
-            Create New Template
-          </button>
+          <div className="flex space-x-3">
+            <button 
+              onClick={() => router.push('/admin/blog')}
+              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Manage Blog
+            </button>
+            <button 
+              onClick={handleCreateTemplate}
+              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <FiPlus className="mr-2" />
+              Create New Template
+            </button>
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow">
