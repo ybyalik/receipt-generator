@@ -1,8 +1,8 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { templates, userTemplates, users, sectionTemplates } from '../shared/schema';
+import { templates, userTemplates, users } from '../shared/schema';
 import type { Template as ReceiptTemplate, Section } from '../lib/types';
-import type { User, NewUser, SectionTemplate, NewSectionTemplate } from '../shared/schema';
+import type { User, NewUser } from '../shared/schema';
 import { eq, and, like, or } from 'drizzle-orm';
 
 const connectionString = process.env.DATABASE_URL!;
@@ -264,42 +264,5 @@ export async function updateUserSubscription(
 
 export async function deleteUser(id: number): Promise<boolean> {
   const result = await db.delete(users).where(eq(users.id, id)).returning();
-  return result.length > 0;
-}
-
-// Section Templates CRUD operations
-export async function getAllSectionTemplates(): Promise<SectionTemplate[]> {
-  const result = await db.select().from(sectionTemplates);
-  return result;
-}
-
-export async function getSectionTemplateById(id: number): Promise<SectionTemplate | null> {
-  const result = await db.select().from(sectionTemplates).where(eq(sectionTemplates.id, id));
-  return result.length > 0 ? result[0] : null;
-}
-
-export async function getSectionTemplatesByType(sectionType: string): Promise<SectionTemplate[]> {
-  const result = await db.select().from(sectionTemplates).where(eq(sectionTemplates.sectionType, sectionType));
-  return result;
-}
-
-export async function createSectionTemplate(template: NewSectionTemplate): Promise<SectionTemplate> {
-  const result = await db.insert(sectionTemplates).values(template).returning();
-  return result[0];
-}
-
-export async function updateSectionTemplate(id: number, updates: Partial<NewSectionTemplate>): Promise<SectionTemplate | null> {
-  const result = await db.update(sectionTemplates)
-    .set({
-      ...updates,
-      updatedAt: new Date(),
-    })
-    .where(eq(sectionTemplates.id, id))
-    .returning();
-  return result.length > 0 ? result[0] : null;
-}
-
-export async function deleteSectionTemplate(id: number): Promise<boolean> {
-  const result = await db.delete(sectionTemplates).where(eq(sectionTemplates.id, id)).returning();
   return result.length > 0;
 }
