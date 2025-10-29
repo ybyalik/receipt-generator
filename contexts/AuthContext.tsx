@@ -91,9 +91,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     try {
       await signInWithPopup(auth, googleProvider);
-    } catch (error) {
+    } catch (error: any) {
+      // User closed the popup - this is normal behavior, don't throw an error
+      if (error.code === 'auth/popup-closed-by-user') {
+        return;
+      }
+      // For other errors, log but don't throw to prevent unhandled errors
       console.error('Error signing in:', error);
-      throw error;
     }
   };
 
