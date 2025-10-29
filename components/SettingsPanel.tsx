@@ -119,17 +119,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 Consolas 11pt
               </button>
               <button
-                onClick={() => onUpdate({ ...settings, font: 'ocr-b' })}
-                className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
-                  settings.font === 'ocr-b'
-                    ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
-                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
-                }`}
-                style={{ fontFamily: 'OCR-B, Courier New, monospace', fontSize: '10pt' }}
-              >
-                OCR-B 10pt
-              </button>
-              <button
                 onClick={() => onUpdate({ ...settings, font: 'custom' })}
                 className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
                   settings.font === 'custom'
