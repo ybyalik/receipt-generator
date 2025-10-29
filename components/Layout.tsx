@@ -112,11 +112,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                 body: JSON.stringify({ firebaseUid: user.uid }),
                               });
                               const data = await response.json();
+                              
+                              if (!response.ok) {
+                                console.error('Portal session error:', data);
+                                alert(data.error || 'Unable to open subscription management. Please try again.');
+                                return;
+                              }
+                              
                               if (data.url) {
                                 window.location.href = data.url;
+                              } else {
+                                console.error('No URL in response:', data);
+                                alert('Unable to open subscription management. Please try again.');
                               }
                             } catch (error) {
                               console.error('Error opening billing portal:', error);
+                              alert('An error occurred. Please try again.');
                             }
                           }}
                           className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-navy-50 transition-colors cursor-pointer"
