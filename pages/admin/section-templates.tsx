@@ -7,6 +7,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { FiPlus, FiEdit, FiTrash2, FiSave, FiX } from 'react-icons/fi';
 import { useToast } from '../../components/ToastContainer';
 import type { Section } from '../../lib/types';
+import SectionDefaultsEditor from '../../components/SectionDefaultsEditor';
 
 interface SectionTemplate {
   id: number;
@@ -283,17 +284,14 @@ const SectionTemplates: NextPage = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Default Data (JSON)</label>
-                  <textarea
-                    value={addForm.defaultData ? JSON.stringify(addForm.defaultData, null, 2) : ''}
-                    onChange={(e) => {
-                      try {
-                        setAddForm({ ...addForm, defaultData: JSON.parse(e.target.value) });
-                      } catch {}
-                    }}
-                    className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm h-64"
-                    placeholder='{"alignment": "center", "logoSize": 50, ...}'
-                  />
+                  <label className="block text-sm font-medium mb-2">Default Values</label>
+                  <div className="border border-gray-200 rounded p-4 bg-gray-50">
+                    <SectionDefaultsEditor
+                      sectionType={addForm.sectionType || ''}
+                      data={addForm.defaultData || {}}
+                      onChange={(newData) => setAddForm({ ...addForm, defaultData: newData })}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-6">
@@ -348,17 +346,14 @@ const SectionTemplates: NextPage = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Default Data (JSON)</label>
-                  <textarea
-                    value={editForm.defaultData ? JSON.stringify(editForm.defaultData, null, 2) : ''}
-                    onChange={(e) => {
-                      try {
-                        setEditForm({ ...editForm, defaultData: JSON.parse(e.target.value) });
-                      } catch {}
-                    }}
-                    className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm h-64"
-                    placeholder='{"alignment": "center", "logoSize": 50, ...}'
-                  />
+                  <label className="block text-sm font-medium mb-2">Default Values</label>
+                  <div className="border border-gray-200 rounded p-4 bg-gray-50">
+                    <SectionDefaultsEditor
+                      sectionType={editForm.sectionType || ''}
+                      data={editForm.defaultData || {}}
+                      onChange={(newData) => setEditForm({ ...editForm, defaultData: newData })}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-6">
