@@ -512,7 +512,7 @@ export default function TemplateEditor() {
                       className="flex items-center justify-center px-3 sm:px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer text-sm sm:text-base"
                     >
                       <FiDownload className="mr-2" />
-                      Download Sample
+                      Download
                     </button>
                   )}
                   <button
@@ -542,7 +542,7 @@ export default function TemplateEditor() {
                     className="flex items-center justify-center px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
                   >
                     <FiDownload className="mr-2" />
-                    Download Sample
+                    Download
                   </button>
                 )}
                 <button
