@@ -31,7 +31,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <nav className="bg-white shadow-sm border-b border-navy-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex items-center space-x-8">
+            <div className="flex items-center space-x-12">
               <Link href="/" className="flex items-center">
                 <Image 
                   src="/logo.png" 
@@ -42,13 +42,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   priority
                 />
               </Link>
-              <Link href="/templates" className="text-navy-600 hover:text-accent-500 font-medium transition-colors">
+              <Link href="/templates" className="text-navy-600 hover:text-accent-500 font-semibold transition-colors">
                 Templates
               </Link>
-              <Link href="/blog" className="text-navy-600 hover:text-accent-500 font-medium transition-colors">
+              <Link href="/blog" className="text-navy-600 hover:text-accent-500 font-semibold transition-colors">
                 Blog
               </Link>
-              <Link href="/contact" className="text-navy-600 hover:text-accent-500 font-medium transition-colors">
+              <Link href="/contact" className="text-navy-600 hover:text-accent-500 font-semibold transition-colors">
                 Contact
               </Link>
             </div>
