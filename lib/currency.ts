@@ -36,15 +36,15 @@ export const formatCurrency = (
 export const getFontFamily = (font: string): string => {
   switch (font) {
     case 'mono':
-      return "'Courier New', Courier, monospace";
-    case 'receipt':
       return "monospace";
+    case 'receipt':
+      return "'Courier Prime', 'Courier', monospace";
     case 'courier':
       return "'Courier New', Courier, monospace";
     case 'consolas':
       return "'Consolas', 'Monaco', monospace";
     case 'ocr-b':
-      return "'OCR-B', 'Courier New', monospace";
+      return "'OCR A Extended', 'Lucida Console', monospace";
     default:
       return "'Courier New', Courier, monospace";
   }
