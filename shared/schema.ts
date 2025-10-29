@@ -6,6 +6,7 @@ export const templates = pgTable('templates', {
   slug: text('slug').notNull().unique(),
   sections: jsonb('sections').notNull(),
   settings: jsonb('settings').notNull(),
+  seoContent: text('seo_content'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

@@ -494,6 +494,15 @@ export default function TemplateEditor() {
             </div>
           </div>
         </div>
+
+        {template.seoContent && (
+          <div className="mt-12 bg-white rounded-lg shadow-md p-8">
+            <div 
+              className="prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: template.seoContent }}
+            />
+          </div>
+        )}
       </div>
 
       {showSaveModal && (

@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Layout from '../../../components/Layout';
 import ReceiptPreview from '../../../components/ReceiptPreview';
 import SettingsPanel from '../../../components/SettingsPanel';
+import TiptapEditor from '../../../components/TiptapEditor';
 import { useTemplates } from '../../../contexts/TemplatesContext';
 import { Section, TemplateSettings } from '../../../lib/types';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -77,6 +78,7 @@ export default function AdminTemplateEditor() {
   const [sections, setSections] = useState<Section[]>([]);
   const [templateName, setTemplateName] = useState('');
   const [templateSlug, setTemplateSlug] = useState('');
+  const [seoContent, setSeoContent] = useState('');
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingSlug, setIsEditingSlug] = useState(false);
   const [settings, setSettings] = useState<TemplateSettings>({
@@ -101,6 +103,7 @@ export default function AdminTemplateEditor() {
       setSections(sectionsWithBarcodeValues);
       setTemplateName(template.name);
       setTemplateSlug(template.slug);
+      setSeoContent(template.seoContent || '');
       if (template.settings) {
         setSettings(template.settings);
       }
@@ -304,6 +307,7 @@ export default function AdminTemplateEditor() {
       setSections(template.sections);
       setTemplateName(template.name);
       setTemplateSlug(template.slug);
+      setSeoContent(template.seoContent || '');
     }
   };
 
@@ -326,6 +330,7 @@ export default function AdminTemplateEditor() {
           slug: newSlug,
           sections: sections,
           settings: settings,
+          seoContent: seoContent,
         }),
       });
       
@@ -502,6 +507,17 @@ export default function AdminTemplateEditor() {
                   <FiPlus className="inline mr-1" /> Barcode
                 </button>
               </div>
+            </div>
+
+            <div className="mt-6 pt-6 border-t">
+              <h2 className="text-xl font-bold mb-2">SEO Content</h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Add custom content for SEO purposes. This will appear below the receipt generator on the template page.
+              </p>
+              <TiptapEditor
+                content={seoContent}
+                onChange={setSeoContent}
+              />
             </div>
           </div>
 

@@ -17,6 +17,7 @@ export async function getAllTemplates(): Promise<ReceiptTemplate[]> {
     slug: row.slug,
     sections: row.sections as Section[],
     settings: row.settings as any,
+    seoContent: (row as any).seoContent || undefined,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   }));
@@ -33,6 +34,7 @@ export async function getTemplateById(id: string): Promise<ReceiptTemplate | nul
     slug: row.slug,
     sections: row.sections as Section[],
     settings: row.settings as any,
+    seoContent: (row as any).seoContent || undefined,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -49,6 +51,7 @@ export async function getTemplateBySlug(slug: string): Promise<ReceiptTemplate |
     slug: row.slug,
     sections: row.sections as Section[],
     settings: row.settings as any,
+    seoContent: (row as any).seoContent || undefined,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -60,6 +63,7 @@ export async function createTemplate(template: Omit<ReceiptTemplate, 'id'>): Pro
     slug: template.slug,
     sections: template.sections as any,
     settings: template.settings as any,
+    seoContent: (template as any).seoContent || null,
   }).returning();
   
   const row = result[0];
@@ -69,6 +73,7 @@ export async function createTemplate(template: Omit<ReceiptTemplate, 'id'>): Pro
     slug: row.slug,
     sections: row.sections as Section[],
     settings: row.settings as any,
+    seoContent: (row as any).seoContent || undefined,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -81,6 +86,7 @@ export async function updateTemplate(id: string, updates: Partial<Omit<ReceiptTe
       ...(updates.slug && { slug: updates.slug }),
       ...(updates.sections && { sections: updates.sections as any }),
       ...(updates.settings && { settings: updates.settings as any }),
+      ...((updates as any).seoContent !== undefined && { seoContent: (updates as any).seoContent }),
       updatedAt: new Date(),
     })
     .where(eq(templates.id, parseInt(id)))
@@ -95,6 +101,7 @@ export async function updateTemplate(id: string, updates: Partial<Omit<ReceiptTe
     slug: row.slug,
     sections: row.sections as Section[],
     settings: row.settings as any,
+    seoContent: (row as any).seoContent || undefined,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
