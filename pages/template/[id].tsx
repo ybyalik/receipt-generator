@@ -399,7 +399,7 @@ export default function TemplateEditor() {
             <h1 className="text-2xl sm:text-3xl font-bold">
               {template.name}
             </h1>
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <div className="hidden lg:flex flex-col sm:flex-row gap-2 sm:gap-3">
               <button
                 onClick={resetTemplate}
                 className="flex items-center justify-center px-4 py-2 bg-red-50 border-2 border-red-500 text-red-700 rounded-lg hover:bg-red-100 transition-colors cursor-pointer"
@@ -505,7 +505,7 @@ export default function TemplateEditor() {
             <div className="bg-white rounded-lg shadow p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                 <h2 className="text-lg sm:text-xl font-bold">Live Preview</h2>
-                <div className="flex flex-col sm:flex-row gap-2">
+                <div className="hidden lg:flex flex-col sm:flex-row gap-2">
                   {!user?.isPremium && (
                     <button
                       onClick={downloadWithWatermark}
@@ -532,6 +532,40 @@ export default function TemplateEditor() {
                   showWatermark={!user?.isPremium}
                   previewRef={previewRef}
                 />
+              </div>
+
+              {/* Mobile-only buttons below preview */}
+              <div className="lg:hidden mt-4 flex flex-col gap-2">
+                {!user?.isPremium && (
+                  <button
+                    onClick={downloadWithWatermark}
+                    className="flex items-center justify-center px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
+                  >
+                    <FiDownload className="mr-2" />
+                    Download Sample
+                  </button>
+                )}
+                <button
+                  onClick={downloadReceipt}
+                  className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap"
+                >
+                  <FiDownload className="mr-2" />
+                  {user?.isPremium ? 'Download' : 'Remove Watermark'}
+                </button>
+                <button
+                  onClick={resetTemplate}
+                  className="flex items-center justify-center px-4 py-2 bg-red-50 border-2 border-red-500 text-red-700 rounded-lg hover:bg-red-100 transition-colors cursor-pointer"
+                >
+                  <FiRefreshCw className="mr-2" />
+                  Reset
+                </button>
+                <button
+                  onClick={handleSaveClick}
+                  className="flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer"
+                >
+                  <FiSave className="mr-2" />
+                  Save Template
+                </button>
               </div>
             </div>
           </div>
