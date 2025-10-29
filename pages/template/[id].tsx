@@ -378,7 +378,7 @@ export default function TemplateEditor() {
         <title>{template.name} - ReceiptGen</title>
       </Head>
 
-      <div className="max-w-[1800px] mx-auto px-4 py-8">
+      <div className="max-w-[1400px] mx-auto px-4 py-8">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
             <h1 className="text-3xl font-bold">
@@ -403,7 +403,7 @@ export default function TemplateEditor() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_600px] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(600px,1fr)_500px] gap-8">
           <div className="bg-white rounded-lg shadow p-6">
             <SettingsPanel settings={settings} onUpdate={setSettings} />
             
