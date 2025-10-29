@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Layout from '../components/Layout';
 import { useTemplates } from '../contexts/TemplatesContext';
 import { FiArrowRight } from 'react-icons/fi';
+import ReceiptPreview from '../components/ReceiptPreview';
 
 const Templates: NextPage = () => {
   const { templates } = useTemplates();
@@ -33,21 +34,13 @@ const Templates: NextPage = () => {
               className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all overflow-hidden border border-navy-100 hover:-translate-y-1"
             >
               <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-8">
-                <div className="bg-white rounded-lg shadow-sm p-4 text-xs text-navy-700 h-48 overflow-hidden">
-                  <div className="text-center font-semibold mb-2 text-navy-900">
-                    {template.name}
-                  </div>
-                  <div className="space-y-1 text-center">
-                    {template.sections.slice(0, 3).map((section, idx) => (
-                      <div key={idx} className="border-b border-navy-100 pb-1">
-                        {section.type.replace('_', ' ').toUpperCase()}
-                      </div>
-                    ))}
-                    {template.sections.length > 3 && (
-                      <div className="text-navy-400 pt-1">
-                        +{template.sections.length - 3} more sections
-                      </div>
-                    )}
+                <div className="bg-white rounded-lg shadow-sm h-64 overflow-hidden flex items-start justify-center">
+                  <div className="scale-50 origin-top">
+                    <ReceiptPreview
+                      sections={template.sections}
+                      settings={template.settings}
+                      showWatermark={false}
+                    />
                   </div>
                 </div>
               </div>
