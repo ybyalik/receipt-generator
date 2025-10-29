@@ -57,7 +57,7 @@ const Home: NextPage = () => {
                 href="/templates"
                 className="bg-accent-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-accent-700 transition-all shadow-lg hover:shadow-xl cursor-pointer"
               >
-                Browse Templates
+                <span className="text-white">Browse Templates</span>
               </Link>
               <Link
                 href="/pricing"
