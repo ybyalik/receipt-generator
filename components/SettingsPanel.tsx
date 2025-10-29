@@ -60,7 +60,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                     className={`px-4 py-2 border rounded-lg transition-all font-medium cursor-pointer ${
                       settings.currencyFormat === format
                         ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
-                        : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
+                        : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
                     }`}
                   >
                     {formatExample(settings.currency, format)}
@@ -79,7 +79,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
                   settings.font === 'mono'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
-                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
+                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
                 }`}
                 style={{ fontFamily: 'Courier New, monospace' }}
               >
@@ -90,7 +90,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
                   settings.font === 'receipt'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
-                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
+                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
                 }`}
                 style={{ fontFamily: 'monospace' }}
               >
@@ -101,7 +101,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
                   settings.font === 'courier'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
-                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
+                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
                 }`}
                 style={{ fontFamily: 'Courier New, monospace', fontSize: '10pt' }}
               >
@@ -112,7 +112,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
                   settings.font === 'consolas'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
-                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
+                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
                 }`}
                 style={{ fontFamily: 'Consolas, Monaco, monospace', fontSize: '11pt' }}
               >
@@ -123,7 +123,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
                   settings.font === 'ocr-b'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
-                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
+                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
                 }`}
                 style={{ fontFamily: 'OCR-B, Courier New, monospace', fontSize: '10pt' }}
               >
@@ -157,7 +157,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                   className={`px-4 py-2 border rounded-lg transition-all font-medium cursor-pointer ${
                     settings.backgroundTexture === texture
                       ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
-                      : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
+                      : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
                   }`}
                 >
                   {texture === 'none' ? 'Off' : `Texture ${index}`}
@@ -180,7 +180,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                   className={`px-4 py-2 border rounded-lg transition-all cursor-pointer ${
                     (settings.receiptWidth || '80mm') === value
                       ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
-                      : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
+                      : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
                   }`}
                 >
                   <div className="font-medium">{label}</div>
