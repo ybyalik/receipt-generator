@@ -119,7 +119,7 @@ export type Section =
   | TwoColumnsSection;
 
 export type CurrencyFormat = 'symbol_before' | 'symbol_after' | 'symbol_after_space'; // $2.99, 2.99$, 2.99 $
-export type FontStyle = 'mono' | 'receipt' | 'courier' | 'consolas' | 'ocr-b' | 'custom';
+export type FontStyle = 'mono' | 'receipt' | 'courier' | 'consolas' | 'ocr-b' | 'custom' | 'bit';
 export type BackgroundTexture = 'none' | 'texture1' | 'texture2' | 'texture3' | 'texture4' | 'texture5';
 export type ReceiptWidth = '57mm' | '80mm'; // 2.25" small receipts | 3.125" standard POS
 

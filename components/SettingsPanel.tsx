@@ -140,6 +140,17 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
               >
                 Custom Receipt
               </button>
+              <button
+                onClick={() => onUpdate({ ...settings, font: 'bit' })}
+                className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
+                  settings.font === 'bit'
+                    ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
+                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
+                }`}
+                style={{ fontFamily: 'BIT Receipt, Courier New, monospace', fontSize: '10pt' }}
+              >
+                BIT Receipt
+              </button>
             </div>
           </div>
 
