@@ -151,6 +151,17 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
               >
                 C12 Receipt
               </button>
+              <button
+                onClick={() => onUpdate({ ...settings, font: '04b24' })}
+                className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
+                  settings.font === '04b24'
+                    ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
+                    : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
+                }`}
+                style={{ fontFamily: '04B24 Receipt, Courier New, monospace', fontSize: '10pt' }}
+              >
+                04B24 Receipt
+              </button>
             </div>
           </div>
 
