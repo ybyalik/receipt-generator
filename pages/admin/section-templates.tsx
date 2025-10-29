@@ -36,10 +36,16 @@ const SectionTemplates: NextPage = () => {
 
   const fetchTemplates = async () => {
     try {
-      const res = await fetch('/api/admin/section-templates');
+      const res = await fetch('/api/admin/section-templates', {
+        headers: {
+          'x-user-email': user?.email || '',
+        },
+      });
       if (res.ok) {
         const data = await res.json();
         setTemplates(data);
+      } else {
+        showError('Failed to load section templates');
       }
     } catch (error) {
       showError('Failed to load section templates');
@@ -114,6 +120,9 @@ const SectionTemplates: NextPage = () => {
     try {
       const res = await fetch(`/api/admin/section-templates/${id}`, {
         method: 'DELETE',
+        headers: {
+          'x-user-email': user?.email || '',
+        },
       });
 
       if (res.ok) {
