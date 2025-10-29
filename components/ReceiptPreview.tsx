@@ -28,13 +28,22 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       return <div className="my-3" />;
     }
     
-    // Use text for all divider styles
+    // Special handling for double (two rows of dots)
+    if (style === 'double') {
+      return (
+        <div className="my-2 text-center text-gray-400 overflow-hidden leading-tight">
+          <div className="whitespace-nowrap">• • • • • • • • • • • • • • • • • • • • • • • • • • • • • • •</div>
+          <div className="whitespace-nowrap">• • • • • • • • • • • • • • • • • • • • • • • • • • • • • • •</div>
+        </div>
+      );
+    }
+    
+    // Use text for other divider styles
     const textDividers = {
       dashed: '-------------------------------------------',
       solid: '===========================================',
       dotted: '• • • • • • • • • • • • • • • • • • • • • • • • • • • • • • •',
-      double: '⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮ ⋮',
-      stars: '* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *',
+      stars: '*******************************************',
     };
 
     return (
