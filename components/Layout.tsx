@@ -25,7 +25,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-navy-50">
+    <div className="min-h-screen bg-navy-50 flex flex-col">
       <nav className="bg-white shadow-sm border-b border-navy-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -123,7 +123,43 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </div>
       </nav>
-      <main>{children}</main>
+      <main className="flex-grow">{children}</main>
+      <footer className="bg-navy-900 text-white py-8 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center space-y-6">
+            <div className="flex items-center space-x-8">
+              <Link href="/contact" className="text-white hover:text-gray-300 transition-colors font-medium">
+                Contact
+              </Link>
+            </div>
+            
+            <div className="flex justify-center">
+              <Image 
+                src="/logo-footer.png" 
+                alt="Receipt Generator" 
+                width={200} 
+                height={60} 
+                style={{ width: 'auto', height: '60px' }}
+              />
+            </div>
+            
+            <div className="text-center space-y-2">
+              <p className="text-sm text-gray-300">
+                Copyright &copy; ReceiptGenerator.net. All Rights Reserved.
+              </p>
+              <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
+                <Link href="/privacy" className="hover:text-white transition-colors">
+                  Privacy Policy
+                </Link>
+                <span>|</span>
+                <Link href="/terms" className="hover:text-white transition-colors">
+                  Terms and Conditions
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
