@@ -62,16 +62,29 @@ The architecture emphasizes component composition, including higher-order `Layou
 
 ## Recent Updates (October 29, 2025)
 
-### AI Receipt Generator
+### AI Receipt Generator (BETA)
 New AI-powered feature that automatically creates receipt templates from uploaded images:
-- **Upload Page** (`/ai`): User interface for uploading receipt images (PNG, JPG, GIF up to 10MB)
+- **Upload Page** (`/ai`): User interface for uploading receipt images with BETA badge indicating feature status (PNG, JPG, GIF up to 10MB)
 - **OpenAI Vision Integration**: Uses GPT-4o vision API via Replit AI Integrations gateway (no personal API key needed, charged to Replit credits)
-- **Automatic Template Generation**: AI analyzes receipt images and extracts all visible data (business info, items, prices, payment details, barcodes, etc.)
-- **Template Mapping**: Converts AI response to complete receipt template structure with sections, settings, and pre-filled data
-- **Editor Page** (`/ai-result`): Full template editor allowing users to customize the AI-generated template before downloading
+- **Comprehensive Extraction**: AI extracts ALL visible text including business details, transaction IDs, approval codes, footer messages, and more
+- **Smart Section Creation**: Only creates sections with actual data - no empty fields
+- **Multi-Receipt Support**: Handles retail receipts, bank receipts, ATM receipts, and payment terminal receipts
+- **Auto-Currency Detection**: Automatically detects currency (USD, THB, EUR, etc.) from receipt content
+- **Template Mapping**: Converts AI response to complete receipt template structure with flexible sections:
+  - `businessLines`: Captures ALL business info (branch, address, location)
+  - `transactionDetails`: Host, TID, MID, Batch, Ref numbers
+  - `approvalInfo`: Approval codes and status
+  - `footerLines`: All footer text (refund policy, customer copy, etc.)
+- **Result Page** (`/ai-result`): Full template editor matching regular template page functionality:
+  - Same 60/40 layout design
+  - Watermark for non-premium users
+  - "Save Template" functionality to add to user's collection
+  - "Download Sample" button for non-premium users
+  - "Remove Watermark" button redirects to pricing for upgrade
+  - Section editing with live preview
+  - Session persistence until explicitly saved or user returns to AI page
 - **Security**: Server-side validation for file size (10MB max), file type (images only), with proper error handling and cleanup
-- **Data Safety**: Robust numeric parsing to handle various AI response formats without crashes
-- **Session Persistence**: Template data persists through page refreshes until explicitly downloaded or user returns to AI page
+- **Data Safety**: Robust numeric parsing handles various AI response formats without crashes
 - **Navigation**: "AI Generator" link added to main navigation
 
 ## Recent Updates (October 29, 2025)
