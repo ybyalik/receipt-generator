@@ -85,6 +85,13 @@ The Date & Time section now includes:
   - Custom format (uses date-fns format tokens)
 - **Technical Implementation**: Date values stored as ISO 8601 strings, format string stored separately in `dateFormat` field
 
+### Custom Receipt Fonts
+Added 2 custom receipt fonts for authentic receipt styling:
+- **Custom Receipt** (11pt): User-provided custom font #1
+- **BIT Receipt** (10pt): User-provided custom font #2
+- Font files stored in `public/fonts/` with @font-face declarations in `globals.css`
+- Total of 6 font options available: Monospace, Receipt, Courier New 10pt, Consolas 11pt, Custom Receipt, BIT Receipt
+
 ## Blog System
 
 The application includes a full-featured blog at `/blog` with the following capabilities:
