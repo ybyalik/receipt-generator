@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import Layout from '../../components/Layout';
 import type { BlogPost } from '../../shared/schema';
 import { format } from 'date-fns';
@@ -52,10 +53,10 @@ export default function BlogPost() {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Post not found</h1>
-            <p className="text-gray-600 mb-4">The blog post you're looking for doesn't exist.</p>
-            <a href="/blog" className="text-navy-600 hover:text-navy-800">
+            <p className="text-gray-600 mb-4">The blog post you&apos;re looking for doesn&apos;t exist.</p>
+            <Link href="/blog" className="text-navy-600 hover:text-navy-800">
               ← Back to blog
-            </a>
+            </Link>
           </div>
         </div>
       </Layout>
@@ -66,9 +67,9 @@ export default function BlogPost() {
     <Layout>
       <div className="min-h-screen bg-gray-50 py-8 sm:py-12">
         <article className="max-w-3xl mx-auto px-4">
-          <a href="/blog" className="text-navy-600 hover:text-navy-800 mb-4 sm:mb-6 inline-block">
+          <Link href="/blog" className="text-navy-600 hover:text-navy-800 mb-4 sm:mb-6 inline-block">
             ← Back to blog
-          </a>
+          </Link>
 
           {post.featuredImage && (
             <div className="aspect-video w-full overflow-hidden rounded-lg mb-4 sm:mb-6">

@@ -357,7 +357,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </div>
       </footer>
-      {isAuthModalOpen && <AuthModal onClose={() => setIsAuthModalOpen(false)} />}
+      {isAuthModalOpen && <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />}
     </div>
   );
 };

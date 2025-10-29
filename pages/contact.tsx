@@ -59,7 +59,7 @@ export default function Contact() {
           <div className="bg-white rounded-lg shadow-md p-8">
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold text-navy-900 mb-3">Contact Us</h1>
-              <p className="text-gray-600">Have a question? We'd love to hear from you.</p>
+              <p className="text-gray-600">Have a question? We&apos;d love to hear from you.</p>
             </div>
 
             <div className="mb-8 p-4 bg-navy-50 rounded-lg border border-navy-200">
@@ -77,7 +77,7 @@ export default function Contact() {
             {submitted && (
               <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                 <p className="text-green-800 text-center">
-                  Thank you for contacting us! We'll get back to you soon.
+                  Thank you for contacting us! We&apos;ll get back to you soon.
                 </p>
               </div>
             )}

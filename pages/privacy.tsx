@@ -10,7 +10,7 @@ export default function Privacy() {
             <h1 className="text-4xl font-bold text-navy-900 mb-6">Privacy Policy</h1>
             
             <p><strong>Last Updated:</strong> October 20, 2024</p>
-            <p>This Privacy Policy explains how <strong>ReceiptGenerator.net</strong> ("we," "our," or "us") collects, uses, and protects the information you provide when using our website and services.</p>
+            <p>This Privacy Policy explains how <strong>ReceiptGenerator.net</strong> (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) collects, uses, and protects the information you provide when using our website and services.</p>
 
             <h2 className="text-2xl font-bold text-navy-900 mt-8 mb-4">1. Information We Collect</h2>
             <p>ReceiptGenerator.net collects limited information necessary to operate and improve our services. We may collect:</p>
@@ -41,7 +41,7 @@ export default function Privacy() {
             <h2 className="text-2xl font-bold text-navy-900 mt-8 mb-4">6. Third-Party Links</h2>
             <p>Our website may contain links to third-party sites. We are not responsible for the content or privacy practices of those websites. We encourage you to review the privacy policies of any external sites you visit.</p>
 
-            <h2 className="text-2xl font-bold text-navy-900 mt-8 mb-4">7. Children's Privacy</h2>
+            <h2 className="text-2xl font-bold text-navy-900 mt-8 mb-4">7. Children&apos;s Privacy</h2>
             <p>ReceiptGenerator.net is not intended for use by individuals under the age of 18. We do not knowingly collect personal data from minors. If you believe that a child has provided us with personal information, please contact us to request its removal.</p>
 
             <h2 className="text-2xl font-bold text-navy-900 mt-8 mb-4">8. Your Rights</h2>

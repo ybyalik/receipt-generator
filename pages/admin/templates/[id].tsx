@@ -103,7 +103,7 @@ export default function AdminTemplateEditor() {
       setSections(sectionsWithBarcodeValues);
       setTemplateName(template.name);
       setTemplateSlug(template.slug);
-      setSeoContent(template.seoContent || '');
+      setSeoContent((template as any).seoContent || '');
       if (template.settings) {
         setSettings(template.settings);
       }

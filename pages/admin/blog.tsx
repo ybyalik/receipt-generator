@@ -314,7 +314,7 @@ export default function AdminBlog() {
                   {posts.length === 0 && (
                     <tr>
                       <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
-                        No blog posts yet. Click "New Post" to create one.
+                        No blog posts yet. Click &quot;New Post&quot; to create one.
                       </td>
                     </tr>
                   )}
