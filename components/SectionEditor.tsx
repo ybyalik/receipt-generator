@@ -678,16 +678,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
         return (
           <>
             <div className="mb-3">
-              <label className="block text-sm font-medium mb-1">Barcode Value</label>
-              <input
-                type="text"
-                value={section.value}
-                onChange={(e) => onUpdate({ ...section, value: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 placeholder:text-gray-400"
-                placeholder="1234567890123"
-              />
-            </div>
-            <div className="mb-3">
               <label className="block text-sm font-medium mb-1">Size: {section.size}</label>
               <input
                 type="range"
