@@ -23,6 +23,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
       case 'payment': return 'Payment';
       case 'date_time': return 'Date & Time';
       case 'barcode': return 'Barcode';
+      case 'two_columns': return 'Two Columns';
       default: return 'Section';
     }
   };
@@ -35,6 +36,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
       case 'payment': return <FiCreditCard className="w-4 h-4" />;
       case 'date_time': return <FiClock className="w-4 h-4" />;
       case 'barcode': return <FiBarChart2 className="w-4 h-4" />;
+      case 'two_columns': return <FiAlignLeft className="w-4 h-4" />;
       default: return <FiFile className="w-4 h-4" />;
     }
   };
@@ -779,6 +781,115 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
               <p className="text-xs text-gray-500 mt-1">
                 Controls the vertical size of the barcode
               </p>
+            </div>
+          </>
+        );
+
+      case 'two_columns':
+        return (
+          <>
+            <div className="grid grid-cols-2 gap-4">
+              {/* Column 1 */}
+              <div className="border border-gray-200 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-semibold">Column 1</label>
+                </div>
+                {section.column1.map((field, index) => (
+                  <div key={index} className="mb-2 flex gap-2">
+                    <input
+                      type="text"
+                      value={field.title}
+                      onChange={(e) => {
+                        const newColumn1 = [...section.column1];
+                        newColumn1[index] = { ...field, title: e.target.value };
+                        onUpdate({ ...section, column1: newColumn1 });
+                      }}
+                      placeholder="Label"
+                      className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
+                    />
+                    <input
+                      type="text"
+                      value={field.value}
+                      onChange={(e) => {
+                        const newColumn1 = [...section.column1];
+                        newColumn1[index] = { ...field, value: e.target.value };
+                        onUpdate({ ...section, column1: newColumn1 });
+                      }}
+                      placeholder="Value"
+                      className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
+                    />
+                    <button
+                      onClick={() => {
+                        const newColumn1 = section.column1.filter((_, i) => i !== index);
+                        onUpdate({ ...section, column1: newColumn1 });
+                      }}
+                      className="text-red-600 hover:text-red-800 p-1"
+                    >
+                      <FiTrash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  onClick={() => {
+                    const newColumn1 = [...section.column1, { title: '', value: '' }];
+                    onUpdate({ ...section, column1: newColumn1 });
+                  }}
+                  className="text-sm text-accent-600 hover:text-accent-700 flex items-center gap-1 mt-2"
+                >
+                  <span className="text-lg">+</span> Add line
+                </button>
+              </div>
+
+              {/* Column 2 */}
+              <div className="border border-gray-200 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-semibold">Column 2</label>
+                </div>
+                {section.column2.map((field, index) => (
+                  <div key={index} className="mb-2 flex gap-2">
+                    <input
+                      type="text"
+                      value={field.title}
+                      onChange={(e) => {
+                        const newColumn2 = [...section.column2];
+                        newColumn2[index] = { ...field, title: e.target.value };
+                        onUpdate({ ...section, column2: newColumn2 });
+                      }}
+                      placeholder="Label"
+                      className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
+                    />
+                    <input
+                      type="text"
+                      value={field.value}
+                      onChange={(e) => {
+                        const newColumn2 = [...section.column2];
+                        newColumn2[index] = { ...field, value: e.target.value };
+                        onUpdate({ ...section, column2: newColumn2 });
+                      }}
+                      placeholder="Value"
+                      className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
+                    />
+                    <button
+                      onClick={() => {
+                        const newColumn2 = section.column2.filter((_, i) => i !== index);
+                        onUpdate({ ...section, column2: newColumn2 });
+                      }}
+                      className="text-red-600 hover:text-red-800 p-1"
+                    >
+                      <FiTrash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  onClick={() => {
+                    const newColumn2 = [...section.column2, { title: '', value: '' }];
+                    onUpdate({ ...section, column2: newColumn2 });
+                  }}
+                  className="text-sm text-accent-600 hover:text-accent-700 flex items-center gap-1 mt-2"
+                >
+                  <span className="text-lg">+</span> Add line
+                </button>
+              </div>
             </div>
           </>
         );

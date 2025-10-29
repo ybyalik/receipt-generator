@@ -270,8 +270,23 @@ export default function TemplateEditor() {
           type: 'barcode',
           id: newId,
           size: 2,
-          length: 13,
+          length: 60,
           value: '1234567890123',
+          dividerAtBottom: true,
+          dividerStyle: 'dashed',
+        };
+        break;
+      case 'two_columns':
+        newSection = {
+          type: 'two_columns',
+          id: newId,
+          column1: [
+            { title: 'Table', value: '415' },
+            { title: 'Server', value: 'Rebecca' },
+          ],
+          column2: [
+            { title: 'Guests', value: '2' },
+          ],
           dividerAtBottom: true,
           dividerStyle: 'dashed',
         };
@@ -475,6 +490,12 @@ export default function TemplateEditor() {
                   className="px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 hover:border-gray-400 transition-all cursor-pointer text-left"
                 >
                   <FiPlus className="inline mr-1" /> Barcode
+                </button>
+                <button
+                  onClick={() => addSection('two_columns')}
+                  className="px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 hover:border-gray-400 transition-all cursor-pointer text-left"
+                >
+                  <FiPlus className="inline mr-1" /> Two Columns
                 </button>
               </div>
             </div>

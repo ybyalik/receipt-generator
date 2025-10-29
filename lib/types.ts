@@ -94,13 +94,29 @@ export interface BarcodeSection {
   dividerStyle: DividerStyle;
 }
 
+export interface TwoColumnsSection {
+  type: 'two_columns';
+  id: string;
+  column1: Array<{
+    title: string;
+    value: string;
+  }>;
+  column2: Array<{
+    title: string;
+    value: string;
+  }>;
+  dividerAtBottom: boolean;
+  dividerStyle: DividerStyle;
+}
+
 export type Section = 
   | HeaderSection 
   | CustomMessageSection 
   | ItemsListSection 
   | PaymentSection 
   | DateTimeSection 
-  | BarcodeSection;
+  | BarcodeSection
+  | TwoColumnsSection;
 
 export type CurrencyFormat = 'symbol_before' | 'symbol_after' | 'symbol_after_space'; // $2.99, 2.99$, 2.99 $
 export type FontStyle = 'mono' | 'receipt' | 'courier' | 'consolas' | 'ocr-b';

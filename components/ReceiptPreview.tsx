@@ -247,6 +247,33 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
           </div>
         );
 
+      case 'two_columns':
+        return (
+          <div key={section.id} className="mb-4">
+            <div className="text-xs grid grid-cols-2 gap-4">
+              {/* Column 1 */}
+              <div className="space-y-1">
+                {section.column1.map((field, idx) => (
+                  <div key={idx} className="flex justify-between gap-2">
+                    <span className="flex-shrink-0">{field.title}</span>
+                    <span className="text-right">{field.value}</span>
+                  </div>
+                ))}
+              </div>
+              {/* Column 2 */}
+              <div className="space-y-1">
+                {section.column2.map((field, idx) => (
+                  <div key={idx} className="flex justify-between gap-2">
+                    <span className="flex-shrink-0">{field.title}</span>
+                    <span className="text-right">{field.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {renderDivider(section.dividerStyle, section.dividerAtBottom)}
+          </div>
+        );
+
       default:
         return null;
     }
