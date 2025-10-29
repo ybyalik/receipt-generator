@@ -64,14 +64,14 @@ export default function BlogPost() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen bg-gray-50 py-8 sm:py-12">
         <article className="max-w-3xl mx-auto px-4">
-          <a href="/blog" className="text-navy-600 hover:text-navy-800 mb-6 inline-block">
+          <a href="/blog" className="text-navy-600 hover:text-navy-800 mb-4 sm:mb-6 inline-block">
             ← Back to blog
           </a>
 
           {post.featuredImage && (
-            <div className="aspect-video w-full overflow-hidden rounded-lg mb-6">
+            <div className="aspect-video w-full overflow-hidden rounded-lg mb-4 sm:mb-6">
               <img
                 src={post.featuredImage}
                 alt={post.title}
@@ -80,7 +80,7 @@ export default function BlogPost() {
             </div>
           )}
 
-          <h1 className="text-4xl font-bold text-navy-900 mb-4">{post.title}</h1>
+          <h1 className="text-2xl sm:text-4xl font-bold text-navy-900 mb-3 sm:mb-4">{post.title}</h1>
           
           <p className="text-gray-600 mb-8">
             {post.publishedAt && format(new Date(post.publishedAt), 'MMMM d, yyyy')}
