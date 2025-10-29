@@ -418,7 +418,7 @@ export default function TemplateEditor() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[460px_minmax(0,1fr)] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="bg-white rounded-lg shadow p-6">
             <SettingsPanel settings={settings} onUpdate={setSettings} />
             
@@ -501,7 +501,7 @@ export default function TemplateEditor() {
             </div>
           </div>
 
-          <div className="sticky top-8 max-w-[700px] mx-auto">
+          <div className="sticky top-8">
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">Live Preview</h2>
