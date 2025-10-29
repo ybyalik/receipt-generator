@@ -79,6 +79,7 @@ export interface DateTimeSection {
   id: string;
   alignment: Alignment;
   date: string;
+  dateFormat?: string; // Format string for displaying date/time
   dividerAtBottom: boolean;
   dividerStyle: DividerStyle;
 }

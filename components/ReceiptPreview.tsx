@@ -183,10 +183,21 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
         );
 
       case 'date_time':
+        const formatDate = (dateString: string, formatString?: string) => {
+          if (!dateString) return '';
+          try {
+            const date = new Date(dateString);
+            const formatToUse = formatString || 'MM/dd/yyyy, h:mm:ss a';
+            return format(date, formatToUse);
+          } catch (error) {
+            return dateString; // Fallback to original string if parsing fails
+          }
+        };
+
         return (
           <div key={section.id} className="mb-4">
             <div className={`text-${section.alignment} text-xs`}>
-              {section.date}
+              {formatDate(section.date, section.dateFormat)}
             </div>
             {renderDivider(section.dividerStyle, section.dividerAtBottom)}
           </div>

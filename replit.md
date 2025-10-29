@@ -56,6 +56,23 @@ The architecture emphasizes component composition, including higher-order `Layou
 -   **JsBarcode** (v3.12.1): For generating barcode graphics.
 -   **date-fns** (v4.1.0): For date formatting and manipulation.
 
+## Recent Updates (October 29, 2025)
+
+### Date & Time Field Enhancement
+The Date & Time section now includes:
+- **Calendar Picker**: Users can select date and time using a native `datetime-local` input instead of typing manually
+- **"Use Current Date/Time" Button**: Quick button to populate with the current date and time
+- **Multiple Display Formats**: Dropdown with 7 preset formats plus custom option:
+  - MM/DD/YYYY, h:mm:ss A (e.g., 10/28/2025, 7:40:07 AM)
+  - MM/DD/YYYY h:mm A (e.g., 10/28/2025 7:40 AM)
+  - DD/MM/YYYY HH:mm (e.g., 28/10/2025 07:40)
+  - YYYY-MM-DD HH:mm:ss (e.g., 2025-10-28 07:40:07)
+  - MMMM D, YYYY h:mm A (e.g., October 28, 2025 7:40 AM)
+  - MMM D, YYYY (e.g., Oct 28, 2025)
+  - DD MMM YYYY HH:mm (e.g., 28 Oct 2025 07:40)
+  - Custom format (uses date-fns format tokens)
+- **Technical Implementation**: Date values stored as ISO 8601 strings, format string stored separately in `dateFormat` field
+
 ## Blog System
 
 The application includes a full-featured blog at `/blog` with the following capabilities:

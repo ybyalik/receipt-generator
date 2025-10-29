@@ -658,19 +658,78 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
         );
 
       case 'date_time':
+        const dateFormats = [
+          { label: 'MM/DD/YYYY, h:mm:ss A', value: 'MM/dd/yyyy, h:mm:ss a', example: '10/28/2025, 7:40:07 AM' },
+          { label: 'MM/DD/YYYY h:mm A', value: 'MM/dd/yyyy h:mm a', example: '10/28/2025 7:40 AM' },
+          { label: 'DD/MM/YYYY HH:mm', value: 'dd/MM/yyyy HH:mm', example: '28/10/2025 07:40' },
+          { label: 'YYYY-MM-DD HH:mm:ss', value: 'yyyy-MM-dd HH:mm:ss', example: '2025-10-28 07:40:07' },
+          { label: 'MMMM D, YYYY h:mm A', value: 'MMMM d, yyyy h:mm a', example: 'October 28, 2025 7:40 AM' },
+          { label: 'MMM D, YYYY', value: 'MMM d, yyyy', example: 'Oct 28, 2025' },
+          { label: 'DD MMM YYYY HH:mm', value: 'dd MMM yyyy HH:mm', example: '28 Oct 2025 07:40' },
+          { label: 'Custom', value: 'custom', example: 'Enter your own format' },
+        ];
+
         return (
           <>
             {renderAlignmentButtons(section.alignment, (alignment) => onUpdate({ ...section, alignment }))}
             <div className="mb-3">
-              <label className="block text-sm font-medium mb-1">Date & Time</label>
+              <label className="block text-sm font-medium mb-1">Select Date & Time</label>
               <input
-                type="text"
-                value={section.date}
-                onChange={(e) => onUpdate({ ...section, date: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 placeholder:text-gray-400"
-                placeholder="MM/DD/YYYY HH:MM AM"
+                type="datetime-local"
+                value={section.date ? new Date(section.date).toISOString().slice(0, 16) : ''}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    onUpdate({ ...section, date: new Date(e.target.value).toISOString() });
+                  }
+                }}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2"
               />
+              <button
+                type="button"
+                onClick={() => onUpdate({ ...section, date: new Date().toISOString() })}
+                className="mt-2 text-sm text-accent-500 hover:text-accent-600 font-medium"
+              >
+                Use Current Date/Time
+              </button>
             </div>
+            
+            <div className="mb-3">
+              <label className="block text-sm font-medium mb-1">Display Format</label>
+              <select
+                value={section.dateFormat || 'MM/dd/yyyy, h:mm:ss a'}
+                onChange={(e) => onUpdate({ ...section, dateFormat: e.target.value })}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+              >
+                {dateFormats.map((format) => (
+                  <option key={format.value} value={format.value}>
+                    {format.label} — {format.example}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {section.dateFormat === 'custom' && (
+              <div className="mb-3">
+                <label className="block text-sm font-medium mb-1">Custom Format String</label>
+                <input
+                  type="text"
+                  value=""
+                  onChange={(e) => onUpdate({ ...section, dateFormat: e.target.value || 'custom' })}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 font-mono text-sm"
+                  placeholder="e.g., MMMM do, yyyy 'at' h:mm a"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Use date-fns format tokens. <a 
+                    href="https://date-fns.org/docs/format" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-accent-500 hover:underline"
+                  >
+                    View format reference
+                  </a>
+                </p>
+              </div>
+            )}
           </>
         );
 
