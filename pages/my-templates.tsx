@@ -80,15 +80,15 @@ const MyTemplates: NextPage = () => {
         <title>My Templates - ReceiptGen</title>
       </Head>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-6 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 py-4 sm:py-8">
+        <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">My Templates</h1>
-            <p className="text-gray-600 mt-1">Templates you&apos;ve customized and saved</p>
+            <h1 className="text-2xl sm:text-3xl font-bold">My Templates</h1>
+            <p className="text-sm sm:text-base text-gray-600 mt-1">Templates you&apos;ve customized and saved</p>
           </div>
           <button 
             onClick={() => router.push('/templates')}
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"
           >
             <FiPlus className="mr-2" />
             Create from Template
@@ -121,27 +121,29 @@ const MyTemplates: NextPage = () => {
 
             <div className="divide-y">
               {userTemplates.map((template) => (
-                <div key={template.id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50">
-                  <div>
-                    <h3 className="font-semibold">{template.name}</h3>
-                    <p className="text-sm text-gray-600">
+                <div key={template.id} className="px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 hover:bg-gray-50">
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-base sm:text-lg">{template.name}</h3>
+                    <p className="text-xs sm:text-sm text-gray-600">
                       {template.sections.length} sections • Saved {new Date(template.createdAt).toLocaleDateString()}
                     </p>
                   </div>
-                  <div className="flex space-x-2">
+                  <div className="flex gap-2">
                     <button 
                       onClick={() => handleEditTemplate(template.id)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors cursor-pointer"
+                      className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors cursor-pointer"
                       title="Edit template"
                     >
                       <FiEdit />
+                      <span className="sm:hidden">Edit</span>
                     </button>
                     <button 
                       onClick={() => handleDeleteTemplate(template.id, template.name)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
+                      className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors cursor-pointer"
                       title="Delete template"
                     >
                       <FiTrash2 />
+                      <span className="sm:hidden">Delete</span>
                     </button>
                   </div>
                 </div>

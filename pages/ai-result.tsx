@@ -157,26 +157,26 @@ export default function AIResult() {
         <title>AI-Generated Receipt - ReceiptGen</title>
       </Head>
 
-      <div className="max-w-[1400px] mx-auto px-4 py-8">
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-2">
+      <div className="max-w-[1400px] mx-auto px-4 py-4 sm:py-8">
+        <div className="mb-4 sm:mb-6">
+          <div className="flex flex-col gap-4 mb-2">
             <div>
-              <h1 className="text-3xl font-bold text-navy-900">
+              <h1 className="text-2xl sm:text-3xl font-bold text-navy-900">
                 AI-Generated Receipt Template
               </h1>
-              <p className="text-gray-600 mt-1">Review and customize your automatically generated receipt</p>
+              <p className="text-sm sm:text-base text-gray-600 mt-1">Review and customize your automatically generated receipt</p>
             </div>
-            <div className="flex space-x-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <button
                 onClick={handleBackToAI}
-                className="flex items-center px-4 py-2 bg-gray-100 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
+                className="flex items-center justify-center px-4 py-2 bg-gray-100 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
               >
                 <FiArrowLeft className="mr-2" />
                 Back to AI
               </button>
               <button
                 onClick={handleSaveClick}
-                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+                className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 <FiSave className="mr-2" />
                 Save Template
@@ -221,15 +221,15 @@ export default function AIResult() {
             </div>
           </div>
 
-          <div className="sticky top-8">
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold">Live Preview</h2>
-                <div className="flex space-x-2">
+          <div className="lg:sticky lg:top-8">
+            <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                <h2 className="text-lg sm:text-xl font-bold">Live Preview</h2>
+                <div className="flex flex-col sm:flex-row gap-2">
                   {!user?.isPremium && (
                     <button
                       onClick={downloadWithWatermark}
-                      className="flex items-center px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
+                      className="flex items-center justify-center px-3 sm:px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer text-sm sm:text-base"
                     >
                       <FiDownload className="mr-2" />
                       Download Sample
@@ -237,7 +237,7 @@ export default function AIResult() {
                   )}
                   <button
                     onClick={handleDownload}
-                    className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+                    className="flex items-center justify-center px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer text-sm sm:text-base whitespace-nowrap"
                   >
                     <FiDownload className="mr-2" />
                     {user?.isPremium ? 'Download' : 'Remove Watermark'}
