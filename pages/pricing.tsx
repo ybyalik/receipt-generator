@@ -20,13 +20,14 @@ const Pricing: NextPage = () => {
       name: 'Monthly',
       price: '$9.99',
       period: '/month',
-      popular: true,
+      popular: false,
+      savings: 'Save $10/month',
     },
     {
       name: 'Yearly',
       price: '$44.99',
       period: '/year',
-      popular: false,
+      popular: true,
       savings: 'Save $75/year',
     },
   ];
@@ -68,7 +69,7 @@ const Pricing: NextPage = () => {
             >
               {plan.popular && (
                 <div className="absolute top-0 right-0 bg-accent-500 text-white px-4 py-1 rounded-bl-xl rounded-tr-xl text-sm font-semibold">
-                  Popular
+                  Best Value
                 </div>
               )}
               <h3 className="text-2xl font-bold mb-4 text-navy-900">{plan.name}</h3>
