@@ -366,7 +366,7 @@ export default function TemplateEditor() {
             <div className="flex space-x-3">
               <button
                 onClick={resetTemplate}
-                className="flex items-center px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
+                className="flex items-center px-4 py-2 bg-red-50 border-2 border-red-500 text-red-700 rounded-lg hover:bg-red-100 transition-colors cursor-pointer"
               >
                 <FiRefreshCw className="mr-2" />
                 Reset
