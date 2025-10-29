@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '../contexts/AuthContext';
-import { FiUser, FiLogOut, FiChevronDown, FiSettings, FiHeart, FiUsers } from 'react-icons/fi';
+import { FiUser, FiLogOut, FiChevronDown, FiSettings, FiHeart, FiUsers, FiCreditCard } from 'react-icons/fi';
 import AuthModal from './AuthModal';
 
 interface LayoutProps {
@@ -100,6 +100,31 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         <FiHeart className="mr-3 w-4 h-4" />
                         My Templates
                       </Link>
+
+                      {user.isPremium && (
+                        <button
+                          onClick={async () => {
+                            setIsDropdownOpen(false);
+                            try {
+                              const response = await fetch('/api/create-portal-session', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ firebaseUid: user.uid }),
+                              });
+                              const data = await response.json();
+                              if (data.url) {
+                                window.location.href = data.url;
+                              }
+                            } catch (error) {
+                              console.error('Error opening billing portal:', error);
+                            }
+                          }}
+                          className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-navy-50 transition-colors cursor-pointer"
+                        >
+                          <FiCreditCard className="mr-3 w-4 h-4" />
+                          Manage Subscription
+                        </button>
+                      )}
                       
                       <div className="border-t border-gray-200 my-2"></div>
                       
