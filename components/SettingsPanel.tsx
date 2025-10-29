@@ -46,7 +46,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 onChange={(e) => onUpdate({ ...settings, currency: e.target.value })}
                 placeholder="$"
                 maxLength={5}
-                className="w-16 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 text-center font-medium bg-white"
+                className="w-16 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 text-center font-medium bg-white cursor-text"
               />
             </div>
             
@@ -57,7 +57,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                   <button
                     key={format}
                     onClick={() => onUpdate({ ...settings, currencyFormat: format })}
-                    className={`px-4 py-2 border rounded-lg transition-all font-medium ${
+                    className={`px-4 py-2 border rounded-lg transition-all font-medium cursor-pointer ${
                       settings.currencyFormat === format
                         ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                         : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
@@ -76,7 +76,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => onUpdate({ ...settings, font: 'mono' })}
-                className={`px-6 py-2 border rounded-lg transition-all ${
+                className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
                   settings.font === 'mono'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                     : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
@@ -87,7 +87,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
               </button>
               <button
                 onClick={() => onUpdate({ ...settings, font: 'receipt' })}
-                className={`px-6 py-2 border rounded-lg transition-all ${
+                className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
                   settings.font === 'receipt'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                     : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
@@ -98,7 +98,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
               </button>
               <button
                 onClick={() => onUpdate({ ...settings, font: 'courier' })}
-                className={`px-6 py-2 border rounded-lg transition-all ${
+                className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
                   settings.font === 'courier'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                     : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
@@ -109,7 +109,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
               </button>
               <button
                 onClick={() => onUpdate({ ...settings, font: 'consolas' })}
-                className={`px-6 py-2 border rounded-lg transition-all ${
+                className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
                   settings.font === 'consolas'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                     : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
@@ -120,7 +120,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
               </button>
               <button
                 onClick={() => onUpdate({ ...settings, font: 'ocr-b' })}
-                className={`px-6 py-2 border rounded-lg transition-all ${
+                className={`px-6 py-2 border rounded-lg transition-all cursor-pointer ${
                   settings.font === 'ocr-b'
                     ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                     : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
@@ -154,7 +154,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 <button
                   key={texture}
                   onClick={() => onUpdate({ ...settings, backgroundTexture: texture })}
-                  className={`px-4 py-2 border rounded-lg transition-all font-medium ${
+                  className={`px-4 py-2 border rounded-lg transition-all font-medium cursor-pointer ${
                     settings.backgroundTexture === texture
                       ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                       : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
@@ -177,7 +177,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onUpdate }) => 
                 <button
                   key={value}
                   onClick={() => onUpdate({ ...settings, receiptWidth: value as ReceiptWidth })}
-                  className={`px-4 py-2 border rounded-lg transition-all ${
+                  className={`px-4 py-2 border rounded-lg transition-all cursor-pointer ${
                     (settings.receiptWidth || '80mm') === value
                       ? 'bg-gray-100 text-gray-900 border-gray-300 shadow-sm'
                       : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50 hover:border-accent-500'
