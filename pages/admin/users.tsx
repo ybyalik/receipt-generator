@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
@@ -31,18 +31,7 @@ export default function AdminUsers() {
   const [isLoading, setIsLoading] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (loading) return;
-
-    if (!user || !isAdmin()) {
-      router.push('/');
-      return;
-    }
-
-    fetchUsers();
-  }, [user, loading, isAdmin, router]);
-
-  const fetchUsers = async (search?: string) => {
+  const fetchUsers = useCallback(async (search?: string) => {
     if (!user?.email) return;
     
     try {
@@ -64,7 +53,18 @@ export default function AdminUsers() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user?.email, showError]);
+
+  useEffect(() => {
+    if (loading) return;
+
+    if (!user || !isAdmin()) {
+      router.push('/');
+      return;
+    }
+
+    fetchUsers();
+  }, [user, loading, isAdmin, router, fetchUsers]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

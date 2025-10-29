@@ -55,7 +55,7 @@ export default function SubscriptionSuccess() {
           </p>
 
           <div className="bg-accent-50 rounded-xl p-6 mb-8">
-            <h2 className="text-lg font-semibold text-navy-900 mb-3">What's Included:</h2>
+            <h2 className="text-lg font-semibold text-navy-900 mb-3">What&apos;s Included:</h2>
             <ul className="space-y-2 text-left max-w-md mx-auto">
               {[
                 'Download receipts without watermarks',
