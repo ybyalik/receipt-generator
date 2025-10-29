@@ -37,7 +37,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     switch (event.type) {
       case 'customer.subscription.created':
       case 'customer.subscription.updated': {
-        const subscription = event.data.object as Stripe.Subscription;
+        const subscription = event.data.object as Stripe.Subscription & {
+          current_period_end?: number;
+        };
         const firebaseUid = subscription.metadata?.firebaseUid;
 
         if (!firebaseUid) {
@@ -67,7 +69,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       case 'customer.subscription.deleted': {
-        const subscription = event.data.object as Stripe.Subscription;
+        const subscription = event.data.object as Stripe.Subscription & {
+          current_period_end?: number;
+        };
         const firebaseUid = subscription.metadata?.firebaseUid;
 
         if (!firebaseUid) {
@@ -75,10 +79,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           break;
         }
 
+        let subscriptionEndsAt: Date | undefined;
+        if (subscription.current_period_end) {
+          subscriptionEndsAt = new Date(subscription.current_period_end * 1000);
+        }
+
         await updateUserSubscription(firebaseUid, {
           subscriptionStatus: 'canceled',
           isPremium: false,
-          subscriptionEndsAt: new Date(subscription.current_period_end * 1000),
+          subscriptionEndsAt,
         });
 
         console.log(`Subscription canceled for user ${firebaseUid}`);
@@ -86,20 +95,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       case 'invoice.payment_succeeded': {
-        const invoice = event.data.object as Stripe.Invoice;
+        const invoice = event.data.object as Stripe.Invoice & {
+          subscription?: string | Stripe.Subscription;
+        };
         
         if (invoice.subscription) {
           const subscription = await stripe.subscriptions.retrieve(
             invoice.subscription as string
-          );
+          ) as Stripe.Subscription & {
+            current_period_end?: number;
+          };
           
           const firebaseUid = subscription.metadata?.firebaseUid;
           if (!firebaseUid) break;
 
+          let subscriptionEndsAt: Date | undefined;
+          if (subscription.current_period_end) {
+            subscriptionEndsAt = new Date(subscription.current_period_end * 1000);
+          }
+
           await updateUserSubscription(firebaseUid, {
             subscriptionStatus: subscription.status,
             isPremium: ['active', 'trialing'].includes(subscription.status),
-            subscriptionEndsAt: new Date(subscription.current_period_end * 1000),
+            subscriptionEndsAt,
           });
 
           console.log(`Payment succeeded for user ${firebaseUid}`);
@@ -108,7 +126,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       case 'invoice.payment_failed': {
-        const invoice = event.data.object as Stripe.Invoice;
+        const invoice = event.data.object as Stripe.Invoice & {
+          subscription?: string | Stripe.Subscription;
+        };
         
         if (invoice.subscription) {
           const subscription = await stripe.subscriptions.retrieve(
