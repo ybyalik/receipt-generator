@@ -125,6 +125,13 @@ export default function AIReceiptGenerator() {
 
       // Items list
       if (aiData.items && aiData.items.length > 0) {
+        // Calculate total from items
+        const itemsTotal = aiData.items.reduce((sum: number, item: any) => {
+          const qty = parseNumber(item.quantity || 1);
+          const price = parseNumber(item.price || 0);
+          return sum + (qty * price);
+        }, 0);
+
         sections.push({
           id: 'items',
           type: 'items_list',
@@ -137,6 +144,10 @@ export default function AIReceiptGenerator() {
             price: parseNumber(item.price || 0),
           })),
           totalLines: [],
+          total: {
+            title: 'Total',
+            price: itemsTotal,
+          },
           dividerStyle: 'dashed',
           dividerAtBottom: true,
         });
