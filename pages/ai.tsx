@@ -318,7 +318,7 @@ export default function AIReceiptGenerator() {
     <Layout>
       <Head>
         <title>AI Receipt Generator - Upload Image & Create Template Instantly | ReceiptGen</title>
-        <meta name="description" content="Upload a receipt image and let our AI automatically extract data to create a customizable template. Powered by advanced vision technology. Try it free!" />
+        <meta name="description" content="Upload a receipt image and let our AI automatically extract data to create a customizable template. Powered by advanced vision technology." />
         <meta name="keywords" content="AI receipt generator, receipt OCR, receipt scanner, receipt image to template, automatic receipt maker, AI receipt reader" />
         <meta property="og:title" content="AI Receipt Generator - Upload Image & Create Template Instantly" />
         <meta property="og:description" content="Upload a receipt image and let our AI automatically extract data to create a customizable template. Powered by advanced vision technology." />

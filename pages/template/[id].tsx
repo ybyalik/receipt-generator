@@ -410,10 +410,10 @@ export default function TemplateEditor() {
   return (
     <Layout>
       <Head>
-        <title>{template.name} - Free Customizable Receipt Template | ReceiptGen</title>
-        <meta name="description" content={`Create and customize ${template.name.toLowerCase()} instantly. Edit details, add items, and download professional receipts in seconds. 100% free to customize.`} />
+        <title>{template.name} - Customizable Receipt Template | ReceiptGen</title>
+        <meta name="description" content={`Create and customize ${template.name.toLowerCase()} instantly. Edit details, add items, and download professional receipts in seconds.`} />
         <meta name="keywords" content={`${template.name.toLowerCase()}, receipt template, ${template.name.toLowerCase()} generator, customizable receipt, business receipt`} />
-        <meta property="og:title" content={`${template.name} - Free Customizable Receipt Template`} />
+        <meta property="og:title" content={`${template.name} - Customizable Receipt Template`} />
         <meta property="og:description" content={`Create and customize ${template.name.toLowerCase()} instantly. Edit details, add items, and download professional receipts in seconds.`} />
         <meta property="og:type" content="website" />
       </Head>
