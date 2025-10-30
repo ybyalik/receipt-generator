@@ -62,6 +62,23 @@ The architecture emphasizes component composition, including higher-order `Layou
 
 ## Recent Updates (October 30, 2025)
 
+### AI Bulk Template Generator
+Production-ready script for automated creation of industry-specific receipt templates:
+- **Script Location**: `scripts/generate-templates.ts`
+- **Command**: `npm run generate-templates`
+- **OpenAI Integration**: Uses GPT-4o to generate realistic business data, items, and pricing for each industry
+- **Template Structure**: Creates complete templates with 6 sections: header, custom message, barcode, items list, payment, and date/time
+- **Unique Slug Generation**: Automatically creates URL-safe slugs (e.g., "Mechanic Shop" → "mechanic-shop-receipt")
+- **Duplicate Handling**: Checks for existing templates and skips duplicates, making re-runs safe
+- **Environment Variables**: 
+  - `AI_INTEGRATIONS_OPENAI_API_KEY`: OpenAI API key (via Replit integration)
+  - `AI_INTEGRATIONS_OPENAI_BASE_URL`: OpenAI base URL (via Replit integration)
+  - `API_BASE_URL`: API endpoint (defaults to localhost:5000 for dev)
+  - `NEXT_PUBLIC_ADMIN_EMAILS`: Admin email for template creation
+- **Generated Templates**: Currently includes Mechanic Shop Receipt, Pawn Shop Receipt, and Carpet Cleaning Receipt
+- **Extensibility**: Add new industries by editing the `industries` array in the script
+- **SEO Note**: Generated templates require SEO content to be added manually via admin panel
+
 ### SEO Meta Tags Optimization
 - **Server-Side Rendering Pattern**: Implemented proper Next.js Pages Router SSR pattern for meta tags via `_app.tsx`
   - Template pages pass `metaTags` through `getServerSideProps` → `pageProps` → `_app.tsx` Head component
