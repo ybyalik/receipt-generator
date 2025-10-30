@@ -381,6 +381,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const generated = await generateTemplateForIndustry(industry);
       
+      // Check if template with this slug already exists
+      const existingCheckResponse = await fetch(`${req.headers.origin || 'http://localhost:5000'}/api/templates/by-slug/${generated.slug}`);
+      
+      if (existingCheckResponse.ok) {
+        // Template already exists, skip it
+        results.push({
+          success: false,
+          industry,
+          error: `Template "${generated.name}" already exists (skipped)`,
+          skipped: true,
+        });
+        continue;
+      }
+      
       // Generate and save logo
       const logoUrl = await generateAndSaveLogo(industry, generated.slug);
       
