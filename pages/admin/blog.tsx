@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 import Layout from '../../components/Layout';
-import TiptapEditor from '../../components/TiptapEditor';
 import type { BlogPost } from '../../shared/schema';
 import { FiEdit2, FiTrash2, FiPlus, FiX, FiUpload, FiImage } from 'react-icons/fi';
 import Image from 'next/image';
+
+const TiptapEditor = dynamic(() => import('../../components/TiptapEditor'), {
+  ssr: false,
+  loading: () => <div className="border rounded-lg p-4 text-gray-500">Loading editor...</div>,
+});
 
 export default function AdminBlog() {
   const { user, isAdmin, loading: authLoading } = useAuth();

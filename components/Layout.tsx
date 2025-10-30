@@ -1,9 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { useAuth } from '../contexts/AuthContext';
 import { FiUser, FiLogOut, FiChevronDown, FiSettings, FiHeart, FiUsers, FiCreditCard, FiMenu, FiX } from 'react-icons/fi';
-import AuthModal from './AuthModal';
+
+const AuthModal = dynamic(() => import('./AuthModal'), {
+  ssr: false,
+  loading: () => null,
+});
 
 interface LayoutProps {
   children: React.ReactNode;

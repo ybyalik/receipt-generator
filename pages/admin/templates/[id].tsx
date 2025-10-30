@@ -1,11 +1,16 @@
 import { useRouter } from 'next/router';
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import Layout from '../../../components/Layout';
 import ReceiptPreview from '../../../components/ReceiptPreview';
 import SettingsPanel from '../../../components/SettingsPanel';
-import TiptapEditor from '../../../components/TiptapEditor';
 import { useTemplates } from '../../../contexts/TemplatesContext';
+
+const TiptapEditor = dynamic(() => import('../../../components/TiptapEditor'), {
+  ssr: false,
+  loading: () => <div className="border rounded-lg p-4 text-gray-500">Loading editor...</div>,
+});
 import { Section, TemplateSettings } from '../../../lib/types';
 import { useAuth } from '../../../contexts/AuthContext';
 import { FiSave, FiRefreshCw, FiEdit2, FiPlus, FiArrowLeft } from 'react-icons/fi';
