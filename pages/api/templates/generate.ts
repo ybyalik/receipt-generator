@@ -6,6 +6,13 @@ const openai = new OpenAI({
   baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
 });
 
+function capitalizeWords(str: string): string {
+  return str
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
 interface GeneratedTemplate {
   name: string;
   slug: string;
@@ -20,10 +27,11 @@ interface GeneratedTemplate {
 }
 
 async function generateTemplateForIndustry(industry: string): Promise<GeneratedTemplate> {
+  const capitalizedIndustry = capitalizeWords(industry);
   const prompt = `Generate a realistic receipt template for a ${industry} business. Return ONLY valid JSON with this exact structure:
 
 {
-  "name": "${industry} Receipt",
+  "name": "${capitalizedIndustry} Receipt",
   "businessName": "Realistic business name",
   "businessAddress": "Street address\\nCity, State ZIP\\nCountry",
   "businessPhone": "(555) 123-4567",
