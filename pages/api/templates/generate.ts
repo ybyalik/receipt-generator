@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI from 'openai';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
-import { ObjectStorageService } from '../../../server/objectStorage';
+import { S3StorageService } from '../../../server/s3Storage';
 
 const openai = new OpenAI({
   apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
@@ -131,19 +131,17 @@ async function generateAndSaveLogo(industry: string, slug: string): Promise<stri
     // Convert base64 to buffer
     const buffer = Buffer.from(base64Image, 'base64');
 
-    // Try Object Storage first (for production), fallback to local filesystem (for dev)
-    const isProduction = process.env.REPL_DEPLOYMENT === '1';
-    const useObjectStorage = process.env.PUBLIC_OBJECT_SEARCH_PATHS && isProduction;
+    // Try AWS S3 first (works in both dev and production)
+    const useS3 = process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && process.env.AWS_S3_BUCKET_NAME;
 
-    if (useObjectStorage) {
+    if (useS3) {
       try {
-        const objectStorageService = new ObjectStorageService();
-        const filename = `logos/${slug}.png`;
-        const logoUrl = await objectStorageService.uploadPublicObject(filename, buffer, 'image/png');
-        console.log(`Logo saved to object storage: ${logoUrl}`);
+        const s3Service = new S3StorageService();
+        const filename = `${slug}.png`;
+        const logoUrl = await s3Service.uploadLogo(buffer, filename);
         return logoUrl;
-      } catch (storageError) {
-        console.error('Object Storage failed, falling back to local filesystem:', storageError);
+      } catch (s3Error) {
+        console.error('S3 upload failed, falling back to local filesystem:', s3Error);
       }
     }
 
