@@ -67,7 +67,7 @@ const Home: NextPage = () => {
                 href="/ai"
                 className="bg-white text-navy-900 border-2 border-navy-200 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-navy-50 hover:border-accent-500 transition-all shadow-md cursor-pointer"
               >
-                AI Generator
+                AI Receipt Generator
               </Link>
             </div>
           </div>
