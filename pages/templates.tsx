@@ -12,8 +12,12 @@ const Templates: NextPage = () => {
   return (
     <Layout>
       <Head>
-        <title>Templates - ReceiptGen</title>
-        <meta name="description" content="Browse our collection of receipt templates" />
+        <title>Free Receipt Templates - Customizable Business Receipt Designs | ReceiptGen</title>
+        <meta name="description" content="Browse our collection of professional receipt templates for restaurants, retail, repair shops, gas stations, and more. Fully customizable and ready to download instantly." />
+        <meta name="keywords" content="receipt templates, business receipt, restaurant receipt, retail receipt, repair shop receipt, gas station receipt, customizable receipt" />
+        <meta property="og:title" content="Free Receipt Templates - Customizable Business Receipt Designs" />
+        <meta property="og:description" content="Browse our collection of professional receipt templates. Fully customizable and ready to download instantly." />
+        <meta property="og:type" content="website" />
       </Head>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">

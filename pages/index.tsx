@@ -37,8 +37,12 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Head>
-        <title>ReceiptGen - Create Professional Receipts Instantly</title>
-        <meta name="description" content="Generate custom receipts with ease" />
+        <title>Free Receipt Generator - Create Professional Receipts Instantly | ReceiptGen</title>
+        <meta name="description" content="Create professional receipts in seconds with our free online receipt generator. Choose from customizable templates, add your details, and download high-quality receipts instantly. Perfect for businesses and individuals." />
+        <meta name="keywords" content="receipt generator, free receipt maker, online receipt, create receipt, receipt template, business receipt, custom receipt" />
+        <meta property="og:title" content="Free Receipt Generator - Create Professional Receipts Instantly" />
+        <meta property="og:description" content="Create professional receipts in seconds with our free online receipt generator. Choose from customizable templates and download instantly." />
+        <meta property="og:type" content="website" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
