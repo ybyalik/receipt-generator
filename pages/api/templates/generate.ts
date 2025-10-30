@@ -116,7 +116,7 @@ async function generateAndSaveLogo(industry: string, slug: string): Promise<stri
     const response = await openai.images.generate({
       model: 'gpt-image-1',
       prompt: logoPrompt,
-      size: '1024x1024',
+      size: '256x256',
       n: 1,
     });
 
