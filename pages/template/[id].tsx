@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { useState, useRef, useEffect } from 'react';
-import Head from 'next/head';
 import Layout from '../../components/Layout';
 import ReceiptPreview from '../../components/ReceiptPreview';
 import SettingsPanel from '../../components/SettingsPanel';
@@ -413,15 +412,6 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
 
   return (
     <Layout>
-      <Head>
-        <title>{template.name} - Customizable Receipt Template</title>
-        <meta name="description" content={`Create and customize ${template.name.toLowerCase()} instantly. Edit details, add items, and download professional receipts in seconds.`} />
-        <meta name="keywords" content={`${template.name.toLowerCase()}, receipt template, ${template.name.toLowerCase()} generator, customizable receipt, business receipt`} />
-        <meta property="og:title" content={`${template.name} - Customizable Receipt Template`} />
-        <meta property="og:description" content={`Create and customize ${template.name.toLowerCase()} instantly. Edit details, add items, and download professional receipts in seconds.`} />
-        <meta property="og:type" content="website" />
-      </Head>
-
       <div className="max-w-[1400px] mx-auto px-4 py-4 sm:py-8">
         <div className="mb-4 sm:mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
@@ -683,9 +673,18 @@ export async function getServerSideProps(context: any) {
       };
     }
     
+    // Pass meta tags through pageProps for server-side rendering
     return {
       props: {
         initialTemplate: template,
+        metaTags: {
+          title: `${template.name} - Customizable Receipt Template`,
+          description: `Create and customize ${template.name.toLowerCase()} instantly. Edit details, add items, and download professional receipts in seconds.`,
+          keywords: `${template.name.toLowerCase()}, receipt template, ${template.name.toLowerCase()} generator, customizable receipt, business receipt`,
+          ogTitle: `${template.name} - Customizable Receipt Template`,
+          ogDescription: `Create and customize ${template.name.toLowerCase()} instantly. Edit details, add items, and download professional receipts in seconds.`,
+          ogType: 'website',
+        },
       },
     };
   } catch (error) {
