@@ -97,18 +97,27 @@ export class ObjectStorageService {
     
     const searchPath = searchPaths[0];
     const fullPath = `${searchPath}/${filePath}`;
+    console.log(`[Object Storage] Uploading to path: ${fullPath}`);
+    
     const { bucketName, objectName } = parseObjectPath(fullPath);
+    console.log(`[Object Storage] Bucket: ${bucketName}, Object: ${objectName}`);
+    
     const bucket = objectStorageClient.bucket(bucketName);
     const file = bucket.file(objectName);
     
-    await file.save(buffer, {
-      contentType,
-      metadata: {
-        cacheControl: 'public, max-age=31536000',
-      },
-    });
-    
-    return `/public-objects/${filePath}`;
+    try {
+      await file.save(buffer, {
+        contentType,
+        metadata: {
+          cacheControl: 'public, max-age=31536000',
+        },
+      });
+      console.log(`[Object Storage] Successfully uploaded: ${objectName}`);
+      return `/public-objects/${filePath}`;
+    } catch (error) {
+      console.error(`[Object Storage] Upload failed for ${bucketName}/${objectName}:`, error);
+      throw error;
+    }
   }
 }
 
