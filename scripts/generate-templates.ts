@@ -5,6 +5,11 @@ const openai = new OpenAI({
   baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
 });
 
+function getApiBaseUrl(): string {
+  // Use environment variable if available, otherwise fallback to localhost for development
+  return process.env.API_BASE_URL || 'http://localhost:5000';
+}
+
 interface GeneratedTemplate {
   name: string;
   slug: string;
@@ -20,7 +25,6 @@ async function generateTemplateForIndustry(industry: string): Promise<GeneratedT
 
 {
   "name": "${industry} Receipt",
-  "slug": "slug-format",
   "businessName": "Realistic business name",
   "businessAddress": "Street address\\nCity, State ZIP\\nCountry",
   "items": [
@@ -62,10 +66,33 @@ Requirements:
   }
   
   const generated = JSON.parse(cleanedContent);
+  
+  // Generate unique slug from industry name
+  const slug = industry
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    + '-receipt';
+  
+  generated.slug = slug;
+  
   return generated;
 }
 
-async function createTemplateInDatabase(generated: GeneratedTemplate) {
+async function createTemplateInDatabase(generated: GeneratedTemplate, skipIfExists: boolean = true) {
+  // Check if template already exists
+  if (skipIfExists) {
+    const checkResponse = await fetch(`${getApiBaseUrl()}/api/templates`);
+    if (checkResponse.ok) {
+      const existingTemplates = await checkResponse.json();
+      const exists = existingTemplates.some((t: any) => t.slug === generated.slug);
+      if (exists) {
+        console.log(`   ⏭️  Template with slug "${generated.slug}" already exists, skipping...`);
+        return null;
+      }
+    }
+  }
+  
   const sections = [];
   
   sections.push({
@@ -161,7 +188,7 @@ async function createTemplateInDatabase(generated: GeneratedTemplate) {
     },
   };
 
-  const response = await fetch('http://localhost:5000/api/templates', {
+  const response = await fetch(`${getApiBaseUrl()}/api/templates`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -171,7 +198,8 @@ async function createTemplateInDatabase(generated: GeneratedTemplate) {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to create template: ${response.statusText}`);
+    const errorText = await response.text();
+    throw new Error(`Failed to create template: ${response.statusText} - ${errorText}`);
   }
 
   return await response.json();
@@ -191,7 +219,11 @@ async function main() {
       
       console.log(`💾 Saving to database...`);
       const saved = await createTemplateInDatabase(generated);
-      console.log(`✅ Created: ${saved.name} (ID: ${saved.id})\n`);
+      if (saved) {
+        console.log(`✅ Created: ${saved.name} (ID: ${saved.id})\n`);
+      } else {
+        console.log(`⏭️  Skipped (already exists)\n`);
+      }
       
       await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (error) {
