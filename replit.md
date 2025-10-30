@@ -72,7 +72,7 @@ Production-ready system for automated creation of industry-specific receipt temp
   - Prompts optimized for monochrome, clean line art suitable for receipts
   - Logos saved to `public/logos/[slug].png` and referenced in header section
   - Gracefully handles generation failures (continues without logo if API fails)
-  - Image specs: 256x256 PNG, black and white only, optimized for small receipt logos
+  - Image specs: 1024x1024 PNG (displayed at ~50px in receipts), base64 format, black and white only
 - **Fully Randomized Templates**: Each generated template is completely unique with randomized:
   - **Fonts**: Random selection from 7 available fonts (monospace, receipt, courier-new, consolas, custom-receipt, bit-receipt, ocrb-receipt)
   - **Divider Styles**: Random mix of dashed, dotted, stars, and double dividers throughout template

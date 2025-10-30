@@ -116,25 +116,19 @@ async function generateAndSaveLogo(industry: string, slug: string): Promise<stri
     const response = await openai.images.generate({
       model: 'gpt-image-1',
       prompt: logoPrompt,
-      size: '256x256',
+      size: '1024x1024',
       n: 1,
     });
 
-    const imageUrl = response.data[0]?.url;
-    if (!imageUrl) {
-      console.error('No image URL returned from DALL-E');
+    // gpt-image-1 returns base64 format, not URL
+    const base64Image = response.data[0]?.b64_json;
+    if (!base64Image) {
+      console.error('No base64 image returned from gpt-image-1');
       return null;
     }
 
-    // Download the image
-    const imageResponse = await fetch(imageUrl);
-    if (!imageResponse.ok) {
-      console.error('Failed to download image from DALL-E');
-      return null;
-    }
-
-    const arrayBuffer = await imageResponse.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    // Convert base64 to buffer
+    const buffer = Buffer.from(base64Image, 'base64');
 
     // Save to public/logos directory
     const filename = `${slug}.png`;
