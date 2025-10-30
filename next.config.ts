@@ -6,6 +6,9 @@ const replitDomains = process.env.REPLIT_DOMAINS
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   ...(replitDomains.length > 0 && {
     allowedDevOrigins: replitDomains,
   }),

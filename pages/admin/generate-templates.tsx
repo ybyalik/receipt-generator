@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
 import Layout from '../../components/Layout';
 import { FiLoader, FiCheckCircle, FiXCircle, FiZap } from 'react-icons/fi';
@@ -177,14 +178,14 @@ export default function GenerateTemplates() {
                         <div className="mt-1 text-sm text-gray-600 space-y-1">
                           <p>
                             <span className="font-medium">Slug:</span>{' '}
-                            <a
+                            <Link
                               href={`/template/${result.template.slug}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-blue-600 hover:underline"
                             >
                               {result.template.slug}
-                            </a>
+                            </Link>
                           </p>
                           <p>
                             <span className="font-medium">Font:</span>{' '}
@@ -205,9 +206,9 @@ export default function GenerateTemplates() {
               <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
                 <p className="text-sm text-blue-800">
                   ✨ {successCount} template{successCount !== 1 ? 's' : ''} created successfully!{' '}
-                  <a href="/admin" className="font-medium text-blue-600 hover:underline">
+                  <Link href="/admin" className="font-medium text-blue-600 hover:underline">
                     View all templates →
-                  </a>
+                  </Link>
                 </p>
               </div>
             )}
