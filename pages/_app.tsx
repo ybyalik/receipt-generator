@@ -16,9 +16,6 @@ function MyApp({ Component, pageProps }: AppProps) {
           {metaTags.description && (
             <meta name="description" content={metaTags.description} key="description" />
           )}
-          {metaTags.keywords && (
-            <meta name="keywords" content={metaTags.keywords} key="keywords" />
-          )}
           {metaTags.ogTitle && (
             <meta property="og:title" content={metaTags.ogTitle} key="og-title" />
           )}

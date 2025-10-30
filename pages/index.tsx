@@ -39,7 +39,6 @@ const Home: NextPage = () => {
       <Head>
         <title>Receipt Generator - Create Professional Receipts Instantly</title>
         <meta name="description" content="Create professional receipts in seconds with our online receipt generator. Choose from customizable templates, add your details, and download high-quality receipts instantly. Perfect for businesses and individuals." />
-        <meta name="keywords" content="receipt generator, receipt maker, online receipt, create receipt, receipt template, business receipt, custom receipt" />
         <meta property="og:title" content="Receipt Generator - Create Professional Receipts Instantly" />
         <meta property="og:description" content="Create professional receipts in seconds with our online receipt generator. Choose from customizable templates and download instantly." />
         <meta property="og:type" content="website" />

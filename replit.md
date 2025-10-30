@@ -60,6 +60,18 @@ The architecture emphasizes component composition, including higher-order `Layou
 
 -   **Resend** (v4.0.0): Transactional email service for contact form submissions. Configured via Replit integration for secure API key management. Emails sent from/to `contact@receiptgenerator.net`.
 
+## Recent Updates (October 30, 2025)
+
+### SEO Meta Tags Optimization
+- **Server-Side Rendering Pattern**: Implemented proper Next.js Pages Router SSR pattern for meta tags via `_app.tsx`
+  - Template pages pass `metaTags` through `getServerSideProps` → `pageProps` → `_app.tsx` Head component
+  - Ensures meta tags are **always** in server-rendered HTML (no rendering inconsistencies)
+  - Verified working for title, description, and Open Graph tags
+- **Removed Keywords Meta Tags**: Eliminated outdated `name="keywords"` meta tags from all pages
+  - Keywords meta tags haven't been used by search engines since 2009
+  - Removed from: index.tsx, templates.tsx, ai.tsx, template/[id].tsx, and _app.tsx
+  - Keeps codebase modern and focused on effective SEO practices
+
 ## Recent Updates (October 29, 2025)
 
 ### AI Receipt Generator (BETA)

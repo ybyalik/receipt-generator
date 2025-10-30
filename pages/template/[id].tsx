@@ -680,7 +680,6 @@ export async function getServerSideProps(context: any) {
         metaTags: {
           title: `${template.name} - Customizable Receipt Template`,
           description: `Create and customize ${template.name.toLowerCase()} instantly. Edit details, add items, and download professional receipts in seconds.`,
-          keywords: `${template.name.toLowerCase()}, receipt template, ${template.name.toLowerCase()} generator, customizable receipt, business receipt`,
           ogTitle: `${template.name} - Customizable Receipt Template`,
           ogDescription: `Create and customize ${template.name.toLowerCase()} instantly. Edit details, add items, and download professional receipts in seconds.`,
           ogType: 'website',
