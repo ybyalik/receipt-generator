@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI from 'openai';
+import { writeFile, mkdir } from 'fs/promises';
+import path from 'path';
 import { ObjectStorageService } from '../../../server/objectStorage';
 
 const openai = new OpenAI({
@@ -129,13 +131,38 @@ async function generateAndSaveLogo(industry: string, slug: string): Promise<stri
     // Convert base64 to buffer
     const buffer = Buffer.from(base64Image, 'base64');
 
-    // Save to Replit App Storage
-    const objectStorageService = new ObjectStorageService();
-    const filename = `logos/${slug}.png`;
-    const logoUrl = await objectStorageService.uploadPublicObject(filename, buffer, 'image/png');
+    // Try Object Storage first (for production), fallback to local filesystem (for dev)
+    const isProduction = process.env.REPL_DEPLOYMENT === '1';
+    const useObjectStorage = process.env.PUBLIC_OBJECT_SEARCH_PATHS && isProduction;
 
-    console.log(`Logo saved to object storage: ${logoUrl}`);
-    return logoUrl;
+    if (useObjectStorage) {
+      try {
+        const objectStorageService = new ObjectStorageService();
+        const filename = `logos/${slug}.png`;
+        const logoUrl = await objectStorageService.uploadPublicObject(filename, buffer, 'image/png');
+        console.log(`Logo saved to object storage: ${logoUrl}`);
+        return logoUrl;
+      } catch (storageError) {
+        console.error('Object Storage failed, falling back to local filesystem:', storageError);
+      }
+    }
+
+    // Fallback to local filesystem (development)
+    const filename = `${slug}.png`;
+    const logosDir = path.join(process.cwd(), 'public', 'logos');
+    
+    // Ensure logos directory exists
+    try {
+      await mkdir(logosDir, { recursive: true });
+    } catch (err) {
+      // Directory might already exist, ignore
+    }
+    
+    const filepath = path.join(logosDir, filename);
+    await writeFile(filepath, buffer);
+
+    console.log(`Logo saved to local filesystem: /logos/${filename}`);
+    return `/logos/${filename}`;
   } catch (error) {
     console.error('Error generating logo:', error);
     return null;
