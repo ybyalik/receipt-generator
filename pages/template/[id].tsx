@@ -593,7 +593,6 @@ export default function TemplateEditor() {
 
         {template.seoContent && (
           <div className="mt-12 bg-white rounded-lg shadow-md p-8">
-            <h2 className="text-2xl font-bold mb-4">SEO Content</h2>
             <div 
               className="prose prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: template.seoContent }}
