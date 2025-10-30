@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import Layout from '../components/Layout';
 import { FiUpload, FiLoader, FiCheck, FiAlertCircle } from 'react-icons/fi';
 import type { Section, TemplateSettings } from '../lib/types';
@@ -315,6 +316,15 @@ export default function AIReceiptGenerator() {
 
   return (
     <Layout>
+      <Head>
+        <title>AI Receipt Generator - Upload Image & Create Template Instantly | ReceiptGen</title>
+        <meta name="description" content="Upload a receipt image and let our AI automatically extract data to create a customizable template. Powered by advanced vision technology. Try it free!" />
+        <meta name="keywords" content="AI receipt generator, receipt OCR, receipt scanner, receipt image to template, automatic receipt maker, AI receipt reader" />
+        <meta property="og:title" content="AI Receipt Generator - Upload Image & Create Template Instantly" />
+        <meta property="og:description" content="Upload a receipt image and let our AI automatically extract data to create a customizable template. Powered by advanced vision technology." />
+        <meta property="og:type" content="website" />
+      </Head>
+
       <div className="min-h-screen bg-gray-50 py-8 sm:py-12">
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-6 sm:mb-8">
