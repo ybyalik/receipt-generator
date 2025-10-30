@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI from 'openai';
-import { writeFile } from 'fs/promises';
-import path from 'path';
+import { ObjectStorageService } from '../../../server/objectStorage';
 
 const openai = new OpenAI({
   apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
@@ -130,13 +129,13 @@ async function generateAndSaveLogo(industry: string, slug: string): Promise<stri
     // Convert base64 to buffer
     const buffer = Buffer.from(base64Image, 'base64');
 
-    // Save to public/logos directory
-    const filename = `${slug}.png`;
-    const filepath = path.join(process.cwd(), 'public', 'logos', filename);
-    await writeFile(filepath, buffer);
+    // Save to Replit App Storage
+    const objectStorageService = new ObjectStorageService();
+    const filename = `logos/${slug}.png`;
+    const logoUrl = await objectStorageService.uploadPublicObject(filename, buffer, 'image/png');
 
-    console.log(`Logo saved: /logos/${filename}`);
-    return `/logos/${filename}`;
+    console.log(`Logo saved to object storage: ${logoUrl}`);
+    return logoUrl;
   } catch (error) {
     console.error('Error generating logo:', error);
     return null;
