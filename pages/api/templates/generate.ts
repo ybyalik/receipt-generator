@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI from 'openai';
+import { writeFile } from 'fs/promises';
+import path from 'path';
 
 const openai = new OpenAI({
   apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
@@ -106,7 +108,50 @@ Requirements:
   return generated;
 }
 
-function createRandomTemplate(generated: GeneratedTemplate) {
+async function generateAndSaveLogo(industry: string, slug: string): Promise<string | null> {
+  try {
+    // Generate simple black and white icon/logo
+    const logoPrompt = `Simple flat vector icon of ${industry}, black and white only, minimal design, clean lines, white background, monochrome, no text`;
+    
+    const response = await openai.images.generate({
+      model: 'dall-e-3',
+      prompt: logoPrompt,
+      size: '1024x1024',
+      quality: 'standard',
+      style: 'natural',
+      n: 1,
+    });
+
+    const imageUrl = response.data[0]?.url;
+    if (!imageUrl) {
+      console.error('No image URL returned from DALL-E');
+      return null;
+    }
+
+    // Download the image
+    const imageResponse = await fetch(imageUrl);
+    if (!imageResponse.ok) {
+      console.error('Failed to download image from DALL-E');
+      return null;
+    }
+
+    const arrayBuffer = await imageResponse.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Save to public/logos directory
+    const filename = `${slug}.png`;
+    const filepath = path.join(process.cwd(), 'public', 'logos', filename);
+    await writeFile(filepath, buffer);
+
+    console.log(`Logo saved: /logos/${filename}`);
+    return `/logos/${filename}`;
+  } catch (error) {
+    console.error('Error generating logo:', error);
+    return null;
+  }
+}
+
+function createRandomTemplate(generated: GeneratedTemplate, logoUrl: string | null) {
   const sections = [];
   const now = Date.now();
   
@@ -136,6 +181,7 @@ function createRandomTemplate(generated: GeneratedTemplate) {
     id: `header-${now}`,
     alignment: 'center',
     logoSize: 50,
+    logoUrl: logoUrl || undefined,
     businessDetails,
     dividerAtBottom: true,
     dividerStyle: headerDivider,
@@ -342,7 +388,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const generated = await generateTemplateForIndustry(industry);
-      const templateConfig = createRandomTemplate(generated);
+      
+      // Generate and save logo
+      const logoUrl = await generateAndSaveLogo(industry, generated.slug);
+      
+      const templateConfig = createRandomTemplate(generated, logoUrl);
 
       const templateData = {
         name: generated.name,
