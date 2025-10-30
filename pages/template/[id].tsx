@@ -110,6 +110,11 @@ export default function TemplateEditor() {
 
   useEffect(() => {
     if (template) {
+      console.log('Template loaded:', { 
+        name: template.name, 
+        hasSeoContent: !!template.seoContent,
+        seoContentLength: template.seoContent?.length 
+      });
       // Backfill empty barcode values
       const sectionsWithBarcodeValues = template.sections.map((section: any) => {
         if (section.type === 'barcode' && (!section.value || section.value === '')) {
@@ -387,6 +392,21 @@ export default function TemplateEditor() {
     }
   };
 
+  if (!template) {
+    return (
+      <Layout>
+        <div className="max-w-7xl mx-auto px-4 py-12 text-center">
+          <div className="flex items-center justify-center gap-2">
+            <FiRefreshCw className="animate-spin text-navy-600" />
+            <span className="text-gray-600">Loading template...</span>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  console.log('Render time - template has seoContent:', !!template?.seoContent);
+
   return (
     <Layout>
       <Head>
@@ -573,8 +593,9 @@ export default function TemplateEditor() {
 
         {template.seoContent && (
           <div className="mt-12 bg-white rounded-lg shadow-md p-8">
+            <h2 className="text-2xl font-bold mb-4">SEO Content</h2>
             <div 
-              className="prose prose-sm max-w-none"
+              className="prose prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: template.seoContent }}
             />
           </div>
