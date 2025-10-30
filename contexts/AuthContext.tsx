@@ -35,6 +35,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
+        // Set user immediately with basic Firebase data for instant UI update
+        const basicUser = {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          displayName: firebaseUser.displayName,
+          photoURL: firebaseUser.photoURL,
+          isPremium: false,
+        };
+        setUser(basicUser);
+        setLoading(false);
+
+        // Fetch premium/subscription data in background
         try {
           const response = await fetch('/api/users/sync', {
             method: 'POST',
@@ -49,6 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           
           if (response.ok) {
             const dbUser = await response.json();
+            // Update with premium data once loaded
             setUser({
               uid: firebaseUser.uid,
               email: firebaseUser.email,
@@ -61,29 +74,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               subscriptionStatus: dbUser.subscriptionStatus,
               subscriptionEndsAt: dbUser.subscriptionEndsAt ? new Date(dbUser.subscriptionEndsAt) : null,
             });
-          } else {
-            setUser({
-              uid: firebaseUser.uid,
-              email: firebaseUser.email,
-              displayName: firebaseUser.displayName,
-              photoURL: firebaseUser.photoURL,
-              isPremium: false,
-            });
           }
         } catch (error) {
           console.error('Error syncing user:', error);
-          setUser({
-            uid: firebaseUser.uid,
-            email: firebaseUser.email,
-            displayName: firebaseUser.displayName,
-            photoURL: firebaseUser.photoURL,
-            isPremium: false,
-          });
+          // Keep basic user data even if sync fails
         }
       } else {
         setUser(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();
