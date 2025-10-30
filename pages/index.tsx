@@ -64,10 +64,10 @@ const Home: NextPage = () => {
                 <span className="text-white">Browse Templates</span>
               </Link>
               <Link
-                href="/pricing"
+                href="/ai"
                 className="bg-white text-navy-900 border-2 border-navy-200 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-navy-50 hover:border-accent-500 transition-all shadow-md cursor-pointer"
               >
-                View Pricing
+                AI Generator
               </Link>
             </div>
           </div>
@@ -193,7 +193,7 @@ const Home: NextPage = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Get Started?</h2>
           <p className="text-xl text-white/90 mb-10 leading-relaxed">
-            Join thousands of users creating professional receipts every day. Start for free!
+            Join thousands of users creating professional receipts every day.
           </p>
           <Link
             href="/templates"
