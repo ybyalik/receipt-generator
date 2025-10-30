@@ -93,6 +93,13 @@ export default function AdminTemplateEditor() {
 
   useEffect(() => {
     if (template) {
+      console.log('Loading template data:', { 
+        id: template.id, 
+        name: template.name, 
+        hasSeoContent: !!template.seoContent,
+        seoContentLength: template.seoContent?.length 
+      });
+      
       // Backfill empty barcode values
       const sectionsWithBarcodeValues = template.sections.map(section => {
         if (section.type === 'barcode' && (!section.value || section.value === '')) {
@@ -108,7 +115,7 @@ export default function AdminTemplateEditor() {
         setSettings(template.settings);
       }
     }
-  }, [template]);
+  }, [template, id]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),

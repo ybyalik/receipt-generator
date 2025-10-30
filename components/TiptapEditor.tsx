@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
@@ -40,6 +40,18 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({ content, onChange }) => {
       onChange(html);
     },
   });
+
+  // Update editor content when prop changes
+  useEffect(() => {
+    if (editor && content !== editor.getHTML()) {
+      console.log('TiptapEditor: Updating content from prop', { 
+        contentLength: content?.length,
+        currentLength: editor.getHTML()?.length 
+      });
+      editor.commands.setContent(content);
+      setHtmlContent(content);
+    }
+  }, [content, editor]);
 
   const addLink = () => {
     const url = window.prompt('Enter URL:');
