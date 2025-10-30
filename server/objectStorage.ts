@@ -1,6 +1,6 @@
 // Referenced from blueprint:javascript_object_storage
 import { Storage, File } from "@google-cloud/storage";
-import type { Response } from "express";
+import type { NextApiResponse } from "next";
 
 const REPLIT_SIDECAR_ENDPOINT = "http://127.0.0.1:1106";
 
@@ -66,14 +66,13 @@ export class ObjectStorageService {
     return null;
   }
 
-  async downloadObject(file: File, res: Response, cacheTtlSec: number = 3600) {
+  async downloadObject(file: File, res: NextApiResponse, cacheTtlSec: number = 3600) {
     try {
       const [metadata] = await file.getMetadata();
-      res.set({
-        "Content-Type": metadata.contentType || "application/octet-stream",
-        "Content-Length": metadata.size,
-        "Cache-Control": `public, max-age=${cacheTtlSec}`,
-      });
+      res.setHeader("Content-Type", metadata.contentType || "application/octet-stream");
+      res.setHeader("Content-Length", metadata.size || 0);
+      res.setHeader("Cache-Control", `public, max-age=${cacheTtlSec}`);
+      
       const stream = file.createReadStream();
       stream.on("error", (err) => {
         console.error("Stream error:", err);
