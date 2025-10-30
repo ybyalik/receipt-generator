@@ -130,14 +130,21 @@ const Admin: NextPage = () => {
       </Head>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <h1 className="text-3xl font-bold">Admin Panel</h1>
-          <div className="flex space-x-3">
+          <div className="flex flex-wrap gap-3">
             <button 
               onClick={() => router.push('/admin/blog')}
               className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
               Manage Blog
+            </button>
+            <button 
+              onClick={() => router.push('/admin/generate-templates')}
+              className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              <FiPlus className="mr-2" />
+              AI Generator
             </button>
             <button 
               onClick={handleCreateTemplate}
