@@ -114,11 +114,9 @@ async function generateAndSaveLogo(industry: string, slug: string): Promise<stri
     const logoPrompt = `Simple flat vector icon of ${industry}, black and white only, minimal design, clean lines, white background, monochrome, no text`;
     
     const response = await openai.images.generate({
-      model: 'dall-e-3',
+      model: 'gpt-image-1',
       prompt: logoPrompt,
       size: '1024x1024',
-      quality: 'standard',
-      style: 'natural',
       n: 1,
     });
 
