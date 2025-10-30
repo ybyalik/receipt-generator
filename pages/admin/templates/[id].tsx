@@ -321,31 +321,21 @@ export default function AdminTemplateEditor() {
     const newSlug = templateSlug.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     
     try {
-      const res = await fetch(`/api/templates/${template.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userEmail: userEmail,
-          name: templateName,
-          slug: newSlug,
-          sections: sections,
-          settings: settings,
-          seoContent: seoContent,
-        }),
-      });
+      await updateTemplate(template.id, {
+        name: templateName,
+        slug: newSlug,
+        sections: sections,
+        settings: settings,
+        seoContent: seoContent,
+      }, userEmail);
       
-      if (res.ok) {
-        showSuccess(`Global template "${templateName}" has been saved!`);
-        if (oldSlug !== newSlug) {
-          router.push(`/admin/templates/${template.id}`);
-        }
-      } else {
-        const error = await res.json();
-        showError(`Failed to save: ${error.error || 'Unknown error'}`);
+      showSuccess(`Global template "${templateName}" has been saved!`);
+      if (oldSlug !== newSlug) {
+        router.push(`/admin/templates/${template.id}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Save error:', error);
-      showError('Failed to save template. Please try again.');
+      showError(error.message || 'Failed to save template. Please try again.');
     }
   };
 
