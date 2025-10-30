@@ -13,6 +13,10 @@ function capitalizeWords(str: string): string {
     .join(' ');
 }
 
+function randomChoice<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 interface GeneratedTemplate {
   name: string;
   slug: string;
@@ -99,318 +103,204 @@ Requirements:
   return generated;
 }
 
-function createFurnitureStyleTemplate(generated: GeneratedTemplate) {
+function createRandomTemplate(generated: GeneratedTemplate) {
   const sections = [];
   const now = Date.now();
+  
+  // Random choices
+  const fonts = ['monospace', 'receipt', 'courier-new', 'consolas', 'custom-receipt', 'bit-receipt', 'ocrb-receipt'];
+  const dividerStyles = ['dashed', 'dotted', 'stars', 'double'];
+  const alignments = ['left', 'center', 'right'];
+  
+  const font = randomChoice(fonts);
+  const headerDivider = randomChoice(dividerStyles);
+  const titleDivider = randomChoice(dividerStyles);
+  const titleAlignment = randomChoice(alignments);
+  
+  // Random boolean choices
+  const includeCustomerInfo = Math.random() > 0.5;
+  const includeFooterMessage = Math.random() > 0.5;
+  const includeWebsite = Math.random() > 0.5;
+  const barcodePosition = randomChoice(['top', 'middle', 'bottom', 'none']);
+  
+  // Header (always included)
+  let businessDetails = `${generated.businessName}\n${generated.businessAddress}`;
+  if (Math.random() > 0.3) businessDetails += `\n${generated.businessPhone || '(555) 123-4567'}`;
+  if (Math.random() > 0.5) businessDetails += `\n${generated.businessEmail || 'contact@business.com'}`;
   
   sections.push({
     type: 'header',
     id: `header-${now}`,
     alignment: 'center',
     logoSize: 50,
-    businessDetails: `${generated.businessName}\n${generated.businessAddress}\n${generated.businessPhone || ''}`,
+    businessDetails,
     dividerAtBottom: true,
-    dividerStyle: 'dashed',
+    dividerStyle: headerDivider,
   });
 
-  sections.push({
-    type: 'custom_message',
-    id: `custom_message-${now}`,
-    alignment: 'center',
-    message: `Receipt #: ${Math.floor(Math.random() * 1000000000).toString().padStart(10, '0')}\nReceipt date: ${new Date().toLocaleDateString('en-US')}\n\n${generated.name}`,
-    dividerAtBottom: true,
-    dividerStyle: 'dashed',
-  });
-
-  if (generated.includeBarcode) {
+  // Barcode at top (if chosen)
+  if (barcodePosition === 'top' && generated.includeBarcode) {
     sections.push({
       type: 'barcode',
-      id: `barcode-${now + 1}`,
+      id: `barcode-top-${now}`,
       size: 2,
       length: 13,
       value: '1234567890123',
-      dividerAtBottom: false,
-      dividerStyle: 'dashed',
+      dividerAtBottom: Math.random() > 0.5,
+      dividerStyle: randomChoice(dividerStyles),
     });
   }
 
-  sections.push({
-    type: 'custom_message',
-    id: `billing-${now}`,
-    alignment: 'center',
-    message: `Billed to: Customer Name\n123 Willow Creek Road\nMadison, WI 53703`,
-    dividerAtBottom: true,
-    dividerStyle: 'dotted',
-  });
-
-  const subtotal = generated.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const tax = subtotal * 0.0825;
-  const total = subtotal + tax;
-
-  sections.push({
-    type: 'items_list',
-    id: `items_list-${now}`,
-    items: generated.items,
-    totalLines: [
-      { title: 'Subtotal', value: subtotal },
-      { title: 'Tax', value: tax },
-    ],
-    tax: null,
-    total: { title: 'Total', price: total },
-    dividerAfterItems: true,
-    dividerAfterItemsStyle: 'dotted',
-    dividerAfterTotal: false,
-    dividerAfterTotalStyle: 'dashed',
-  });
-
-  sections.push({
-    type: 'payment',
-    id: `payment-${now}`,
-    paymentType: generated.paymentType,
-    cashFields: [
-      { title: 'Cash Tendered', value: `$${(total + 20).toFixed(2)}` },
-      { title: 'Change', value: '$20.00' },
-    ],
-    cardFields: [
-      { title: 'Card number', value: '**** **** **** 4822' },
-      { title: 'Card type', value: 'Debit' },
-      { title: 'Card entry', value: 'Chip' },
-      { title: 'Date/time', value: new Date().toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true }) },
-      { title: 'Reference #', value: `B${Math.floor(Math.random() * 1000000000000000).toString().slice(0, 15)}` },
-      { title: 'Status', value: 'APPROVED' },
-    ],
-    dividerAtBottom: true,
-    dividerStyle: 'stars',
-  });
-
-  sections.push({
-    type: 'custom_message',
-    id: `footer-${now}`,
-    alignment: 'center',
-    message: `Customers are encouraged to review their receipts immediately and report any discrepancies within 7 days. Any disputes regarding receipts or payments should be reported promptly and will be addressed within 10 business days. Receipts serve as proof of payment and include details such as date, amount paid, payment method, and items or services purchased.\n\nThank you for choosing ${generated.businessName}.`,
-    dividerAtBottom: true,
-    dividerStyle: 'stars',
-  });
-
-  sections.push({
-    type: 'date_time',
-    id: `date_time-${now}`,
-    alignment: 'center',
-    date: new Date().toISOString(),
-    dateFormat: 'M/d/yyyy, h:mm:ss a',
-    dividerAtBottom: false,
-    dividerStyle: 'dashed',
-  });
-
-  return {
-    sections,
-    settings: {
-      currency: '$',
-      currencyFormat: 'symbol_before',
-      font: 'custom-receipt',
-      textColor: '#000000',
-      backgroundTexture: 'none',
-    },
-  };
-}
-
-function createPawnShopStyleTemplate(generated: GeneratedTemplate) {
-  const sections = [];
-  const now = Date.now();
+  // Title/Receipt number
+  const receiptFormats = [
+    `${generated.name}\nReceipt #: ${Math.floor(Math.random() * 1000000000).toString().padStart(10, '0')}`,
+    `Receipt #: RCP-${Math.floor(Math.random() * 1000000)}\n${generated.name}`,
+    `${generated.name}\n${new Date().toLocaleDateString('en-US')}`,
+    generated.name,
+  ];
   
-  sections.push({
-    type: 'header',
-    id: `header-${now}`,
-    alignment: 'center',
-    logoSize: 50,
-    businessDetails: `${generated.businessName}\n${generated.businessPhone || '(555) 123-4567'}\n${generated.businessAddress}\n${generated.businessEmail || 'contact@business.com'}`,
-    dividerAtBottom: true,
-    dividerStyle: 'double',
-  });
-
   sections.push({
     type: 'custom_message',
     id: `title-${now}`,
-    alignment: 'center',
-    message: generated.name,
+    alignment: titleAlignment,
+    message: randomChoice(receiptFormats),
     dividerAtBottom: true,
-    dividerStyle: 'double',
+    dividerStyle: titleDivider,
   });
 
-  sections.push({
-    type: 'custom_message',
-    id: `customer-${now}`,
-    alignment: 'left',
-    message: `Customer Information:\nName: Customer Name\nAddress: 3914 Brookstone Avenue\nCharlotte, NC 28205`,
-    dividerAtBottom: true,
-    dividerStyle: 'stars',
-  });
-
-  const subtotal = generated.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const tax = subtotal * 0.0825;
-  const total = subtotal + tax;
-
-  sections.push({
-    type: 'items_list',
-    id: `items_list-${now}`,
-    items: generated.items,
-    totalLines: [
-      { title: 'Subtotal', value: subtotal },
-      { title: 'Tax', value: tax },
-    ],
-    tax: null,
-    total: { title: 'Total', price: total },
-    dividerAfterItems: false,
-    dividerAfterItemsStyle: 'dashed',
-    dividerAfterTotal: true,
-    dividerAfterTotalStyle: 'stars',
-  });
-
-  sections.push({
-    type: 'payment',
-    id: `payment-${now}`,
-    paymentType: generated.paymentType,
-    cashFields: [
-      { title: 'Cash Tendered', value: `$${(total + 20).toFixed(2)}` },
-      { title: 'Change', value: '$20.00' },
-    ],
-    cardFields: [
-      { title: 'Card number', value: '**** **** **** 4822' },
-      { title: 'Card type', value: 'Debit' },
-      { title: 'Card entry', value: 'Chip' },
-      { title: 'Date/time', value: new Date().toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true }) },
-      { title: 'Reference #', value: `B${Math.floor(Math.random() * 1000000000000000).toString().slice(0, 15)}` },
-      { title: 'Status', value: 'APPROVED' },
-    ],
-    dividerAtBottom: true,
-    dividerStyle: 'dashed',
-  });
-
-  sections.push({
-    type: 'custom_message',
-    id: `website-${now}`,
-    alignment: 'center',
-    message: generated.businessWebsite || 'www.business.com',
-    dividerAtBottom: false,
-    dividerStyle: 'dashed',
-  });
-
-  if (generated.includeBarcode) {
+  // Barcode in middle (if chosen)
+  if (barcodePosition === 'middle' && generated.includeBarcode) {
     sections.push({
       type: 'barcode',
-      id: `barcode-${now}`,
+      id: `barcode-middle-${now}`,
       size: 2,
       length: 13,
       value: '1234567890123',
-      dividerAtBottom: false,
-      dividerStyle: 'dashed',
+      dividerAtBottom: Math.random() > 0.5,
+      dividerStyle: randomChoice(dividerStyles),
     });
   }
 
-  sections.push({
-    type: 'date_time',
-    id: `date_time-${now}`,
-    alignment: 'center',
-    date: new Date().toISOString(),
-    dateFormat: 'M/d/yyyy, h:mm:ss a',
-    dividerAtBottom: false,
-    dividerStyle: 'dashed',
-  });
-
-  return {
-    sections,
-    settings: {
-      currency: '$',
-      currencyFormat: 'symbol_before',
-      font: 'ocrb-receipt',
-      textColor: '#000000',
-      backgroundTexture: 'none',
-    },
-  };
-}
-
-function createMinimalStyleTemplate(generated: GeneratedTemplate) {
-  const sections = [];
-  const now = Date.now();
-  
-  sections.push({
-    type: 'header',
-    id: `header-${now}`,
-    alignment: 'center',
-    logoSize: 50,
-    businessDetails: `${generated.businessName}\n${generated.businessAddress}\n${generated.businessPhone || ''}`,
-    dividerAtBottom: true,
-    dividerStyle: 'dashed',
-  });
-
-  sections.push({
-    type: 'custom_message',
-    id: `title-${now}`,
-    alignment: 'center',
-    message: `${generated.name}\nReceipt #: RCP-${Math.floor(Math.random() * 1000000)}`,
-    dividerAtBottom: true,
-    dividerStyle: 'dashed',
-  });
-
-  const subtotal = generated.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const tax = subtotal * 0.0825;
-  const total = subtotal + tax;
-
-  sections.push({
-    type: 'items_list',
-    id: `items_list-${now}`,
-    items: generated.items,
-    totalLines: [
-      { title: 'Subtotal:', value: subtotal },
-    ],
-    tax: { title: 'Tax (8.25%):', value: tax },
-    total: { title: 'Total:', price: total },
-    dividerAfterItems: false,
-    dividerAfterItemsStyle: 'dashed',
-    dividerAfterTotal: true,
-    dividerAfterTotalStyle: 'dashed',
-  });
-
-  sections.push({
-    type: 'payment',
-    id: `payment-${now}`,
-    paymentType: generated.paymentType,
-    cashFields: [
-      { title: 'Cash Tendered', value: `$${(total + 20).toFixed(2)}` },
-      { title: 'Change', value: '$20.00' },
-    ],
-    cardFields: [
-      { title: 'Card number', value: '**** **** **** 4822' },
-      { title: 'Card type', value: 'Debit' },
-      { title: 'Card entry', value: 'Chip' },
-      { title: 'Date/time', value: new Date().toLocaleString() },
-      { title: 'Reference #', value: `REF${Math.floor(Math.random() * 1000000000)}` },
-      { title: 'Status', value: 'APPROVED' },
-    ],
-    dividerAtBottom: true,
-    dividerStyle: 'dashed',
-  });
-
-  if (generated.includeBarcode) {
+  // Customer info (optional)
+  if (includeCustomerInfo) {
+    const customerMessages = [
+      `Billed to: Customer Name\n123 Willow Creek Road\nMadison, WI 53703`,
+      `Customer Information:\nName: Customer Name\nAddress: 3914 Brookstone Avenue\nCharlotte, NC 28205`,
+      `Customer: Customer Name\nPhone: (555) 987-6543`,
+    ];
+    
     sections.push({
-      type: 'barcode',
-      id: `barcode-${now}`,
-      size: 2,
-      length: 13,
-      value: '1234567890123',
+      type: 'custom_message',
+      id: `customer-${now}`,
+      alignment: randomChoice(alignments),
+      message: randomChoice(customerMessages),
       dividerAtBottom: true,
-      dividerStyle: 'dashed',
+      dividerStyle: randomChoice(dividerStyles),
     });
   }
 
+  // Items list (always included)
+  const subtotal = generated.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const tax = subtotal * 0.0825;
+  const total = subtotal + tax;
+
+  sections.push({
+    type: 'items_list',
+    id: `items_list-${now}`,
+    items: generated.items,
+    totalLines: [
+      { title: 'Subtotal', value: subtotal },
+      { title: 'Tax', value: tax },
+    ],
+    tax: null,
+    total: { title: 'Total', price: total },
+    dividerAfterItems: Math.random() > 0.5,
+    dividerAfterItemsStyle: randomChoice(dividerStyles),
+    dividerAfterTotal: Math.random() > 0.5,
+    dividerAfterTotalStyle: randomChoice(dividerStyles),
+  });
+
+  // Payment (always included)
+  sections.push({
+    type: 'payment',
+    id: `payment-${now}`,
+    paymentType: generated.paymentType,
+    cashFields: [
+      { title: 'Cash Tendered', value: `$${(total + 20).toFixed(2)}` },
+      { title: 'Change', value: '$20.00' },
+    ],
+    cardFields: [
+      { title: 'Card number', value: '**** **** **** 4822' },
+      { title: 'Card type', value: 'Debit' },
+      { title: 'Card entry', value: 'Chip' },
+      { title: 'Date/time', value: new Date().toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true }) },
+      { title: 'Reference #', value: `REF${Math.floor(Math.random() * 1000000000).toString().slice(0, 10)}` },
+      { title: 'Status', value: 'APPROVED' },
+    ],
+    dividerAtBottom: Math.random() > 0.5,
+    dividerStyle: randomChoice(dividerStyles),
+  });
+
+  // Website (optional)
+  if (includeWebsite && generated.businessWebsite) {
+    sections.push({
+      type: 'custom_message',
+      id: `website-${now}`,
+      alignment: 'center',
+      message: generated.businessWebsite,
+      dividerAtBottom: Math.random() > 0.5,
+      dividerStyle: randomChoice(dividerStyles),
+    });
+  }
+
+  // Footer message (optional)
+  if (includeFooterMessage) {
+    const footerMessages = [
+      `Thank you for your business!\n${generated.businessName}`,
+      `Customers are encouraged to review their receipts immediately and report any discrepancies within 7 days.\n\nThank you for choosing ${generated.businessName}.`,
+      `All sales are final. No refunds or exchanges.\nFor questions, contact: ${generated.businessEmail || 'contact@business.com'}`,
+      `We appreciate your business!\nVisit us again soon.`,
+    ];
+    
+    sections.push({
+      type: 'custom_message',
+      id: `footer-${now}`,
+      alignment: randomChoice(alignments),
+      message: randomChoice(footerMessages),
+      dividerAtBottom: Math.random() > 0.5,
+      dividerStyle: randomChoice(dividerStyles),
+    });
+  }
+
+  // Barcode at bottom (if chosen)
+  if (barcodePosition === 'bottom' && generated.includeBarcode) {
+    sections.push({
+      type: 'barcode',
+      id: `barcode-bottom-${now}`,
+      size: 2,
+      length: 13,
+      value: '1234567890123',
+      dividerAtBottom: Math.random() > 0.5,
+      dividerStyle: randomChoice(dividerStyles),
+    });
+  }
+
+  // Date/time (always at end)
+  const dateFormats = [
+    'M/d/yyyy, h:mm:ss a',
+    'MM/dd/yyyy h:mm a',
+    'dd/MM/yyyy HH:mm',
+    'MMMM d, yyyy h:mm a',
+  ];
+  
   sections.push({
     type: 'date_time',
     id: `date_time-${now}`,
-    alignment: 'center',
+    alignment: randomChoice(alignments),
     date: new Date().toISOString(),
-    dateFormat: 'MM/dd/yyyy, h:mm:ss a',
+    dateFormat: randomChoice(dateFormats),
     dividerAtBottom: false,
-    dividerStyle: 'dashed',
+    dividerStyle: randomChoice(dividerStyles),
   });
 
   return {
@@ -418,7 +308,7 @@ function createMinimalStyleTemplate(generated: GeneratedTemplate) {
     settings: {
       currency: '$',
       currencyFormat: 'symbol_before',
-      font: 'bit-receipt',
+      font,
       textColor: '#000000',
       backgroundTexture: 'none',
     },
@@ -449,16 +339,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const generated = await generateTemplateForIndustry(industry);
-      
-      const styleIndex = i % 3;
-      let templateConfig;
-      if (styleIndex === 0) {
-        templateConfig = createFurnitureStyleTemplate(generated);
-      } else if (styleIndex === 1) {
-        templateConfig = createPawnShopStyleTemplate(generated);
-      } else {
-        templateConfig = createMinimalStyleTemplate(generated);
-      }
+      const templateConfig = createRandomTemplate(generated);
 
       const templateData = {
         name: generated.name,
@@ -480,7 +361,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           success: true,
           industry,
           template: created,
-          style: styleIndex === 0 ? 'furniture' : styleIndex === 1 ? 'pawn-shop' : 'minimal',
         });
       } else {
         const error = await createResponse.text();

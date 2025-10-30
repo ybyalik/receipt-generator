@@ -105,8 +105,8 @@ export default function GenerateTemplates() {
               </h3>
               <ul className="text-sm text-blue-800 space-y-1">
                 <li>• AI generates realistic business names, addresses, and items for each type</li>
-                <li>• Each template gets a unique visual style (Furniture, Pawn Shop, or Minimal)</li>
-                <li>• Different fonts, divider styles, and section arrangements</li>
+                <li>• Each template gets a completely unique random visual style</li>
+                <li>• Randomized fonts, dividers, sections, and layouts for maximum variety</li>
                 <li>• Automatically creates URL-friendly slugs</li>
                 <li>• Skips duplicates if template already exists</li>
               </ul>
@@ -185,10 +185,6 @@ export default function GenerateTemplates() {
                             >
                               {result.template.slug}
                             </a>
-                          </p>
-                          <p>
-                            <span className="font-medium">Style:</span>{' '}
-                            <span className="capitalize">{result.style}</span>
                           </p>
                           <p>
                             <span className="font-medium">Font:</span>{' '}
