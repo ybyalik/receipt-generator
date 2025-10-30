@@ -173,7 +173,7 @@ function createRandomTemplate(generated: GeneratedTemplate, logoUrl: string | nu
     id: `header-${now}`,
     alignment: 'center',
     logoSize: 50,
-    logoUrl: logoUrl || undefined,
+    logo: logoUrl || undefined,
     businessDetails,
     dividerAtBottom: true,
     dividerStyle: headerDivider,
