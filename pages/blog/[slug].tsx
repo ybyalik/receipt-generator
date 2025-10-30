@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '../../components/Layout';
 import type { BlogPost } from '../../shared/schema';
@@ -63,8 +64,24 @@ export default function BlogPost() {
     );
   }
 
+  // Extract plain text from HTML content for meta description
+  const getMetaDescription = (htmlContent: string): string => {
+    const text = htmlContent.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    return text.length > 155 ? text.substring(0, 155) + '...' : text;
+  };
+
   return (
     <Layout>
+      <Head>
+        <title>{post.title} | ReceiptGen Blog</title>
+        <meta name="description" content={getMetaDescription(post.content)} />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={getMetaDescription(post.content)} />
+        <meta property="og:type" content="article" />
+        {post.featuredImage && <meta property="og:image" content={post.featuredImage} />}
+        {post.publishedAt && <meta property="article:published_time" content={new Date(post.publishedAt).toISOString()} />}
+      </Head>
+
       <div className="min-h-screen bg-gray-50 py-8 sm:py-12">
         <article className="max-w-3xl mx-auto px-4">
           <Link href="/blog" className="text-navy-600 hover:text-navy-800 mb-4 sm:mb-6 inline-block">
