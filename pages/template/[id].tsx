@@ -66,7 +66,11 @@ function SortableSection({
   );
 }
 
-export default function TemplateEditor() {
+interface TemplateEditorProps {
+  initialTemplate: any;
+}
+
+export default function TemplateEditor({ initialTemplate }: TemplateEditorProps) {
   const router = useRouter();
   const { id } = router.query;
   const { user } = useAuth();
@@ -75,7 +79,7 @@ export default function TemplateEditor() {
   const { getTemplateBySlug, updateTemplate, loading: templatesLoading } = useTemplates();
   const { showSuccess, showError } = useToast();
 
-  const [template, setTemplate] = useState<any>(null);
+  const [template, setTemplate] = useState<any>(initialTemplate);
   const [sections, setSections] = useState<Section[]>([]);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [templateName, setTemplateName] = useState('');
@@ -410,7 +414,7 @@ export default function TemplateEditor() {
   return (
     <Layout>
       <Head>
-        <title>{template.name} - Customizable Receipt Template | ReceiptGen</title>
+        <title>{template.name} - Customizable Receipt Template</title>
         <meta name="description" content={`Create and customize ${template.name.toLowerCase()} instantly. Edit details, add items, and download professional receipts in seconds.`} />
         <meta name="keywords" content={`${template.name.toLowerCase()}, receipt template, ${template.name.toLowerCase()} generator, customizable receipt, business receipt`} />
         <meta property="og:title" content={`${template.name} - Customizable Receipt Template`} />
@@ -657,4 +661,37 @@ export default function TemplateEditor() {
       </div>
     </Layout>
   );
+}
+
+// Server-side rendering to populate meta tags for SEO
+export async function getServerSideProps(context: any) {
+  const { id } = context.params;
+  
+  try {
+    // Fetch template data server-side
+    const protocol = context.req.headers['x-forwarded-proto'] || 'http';
+    const host = context.req.headers.host;
+    const baseUrl = `${protocol}://${host}`;
+    
+    const res = await fetch(`${baseUrl}/api/templates`);
+    const templates = await res.json();
+    const template = templates.find((t: any) => t.slug === id);
+    
+    if (!template) {
+      return {
+        notFound: true,
+      };
+    }
+    
+    return {
+      props: {
+        initialTemplate: template,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching template:', error);
+    return {
+      notFound: true,
+    };
+  }
 }

@@ -73,7 +73,7 @@ export default function BlogPost() {
   return (
     <Layout>
       <Head>
-        <title>{post.title} | ReceiptGen Blog</title>
+        <title>{post.title} | Blog</title>
         <meta name="description" content={getMetaDescription(post.content)} />
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={getMetaDescription(post.content)} />

@@ -12,7 +12,7 @@ const Templates: NextPage = () => {
   return (
     <Layout>
       <Head>
-        <title>Receipt Templates - Customizable Business Receipt Designs | ReceiptGen</title>
+        <title>Receipt Templates - Customizable Business Receipt Designs</title>
         <meta name="description" content="Browse our collection of professional receipt templates for restaurants, retail, repair shops, gas stations, and more. Fully customizable and ready to download instantly." />
         <meta name="keywords" content="receipt templates, business receipt, restaurant receipt, retail receipt, repair shop receipt, gas station receipt, customizable receipt" />
         <meta property="og:title" content="Receipt Templates - Customizable Business Receipt Designs" />
