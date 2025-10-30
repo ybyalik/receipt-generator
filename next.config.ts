@@ -9,6 +9,18 @@ const nextConfig: NextConfig = {
   ...(replitDomains.length > 0 && {
     allowedDevOrigins: replitDomains,
   }),
+  async rewrites() {
+    return [
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap.xml',
+      },
+      {
+        source: '/robots.txt',
+        destination: '/api/robots.txt',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
