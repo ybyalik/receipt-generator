@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { useTemplates } from '../contexts/TemplatesContext';
 import { useAuth } from '../contexts/AuthContext';
-import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash2, FiEye } from 'react-icons/fi';
 import { useToast } from '../components/ToastContainer';
 
 const Admin: NextPage = () => {
@@ -171,6 +171,13 @@ const Admin: NextPage = () => {
                   </p>
                 </div>
                 <div className="flex space-x-2">
+                  <button 
+                    onClick={() => router.push(`/template/${template.slug}`)}
+                    className="p-2 text-green-600 hover:bg-green-50 rounded transition-colors cursor-pointer"
+                    title="View front-end template"
+                  >
+                    <FiEye />
+                  </button>
                   <button 
                     onClick={() => handleEditTemplate(template.id)}
                     className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors cursor-pointer"
