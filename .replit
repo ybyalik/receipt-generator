@@ -34,10 +34,6 @@ externalPort = 3002
 localPort = 45385
 externalPort = 3003
 
-[[ports]]
-localPort = 46377
-externalPort = 4200
-
 [agent]
 expertMode = true
 integrations = ["resend:1.0.0", "javascript_openai_ai_integrations:1.0.0", "javascript_object_storage:1.0.0"]
