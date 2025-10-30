@@ -337,6 +337,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 alt="Receipt Generator" 
                 width={180} 
                 height={60} 
+                priority
                 style={{ width: 'auto', height: '50px' }}
               />
             </div>
