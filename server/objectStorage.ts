@@ -19,7 +19,6 @@ export const objectStorageClient = new Storage({
     },
     universe_domain: "googleapis.com",
   },
-  projectId: "",
 });
 
 export class ObjectNotFoundError extends Error {
