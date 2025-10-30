@@ -63,11 +63,14 @@ The architecture emphasizes component composition, including higher-order `Layou
 ## Recent Updates (October 30, 2025)
 
 ### AI Bulk Template Generator
-Production-ready script for automated creation of industry-specific receipt templates:
+Production-ready script for automated creation of industry-specific receipt templates with varied visual designs:
 - **Script Location**: `scripts/generate-templates.ts`
 - **Command**: `npm run generate-templates`
 - **OpenAI Integration**: Uses GPT-4o to generate realistic business data, items, and pricing for each industry
-- **Template Structure**: Creates complete templates with 6 sections: header, custom message, barcode, items list, payment, and date/time
+- **Template Variety**: Creates 3 distinct visual styles that rotate through industries:
+  - **Furniture-Style**: Barcode in middle, customer billing section, footer message, stars/dashed dividers, custom-receipt font
+  - **Pawn Shop-Style**: Barcode at bottom, customer info section, website URL, double equals/stars dividers, ocrb-receipt font
+  - **Minimal-Style**: Simple layout with fewer sections, dashed dividers only, bit-receipt font
 - **Unique Slug Generation**: Automatically creates URL-safe slugs (e.g., "Mechanic Shop" → "mechanic-shop-receipt")
 - **Duplicate Handling**: Checks for existing templates and skips duplicates, making re-runs safe
 - **Environment Variables**: 
@@ -75,8 +78,8 @@ Production-ready script for automated creation of industry-specific receipt temp
   - `AI_INTEGRATIONS_OPENAI_BASE_URL`: OpenAI base URL (via Replit integration)
   - `API_BASE_URL`: API endpoint (defaults to localhost:5000 for dev)
   - `NEXT_PUBLIC_ADMIN_EMAILS`: Admin email for template creation
-- **Generated Templates**: Currently includes Mechanic Shop Receipt, Pawn Shop Receipt, and Carpet Cleaning Receipt
-- **Extensibility**: Add new industries by editing the `industries` array in the script
+- **Generated Templates**: Currently includes Mechanic Shop Receipt (furniture-style), Pawn Shop Receipt (pawn shop-style), and Carpet Cleaning Receipt (minimal-style)
+- **Extensibility**: Add new industries by editing the `industries` array in the script - each gets a different style
 - **SEO Note**: Generated templates require SEO content to be added manually via admin panel
 
 ### SEO Meta Tags Optimization
