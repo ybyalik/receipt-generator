@@ -32,10 +32,13 @@ interface GeneratedTemplate {
 
 async function generateTemplateForIndustry(industry: string): Promise<GeneratedTemplate> {
   const capitalizedIndustry = capitalizeWords(industry);
+  const includesReceipt = industry.toLowerCase().includes('receipt');
+  const templateName = includesReceipt ? capitalizedIndustry : `${capitalizedIndustry} Receipt`;
+  
   const prompt = `Generate a realistic receipt template for a ${industry} business. Return ONLY valid JSON with this exact structure:
 
 {
-  "name": "${capitalizedIndustry} Receipt",
+  "name": "${templateName}",
   "businessName": "Realistic business name",
   "businessAddress": "Street address\\nCity, State ZIP\\nCountry",
   "businessPhone": "(555) 123-4567",
