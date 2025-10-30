@@ -67,6 +67,12 @@ Production-ready system for automated creation of industry-specific receipt temp
 - **Admin UI**: `/admin/generate-templates` - Bulk template generator with textarea input for multiple industries
 - **API Endpoint**: `/api/templates/generate` - Handles bulk template generation requests
 - **OpenAI Integration**: Uses GPT-4o to generate realistic business data, items, and pricing for each industry
+- **AI-Generated Logos**: Automatically creates custom black and white logos/icons for each template:
+  - Uses DALL-E 3 to generate simple, minimal icons relevant to the business type (e.g., car icon for "Car Receipt")
+  - Prompts optimized for monochrome, clean line art suitable for receipts
+  - Logos saved to `public/logos/[slug].png` and referenced in header section
+  - Gracefully handles generation failures (continues without logo if API fails)
+  - Image specs: 1024x1024 PNG, black and white only, standard quality
 - **Fully Randomized Templates**: Each generated template is completely unique with randomized:
   - **Fonts**: Random selection from 7 available fonts (monospace, receipt, courier-new, consolas, custom-receipt, bit-receipt, ocrb-receipt)
   - **Divider Styles**: Random mix of dashed, dotted, stars, and double dividers throughout template
