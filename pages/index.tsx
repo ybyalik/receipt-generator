@@ -85,7 +85,7 @@ const Home: NextPage = () => {
                   : 'opacity-0 -translate-x-8'
               }`}
             >
-              <h2 className="text-4xl font-bold text-navy-900 mb-6">Start with Professional Formats</h2>
+              <h2 className="text-4xl font-bold text-navy-900 mb-6">Start with Professional Templates</h2>
               <p className="text-lg text-navy-700 mb-6 leading-relaxed">
                 Choose from ready-made receipt templates for every major retailer and service. Each template includes the essential fields and information needed for proper documentation.
               </p>
