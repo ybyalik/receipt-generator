@@ -117,7 +117,7 @@ const Admin: NextPage = () => {
 
   const confirmDelete = async () => {
     if (!deleteConfirm || !user) return;
-    
+
     await deleteTemplate(deleteConfirm.id, user.email);
     showSuccess(`Template "${deleteConfirm.name}" has been deleted!`);
     setDeleteConfirm(null);
@@ -133,20 +133,20 @@ const Admin: NextPage = () => {
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <h1 className="text-3xl font-bold">Admin Panel</h1>
           <div className="flex flex-wrap gap-3">
-            <button 
+            <button
               onClick={() => router.push('/admin/blog')}
               className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
               Manage Blog
             </button>
-            <button 
+            <button
               onClick={() => router.push('/admin/generate-templates')}
               className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
             >
               <FiPlus className="mr-2" />
               AI Generator
             </button>
-            <button 
+            <button
               onClick={handleCreateTemplate}
               className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
@@ -171,21 +171,23 @@ const Admin: NextPage = () => {
                   </p>
                 </div>
                 <div className="flex space-x-2">
-                  <button 
-                    onClick={() => router.push(`/template/${template.slug}`)}
+                  <a
+                    href={`/template/${template.slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="p-2 text-green-600 hover:bg-green-50 rounded transition-colors cursor-pointer"
                     title="View front-end template"
                   >
                     <FiEye />
-                  </button>
-                  <button 
+                  </a>
+                  <button
                     onClick={() => handleEditTemplate(template.id)}
                     className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors cursor-pointer"
                     title="Edit global template"
                   >
                     <FiEdit />
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleDeleteTemplate(template.id, template.name)}
                     className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
                     title="Delete template"
