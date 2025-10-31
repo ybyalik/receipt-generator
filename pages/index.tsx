@@ -208,9 +208,6 @@ const Home: NextPage = () => {
                   </div>
                 </li>
               </ul>
-              <p className="text-navy-600 leading-relaxed mb-6">
-                Perfect when you need a receipt from a smaller store, regional chain, or any business not in our standard templates. Upload once, and our AI handles the complex formatting work for you.
-              </p>
               <Link
                 href="/ai"
                 className="inline-block bg-accent-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-accent-700 transition-all shadow-lg hover:shadow-xl cursor-pointer"
