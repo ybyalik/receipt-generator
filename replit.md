@@ -32,11 +32,13 @@ The application provides a responsive design optimized for both desktop and mobi
 
 ### Feature Specifications
 
--   **AI Bulk Template Generator**: Admins can generate industry-specific receipt templates with randomized designs, fonts, divider styles, barcode positions, and optional sections using GPT-4o. AI-generated logos are created via gpt-image-1 and stored persistently in Replit App Storage.
+-   **AI Bulk Template Generator**: Admins can generate industry-specific receipt templates with randomized designs, fonts, divider styles, barcode positions, and optional sections using GPT-4o. AI-generated logos are created via gpt-image-1 and stored persistently in AWS S3.
 -   **AI Receipt Generator (BETA)**: Users can upload receipt images for AI (GPT-4o Vision) to extract data and create editable templates, including auto-currency detection and smart section mapping.
 -   **SEO Meta Tags Optimization**: Meta tags are server-rendered via `_app.tsx` for consistent SEO, with outdated keywords meta tags removed.
 -   **Date & Time Field Enhancement**: The date/time input includes a calendar picker, "Use Current Date/Time" button, and multiple display format options.
 -   **Blog System**: A full-featured blog with admin-managed posts (create, edit, delete, rich text editing with Tiptap, draft/published status, featured images, automatic slug generation) and public-facing content.
+-   **Homepage Feature Sections**: Two dedicated sections highlighting Templates and AI Generator features with screenshots, detailed descriptions, bullet points, and CTA buttons positioned above "How It Works" section.
+-   **Performance Optimizations**: Lazy loading for AuthModal and TipTap editor, modern image formats (WebP/AVIF), compression, production console removal, and bundle analyzer integration.
 
 ## External Dependencies
 
@@ -68,7 +70,7 @@ The application provides a responsive design optimized for both desktop and mobi
 
 ### Object Storage
 
--   **Replit App Storage (Google Cloud Storage)**: For persistent storage and serving of AI-generated logos.
+-   **AWS S3**: For persistent storage and serving of AI-generated logos and feature images. Configured with public read access for images.
 
 ### Email Service
 

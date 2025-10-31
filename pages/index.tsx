@@ -73,6 +73,155 @@ const Home: NextPage = () => {
         </div>
       </div>
 
+      <div className="bg-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-32">
+            <div
+              id="templates-section"
+              ref={setSectionRef('templates-section')}
+              className={`order-2 lg:order-1 transition-all duration-700 ${
+                isVisible('templates-section')
+                  ? 'opacity-100 translate-x-0'
+                  : 'opacity-0 -translate-x-8'
+              }`}
+            >
+              <h2 className="text-4xl font-bold text-navy-900 mb-6">Start with Professional Formats</h2>
+              <p className="text-lg text-navy-700 mb-6 leading-relaxed">
+                Choose from ready-made receipt templates for every major retailer and service. Each template includes the essential fields and information needed for proper documentation.
+              </p>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-start">
+                  <FiCheckCircle className="text-accent-600 mt-1 mr-3 flex-shrink-0" size={20} />
+                  <div>
+                    <strong className="text-navy-900">Instant access</strong>
+                    <span className="text-navy-600"> - No design work needed</span>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <FiCheckCircle className="text-accent-600 mt-1 mr-3 flex-shrink-0" size={20} />
+                  <div>
+                    <strong className="text-navy-900">Industry-specific</strong>
+                    <span className="text-navy-600"> - Retail, auto parts, travel, restaurants, and more</span>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <FiCheckCircle className="text-accent-600 mt-1 mr-3 flex-shrink-0" size={20} />
+                  <div>
+                    <strong className="text-navy-900">Complete structure</strong>
+                    <span className="text-navy-600"> - All necessary fields pre-organized for you</span>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <FiCheckCircle className="text-accent-600 mt-1 mr-3 flex-shrink-0" size={20} />
+                  <div>
+                    <strong className="text-navy-900">Quick customization</strong>
+                    <span className="text-navy-600"> - Just add your transaction details and generate</span>
+                  </div>
+                </li>
+              </ul>
+              <p className="text-navy-600 leading-relaxed mb-6">
+                Perfect for replacing lost receipts from stores you've shopped at. Select your template, fill in the details, and download your receipt in seconds.
+              </p>
+              <Link
+                href="/templates"
+                className="inline-block bg-accent-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-accent-700 transition-all shadow-lg hover:shadow-xl cursor-pointer"
+              >
+                <span className="text-white">Browse Templates</span>
+              </Link>
+            </div>
+            <div
+              className={`order-1 lg:order-2 transition-all duration-700 ${
+                isVisible('templates-section')
+                  ? 'opacity-100 translate-x-0'
+                  : 'opacity-0 translate-x-8'
+              }`}
+            >
+              <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-navy-100">
+                <img
+                  src="https://receipt-generator-net.s3.us-east-1.amazonaws.com/features/templates.webp"
+                  alt="Receipt Templates Gallery"
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div
+              className={`transition-all duration-700 ${
+                isVisible('ai-section')
+                  ? 'opacity-100 translate-x-0'
+                  : 'opacity-0 -translate-x-8'
+              }`}
+            >
+              <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-navy-100">
+                <img
+                  src="https://receipt-generator-net.s3.us-east-1.amazonaws.com/features/ai-generator.webp"
+                  alt="AI Receipt Generator"
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+            <div
+              id="ai-section"
+              ref={setSectionRef('ai-section')}
+              className={`transition-all duration-700 ${
+                isVisible('ai-section')
+                  ? 'opacity-100 translate-x-0'
+                  : 'opacity-0 translate-x-8'
+              }`}
+            >
+              <div className="inline-block bg-accent-100 text-accent-700 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+                BETA
+              </div>
+              <h2 className="text-4xl font-bold text-navy-900 mb-6">Upload Any Receipt, We'll Do the Rest</h2>
+              <p className="text-lg text-navy-700 mb-6 leading-relaxed">
+                Don't see your store in our templates? No problem. Upload a photo or image of any receipt, and our AI instantly analyzes it to match the format with our system.
+              </p>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-start">
+                  <FiZap className="text-accent-600 mt-1 mr-3 flex-shrink-0" size={20} />
+                  <div>
+                    <strong className="text-navy-900">Smart recognition</strong>
+                    <span className="text-navy-600"> - AI identifies store name, layout, and required fields</span>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <FiZap className="text-accent-600 mt-1 mr-3 flex-shrink-0" size={20} />
+                  <div>
+                    <strong className="text-navy-900">Auto-matching</strong>
+                    <span className="text-navy-600"> - Connects your receipt to the closest template in our database</span>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <FiZap className="text-accent-600 mt-1 mr-3 flex-shrink-0" size={20} />
+                  <div>
+                    <strong className="text-navy-900">Guided setup</strong>
+                    <span className="text-navy-600"> - AI pre-fills fields based on your uploaded receipt</span>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <FiZap className="text-accent-600 mt-1 mr-3 flex-shrink-0" size={20} />
+                  <div>
+                    <strong className="text-navy-900">Custom adaptation</strong>
+                    <span className="text-navy-600"> - Creates the format you need, even for obscure retailers</span>
+                  </div>
+                </li>
+              </ul>
+              <p className="text-navy-600 leading-relaxed mb-6">
+                Perfect when you need a receipt from a smaller store, regional chain, or any business not in our standard templates. Upload once, and our AI handles the complex formatting work for you.
+              </p>
+              <Link
+                href="/ai"
+                className="inline-block bg-accent-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-accent-700 transition-all shadow-lg hover:shadow-xl cursor-pointer"
+              >
+                <span className="text-white">Try AI Generator</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-gradient-to-br from-white via-accent-50/30 to-navy-50/50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-center text-navy-900 mb-16">How It Works</h2>
