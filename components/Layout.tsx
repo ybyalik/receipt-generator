@@ -4,6 +4,7 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useAuth } from '../contexts/AuthContext';
 import { FiUser, FiLogOut, FiChevronDown, FiSettings, FiHeart, FiUsers, FiCreditCard, FiMenu, FiX } from 'react-icons/fi';
+import { FaLinkedin } from 'react-icons/fa';
 
 const AuthModal = dynamic(() => import('./AuthModal'), {
   ssr: false,
@@ -336,7 +337,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <footer className="bg-black text-white py-8 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center space-y-6">
-            <div className="flex justify-center">
+            <div className="flex flex-col items-center space-y-3">
               <Image 
                 src="/logo-footer.png" 
                 alt="Receipt Generator" 
@@ -345,6 +346,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 priority
                 style={{ width: 'auto', height: '50px' }}
               />
+              <a
+                href="https://www.linkedin.com/company/receipt-generator/"
+                target="_blank"
+                rel="nofollow noopener noreferrer"
+                className="text-white hover:text-accent-400 transition-colors"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedin className="w-6 h-6" />
+              </a>
             </div>
             <div className="flex flex-wrap justify-center gap-6 text-sm">
               <Link href="/privacy" className="hover:text-accent-400 transition-colors cursor-pointer">
