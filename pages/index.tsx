@@ -344,7 +344,7 @@ const Home: NextPage = () => {
             href="/templates"
             className="inline-block bg-accent-600 text-white px-10 py-4 rounded-xl text-lg font-semibold hover:bg-accent-700 transition-all cursor-pointer shadow-lg hover:shadow-xl hover:scale-105"
           >
-            Create Your First Receipt
+            <span className="text-white">Create Your First Receipt</span>
           </Link>
         </div>
       </div>
