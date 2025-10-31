@@ -368,7 +368,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </Link>
             </div>
             <p className="text-gray-400 text-sm text-center">
-              © 2025 ReceiptGen. All rights reserved.
+              Copyright © 2025 ReceiptGenerator.net. All Rights Reserved.
             </p>
           </div>
         </div>
