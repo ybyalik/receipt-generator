@@ -334,15 +334,15 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-navy-900 via-navy-800 to-accent-900 text-white py-20">
+      <div className="bg-gradient-to-br from-navy-50 via-white to-accent-50 py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Get Started?</h2>
-          <p className="text-xl text-white/90 mb-10 leading-relaxed">
+          <h2 className="text-4xl font-bold text-navy-900 mb-6">Ready to Get Started?</h2>
+          <p className="text-xl text-navy-600 mb-10 leading-relaxed">
             Join thousands of users creating professional receipts every day.
           </p>
           <Link
             href="/templates"
-            className="inline-block bg-accent-500 text-white px-10 py-4 rounded-xl text-lg font-semibold hover:bg-accent-600 transition-all cursor-pointer shadow-xl hover:shadow-2xl hover:scale-105"
+            className="inline-block bg-accent-600 text-white px-10 py-4 rounded-xl text-lg font-semibold hover:bg-accent-700 transition-all cursor-pointer shadow-lg hover:shadow-xl hover:scale-105"
           >
             Create Your First Receipt
           </Link>
