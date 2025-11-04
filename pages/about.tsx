@@ -55,17 +55,6 @@ export default function About() {
                 from fonts to layouts to proper receipt formatting.
               </p>
             </div>
-
-            <div className="bg-white rounded-xl shadow-md p-8 border border-navy-100">
-              <div className="bg-gradient-to-br from-accent-500 to-accent-600 w-14 h-14 rounded-xl flex items-center justify-center mb-5">
-                <FiUsers className="text-2xl text-white" />
-              </div>
-              <h3 className="text-xl font-semibold text-navy-900 mb-3">Built for Everyone</h3>
-              <p className="text-navy-600 leading-relaxed">
-                From individuals needing to replace a lost receipt to businesses creating documentation, 
-                our tools work for any use case.
-              </p>
-            </div>
           </div>
 
           <div className="bg-gradient-to-br from-navy-900 to-accent-900 rounded-2xl shadow-xl p-8 md:p-12 text-white">
