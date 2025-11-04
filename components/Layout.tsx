@@ -363,6 +363,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <Link href="/terms" className="hover:text-accent-400 transition-colors cursor-pointer">
                 Terms of Service
               </Link>
+              <Link href="/about" className="hover:text-accent-400 transition-colors cursor-pointer">
+                About
+              </Link>
               <Link href="/contact" className="hover:text-accent-400 transition-colors cursor-pointer">
                 Contact Us
               </Link>
