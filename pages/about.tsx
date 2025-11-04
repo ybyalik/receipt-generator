@@ -58,17 +58,6 @@ export default function About() {
 
             <div className="bg-white rounded-xl shadow-md p-8 border border-navy-100">
               <div className="bg-gradient-to-br from-accent-500 to-accent-600 w-14 h-14 rounded-xl flex items-center justify-center mb-5">
-                <FiShield className="text-2xl text-white" />
-              </div>
-              <h3 className="text-xl font-semibold text-navy-900 mb-3">Secure & Private</h3>
-              <p className="text-navy-600 leading-relaxed">
-                Your data is yours. We don't store your receipt details or share your information. 
-                Create receipts with confidence knowing your privacy is protected.
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-md p-8 border border-navy-100">
-              <div className="bg-gradient-to-br from-accent-500 to-accent-600 w-14 h-14 rounded-xl flex items-center justify-center mb-5">
                 <FiUsers className="text-2xl text-white" />
               </div>
               <h3 className="text-xl font-semibold text-navy-900 mb-3">Built for Everyone</h3>
@@ -129,7 +118,7 @@ export default function About() {
               href="/templates"
               className="inline-block bg-accent-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-accent-700 transition-all shadow-lg hover:shadow-xl"
             >
-              Get Started Now
+              <span className="text-white">Get Started Now</span>
             </a>
           </div>
         </div>
