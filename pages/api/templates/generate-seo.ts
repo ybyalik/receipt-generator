@@ -49,8 +49,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .replace('{templateName}', templateData.name)
       .replace('{sections}', sectionsDescription);
 
-    const { OpenAI } = await import('openai');
-    const openai = new OpenAI();
+    const { default: OpenAI } = await import('openai');
+    const openai = new OpenAI({
+      apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
+      baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+    });
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
