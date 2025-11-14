@@ -134,6 +134,12 @@ const Admin: NextPage = () => {
           <h1 className="text-3xl font-bold">Admin Panel</h1>
           <div className="flex flex-wrap gap-3">
             <button
+              onClick={() => router.push('/admin/settings')}
+              className="flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              Settings
+            </button>
+            <button
               onClick={() => router.push('/admin/blog')}
               className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
