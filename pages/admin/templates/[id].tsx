@@ -91,6 +91,8 @@ export default function AdminTemplateEditor() {
     textColor: '#000000',
     backgroundTexture: 'none',
   });
+  const [seoContent, setSeoContent] = useState<string>('');
+  const [isGeneratingSeo, setIsGeneratingSeo] = useState(false);
 
   // No redirect - let the conditional render below handle showing Unauthorized page
 
@@ -344,6 +346,7 @@ export default function AdminTemplateEditor() {
     }
   };
 
+  const handleGenerateSeo = async () => {
     if (!template) return;
     
     setIsGeneratingSeo(true);
