@@ -38,7 +38,9 @@ The application provides a responsive design optimized for both desktop and mobi
 -   **Date & Time Field Enhancement**: The date/time input includes a calendar picker, "Use Current Date/Time" button, and multiple display format options.
 -   **Blog System**: A full-featured blog with admin-managed posts (create, edit, delete, rich text editing with Tiptap, draft/published status, featured images, automatic slug generation) and public-facing content.
 -   **Homepage Feature Sections**: Two dedicated sections highlighting Templates and AI Generator features with screenshots, detailed descriptions, bullet points, and CTA buttons positioned above "How It Works" section.
--   **Performance Optimizations**: Lazy loading for AuthModal and TipTap editor, modern image formats (WebP/AVIF), compression, production console removal, and bundle analyzer integration.
+-   **Performance Optimizations**: Lazy loading for AuthModal and TipTap editor, modern image formats (WebP/AVIF), compression, production console removal, bundle analyzer integration, and instant login state detection.
+-   **WWW Redirect**: Middleware automatically redirects www subdomain to apex domain with 301 permanent redirect for SEO.
+-   **AI SEO Content Generation**: Admin can generate SEO content for templates with one click using customizable AI prompts. Settings page allows admins to manage the SEO generation prompt with template name and sections as dynamic placeholders.
 
 ## External Dependencies
 

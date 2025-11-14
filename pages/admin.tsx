@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { useTemplates } from '../contexts/TemplatesContext';
 import { useAuth } from '../contexts/AuthContext';
-import { FiPlus, FiEdit, FiTrash2, FiEye } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash2, FiEye, FiSettings } from 'react-icons/fi';
 import { useToast } from '../components/ToastContainer';
 
 const Admin: NextPage = () => {
@@ -133,6 +133,13 @@ const Admin: NextPage = () => {
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <h1 className="text-3xl font-bold">Admin Panel</h1>
           <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => router.push('/admin/settings')}
+              className="flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              <FiSettings className="mr-2" />
+              Settings
+            </button>
             <button
               onClick={() => router.push('/admin/blog')}
               className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"

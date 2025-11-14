@@ -13,7 +13,7 @@ const TiptapEditor = dynamic(() => import('../../../components/TiptapEditor'), {
 });
 import { Section, TemplateSettings } from '../../../lib/types';
 import { useAuth } from '../../../contexts/AuthContext';
-import { FiSave, FiRefreshCw, FiEdit2, FiPlus, FiArrowLeft } from 'react-icons/fi';
+import { FiSave, FiRefreshCw, FiEdit2, FiPlus, FiArrowLeft, FiZap } from 'react-icons/fi';
 import { useToast } from '../../../components/ToastContainer';
 import {
   DndContext,
@@ -86,6 +86,7 @@ export default function AdminTemplateEditor() {
   const [seoContent, setSeoContent] = useState('');
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingSlug, setIsEditingSlug] = useState(false);
+  const [isGeneratingSeo, setIsGeneratingSeo] = useState(false);
   const [settings, setSettings] = useState<TemplateSettings>({
     currency: '$',
     currencyFormat: 'symbol_before',
@@ -351,6 +352,32 @@ export default function AdminTemplateEditor() {
     }
   };
 
+  const generateSeoContent = async () => {
+    if (!template) return;
+    
+    setIsGeneratingSeo(true);
+    try {
+      const response = await fetch('/api/templates/generate-seo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ templateId: parseInt(template.id) }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate SEO content');
+      }
+
+      const data = await response.json();
+      setSeoContent(data.content);
+      showSuccess('SEO content generated successfully!');
+    } catch (error) {
+      console.error('Error generating SEO content:', error);
+      showError('Failed to generate SEO content. Please try again.');
+    } finally {
+      setIsGeneratingSeo(false);
+    }
+  };
+
   return (
     <Layout>
       <Head>
@@ -512,7 +539,17 @@ export default function AdminTemplateEditor() {
             </div>
 
             <div className="mt-6 pt-6 border-t">
-              <h2 className="text-xl font-bold mb-2">SEO Content</h2>
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-xl font-bold">SEO Content</h2>
+                <button
+                  onClick={generateSeoContent}
+                  disabled={isGeneratingSeo}
+                  className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                >
+                  <FiZap className={isGeneratingSeo ? 'animate-spin' : ''} />
+                  {isGeneratingSeo ? 'Generating...' : 'Generate with AI'}
+                </button>
+              </div>
               <p className="text-sm text-gray-600 mb-4">
                 Add custom content for SEO purposes. This will appear below the receipt generator on the template page.
               </p>

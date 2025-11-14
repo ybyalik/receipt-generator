@@ -7,7 +7,7 @@ import { eq, and, like, or, desc } from 'drizzle-orm';
 
 const connectionString = process.env.DATABASE_URL!;
 const client = postgres(connectionString);
-const db = drizzle(client);
+export const db = drizzle(client);
 
 export async function getAllTemplates(): Promise<ReceiptTemplate[]> {
   const result = await db.select().from(templates);
