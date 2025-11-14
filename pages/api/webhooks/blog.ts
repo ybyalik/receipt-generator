@@ -23,22 +23,26 @@ interface WebhookPayload {
   };
 }
 
-function validateAccessToken(req: NextApiRequest): boolean {
-  const authHeader = req.headers.authorization;
-  
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return false;
-  }
-  
-  const token = authHeader.split(" ")[1];
+function validateAccessToken(req: NextApiRequest): { valid: boolean; error?: string } {
   const expectedToken = process.env.WEBHOOK_ACCESS_TOKEN;
   
   if (!expectedToken) {
-    console.error('WEBHOOK_ACCESS_TOKEN not configured');
-    return false;
+    return { valid: false, error: 'Server misconfiguration: WEBHOOK_ACCESS_TOKEN not set' };
   }
   
-  return token === expectedToken;
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return { valid: false, error: 'Missing or invalid Authorization header' };
+  }
+  
+  const token = authHeader.split(" ")[1];
+  
+  if (token !== expectedToken) {
+    return { valid: false, error: 'Invalid access token' };
+  }
+  
+  return { valid: true };
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -46,13 +50,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  if (!validateAccessToken(req)) {
-    console.error('Invalid access token received');
-    return res.status(401).json({ error: 'Invalid access token' });
+  const authResult = validateAccessToken(req);
+  if (!authResult.valid) {
+    const statusCode = authResult.error?.includes('misconfiguration') ? 503 : 401;
+    console.error('Authentication failed:', authResult.error);
+    return res.status(statusCode).json({ error: authResult.error });
   }
 
   try {
     const payload: WebhookPayload = req.body;
+
+    if (!payload || typeof payload !== 'object') {
+      return res.status(400).json({ error: 'Invalid payload: expected JSON object' });
+    }
 
     if (payload.event_type !== 'publish_articles') {
       return res.status(400).json({ error: 'Unsupported event type' });
@@ -62,6 +72,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Invalid payload: articles array required' });
     }
 
+    if (payload.data.articles.length === 0) {
+      return res.status(400).json({ error: 'Invalid payload: articles array is empty' });
+    }
+
+    if (payload.data.articles.length > 50) {
+      return res.status(400).json({ error: 'Invalid payload: too many articles (max 50 per request)' });
+    }
+
     const results = {
       success: [] as string[],
       failed: [] as { slug: string; error: string }[],
@@ -69,6 +87,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     for (const article of payload.data.articles) {
       try {
+        if (!article.title || !article.slug || !article.content_html) {
+          throw new Error('Missing required fields: title, slug, or content_html');
+        }
+
+        if (article.slug.length > 200) {
+          throw new Error('Slug too long (max 200 characters)');
+        }
+
         const existingPost = await db
           .select()
           .from(blogPosts)

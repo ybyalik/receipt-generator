@@ -1,6 +1,12 @@
 const testWebhook = async () => {
   const webhookUrl = 'http://localhost:5000/api/webhooks/blog';
-  const accessToken = process.env.WEBHOOK_ACCESS_TOKEN || 'test-token-123';
+  const accessToken = process.env.WEBHOOK_ACCESS_TOKEN;
+
+  if (!accessToken) {
+    console.error('❌ Error: WEBHOOK_ACCESS_TOKEN environment variable is not set');
+    console.error('Please set the WEBHOOK_ACCESS_TOKEN secret in Replit Secrets first.');
+    process.exit(1);
+  }
 
   const testPayload = {
     event_type: 'publish_articles',
