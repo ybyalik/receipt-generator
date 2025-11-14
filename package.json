@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 5000 --hostname 0.0.0.0",
-    "build": "next build",
+    "build": "drizzle-kit push --force && next build",
     "start": "next start --port 5000 --hostname 0.0.0.0",
     "lint": "next lint",
     "db:push": "drizzle-kit push",
+    "db:migrate": "drizzle-kit push --force",
     "generate-templates": "tsx scripts/generate-templates.ts"
   },
   "dependencies": {
