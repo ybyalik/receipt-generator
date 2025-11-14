@@ -40,7 +40,6 @@ The application provides a responsive design optimized for both desktop and mobi
 -   **Homepage Feature Sections**: Two dedicated sections highlighting Templates and AI Generator features with screenshots, detailed descriptions, bullet points, and CTA buttons positioned above "How It Works" section.
 -   **Performance Optimizations**: Lazy loading for AuthModal and TipTap editor, modern image formats (WebP/AVIF), compression, production console removal, bundle analyzer integration, and instant login state detection.
 -   **WWW Redirect**: Middleware automatically redirects www subdomain to apex domain with 301 permanent redirect for SEO.
--   **AI SEO Content Generation**: Admin can generate SEO content for templates with one click using customizable AI prompts. Settings page allows admins to manage the SEO generation prompt with template name and sections as dynamic placeholders.
 -   **Blog Webhook Integration**: Secure webhook endpoint (`/api/webhooks/blog`) for automatic blog article publishing from third-party services. Features Bearer token authentication, comprehensive payload validation, duplicate handling, and batch processing (up to 50 articles per request).
 
 ## External Dependencies
