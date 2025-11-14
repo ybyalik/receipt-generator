@@ -32,7 +32,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import SectionEditor from '../../../components/SectionEditor';
-import { FiArrowLeft, FiRefreshCw, FiSave, FiPlus } from 'react-icons/fi';
+import { FiArrowLeft, FiRefreshCw, FiSave, FiPlus, FiEdit2 } from 'react-icons/fi';
 
 function SortableSection({ 
   section, 
