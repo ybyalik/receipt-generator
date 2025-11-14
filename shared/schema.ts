@@ -45,8 +45,6 @@ export const blogPosts = pgTable('blog_posts', {
   slug: text('slug').notNull().unique(),
   content: text('content').notNull(),
   featuredImage: text('featured_image'),
-  tags: jsonb('tags'),
-  metaDescription: text('meta_description'),
   status: text('status').notNull().default('draft'), // 'draft' | 'published'
   publishedAt: timestamp('published_at'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
