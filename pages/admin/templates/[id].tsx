@@ -117,6 +117,9 @@ export default function AdminTemplateEditor() {
       if (template.settings) {
         setSettings(template.settings);
       }
+      if (template.seoContent) {
+        setSeoContent(template.seoContent);
+      }
     }
   }, [template, id]);
 
@@ -544,6 +547,7 @@ export default function AdminTemplateEditor() {
                 Add custom content for SEO purposes. This will appear below the receipt generator on the template page.
               </p>
               <TiptapEditor
+                content={seoContent}
                 onChange={setSeoContent}
               />
             </div>
