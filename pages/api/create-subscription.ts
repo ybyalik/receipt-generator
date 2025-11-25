@@ -78,6 +78,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
+    // Determine base URL from request headers or environment
+    const protocol = req.headers['x-forwarded-proto'] || 'https';
+    const host = req.headers['x-forwarded-host'] || req.headers.host;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `${protocol}://${host}`;
+    
     // Create a Checkout Session instead of directly creating a subscription
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -88,8 +93,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}/my-templates?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}/pricing?canceled=true`,
+      success_url: `${baseUrl}/my-templates?success=true`,
+      cancel_url: `${baseUrl}/pricing?canceled=true`,
       metadata: {
         firebaseUid: user.firebaseUid,
         plan,
