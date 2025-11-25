@@ -235,12 +235,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
         if (invoice.status === 'draft' && invoice.subscription) {
           try {
+            // Set statement descriptor on invoice (works for non-card payments)
             await stripe.invoices.update(invoice.id, {
-              statement_descriptor: 'Generator',
+              statement_descriptor: 'GENERATOR',
             });
-            console.log(`Updated invoice ${invoice.id} with statement descriptor "Generator"`);
+            console.log(`Updated invoice ${invoice.id} with statement descriptor`);
           } catch (err: any) {
             console.error(`Failed to update invoice statement descriptor:`, err.message);
+          }
+        }
+        break;
+      }
+
+      case 'payment_intent.created': {
+        // For card payments, must use statement_descriptor_suffix (2024 requirement)
+        const paymentIntent = event.data.object as Stripe.PaymentIntent & {
+          invoice?: string | null;
+        };
+        
+        // Only update if it's from a subscription invoice
+        if (paymentIntent.invoice) {
+          try {
+            await stripe.paymentIntents.update(paymentIntent.id, {
+              statement_descriptor_suffix: 'GENERATOR',
+            });
+            console.log(`Updated payment intent ${paymentIntent.id} with suffix "GENERATOR"`);
+          } catch (err: any) {
+            console.error(`Failed to update payment intent descriptor:`, err.message);
           }
         }
         break;
