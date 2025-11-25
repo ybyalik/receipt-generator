@@ -94,6 +94,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         break;
       }
 
+      case 'invoice.created': {
+        const invoice = event.data.object as Stripe.Invoice & {
+          subscription?: string | Stripe.Subscription | null;
+        };
+        
+        if (invoice.status === 'draft' && invoice.subscription) {
+          try {
+            await stripe.invoices.update(invoice.id, {
+              statement_descriptor: 'Generator',
+            });
+            console.log(`Updated invoice ${invoice.id} with statement descriptor "Generator"`);
+          } catch (err: any) {
+            console.error(`Failed to update invoice statement descriptor:`, err.message);
+          }
+        }
+        break;
+      }
+
       case 'invoice.payment_succeeded': {
         const invoice = event.data.object as Stripe.Invoice & {
           subscription?: string | Stripe.Subscription;
