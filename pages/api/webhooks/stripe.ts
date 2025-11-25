@@ -5,7 +5,6 @@ import { stripe } from '../../../lib/stripe';
 import { updateUserSubscription, getUserByStripeCustomerId, updateUserSubscriptionByStripeCustomerId } from '../../../server/storage';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const ADMIN_EMAIL = 'contact@receiptgenerator.net';
 
 function generateReceiptEmail(data: {
@@ -376,6 +375,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           if (customerEmail && process.env.RESEND_API_KEY) {
             const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@receiptgenerator.net';
             console.log(`Preparing to send email from: ${fromEmail} to: ${customerEmail}`);
+            
+            // Create Resend client at runtime to ensure env vars are available
+            const resend = new Resend(process.env.RESEND_API_KEY);
             
             const receiptHtml = generateReceiptEmail({
               customerName,
