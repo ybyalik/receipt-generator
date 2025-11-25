@@ -310,65 +310,81 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           subscription?: string | Stripe.Subscription;
           customer_email?: string | null;
           customer_name?: string | null;
+          customer?: string;
           amount_paid?: number;
           currency?: string;
           number?: string | null;
           hosted_invoice_url?: string | null;
           created?: number;
+          lines?: { data: Array<{ period?: { end?: number } }> };
         };
         
         console.log(`Processing invoice.payment_succeeded: ${invoice.id}, subscription: ${invoice.subscription}, customer_email: ${invoice.customer_email}`);
         
+        // Extract data from invoice directly (in case subscription is deleted)
+        const customerEmail = invoice.customer_email;
+        const customerName = invoice.customer_name || 'Valued Customer';
+        const customerId = invoice.customer as string;
+        const amount = invoice.amount_paid || 0;
+        const currency = invoice.currency || 'usd';
+        const invoiceNumber = invoice.number || `INV-${Date.now()}`;
+        const invoiceDate = invoice.created 
+          ? new Date(invoice.created * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+          : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        
+        let plan = 'monthly';
+        let subscriptionEndsAt: Date | undefined;
+        let firebaseUid: string | undefined;
+        
+        // Try to get subscription details, but don't fail if subscription is deleted
         if (invoice.subscription) {
-          const subscription = await stripe.subscriptions.retrieve(
-            invoice.subscription as string
-          ) as Stripe.Subscription & {
-            current_period_end?: number;
-          };
-          
-          const customerId = subscription.customer as string;
-          const firebaseUid = subscription.metadata?.firebaseUid;
+          try {
+            const subscription = await stripe.subscriptions.retrieve(
+              invoice.subscription as string
+            ) as Stripe.Subscription & {
+              current_period_end?: number;
+            };
+            
+            firebaseUid = subscription.metadata?.firebaseUid;
+            plan = subscription.metadata?.plan || 'monthly';
+            
+            if (subscription.current_period_end) {
+              subscriptionEndsAt = new Date(subscription.current_period_end * 1000);
+            }
 
-          let subscriptionEndsAt: Date | undefined;
-          if (subscription.current_period_end) {
-            subscriptionEndsAt = new Date(subscription.current_period_end * 1000);
-          }
-
-          // Update user subscription - try firebaseUid first, fallback to stripeCustomerId
-          if (firebaseUid) {
-            await updateUserSubscription(firebaseUid, {
-              subscriptionStatus: subscription.status,
-              isPremium: ['active', 'trialing'].includes(subscription.status),
-              subscriptionEndsAt,
-            });
-            console.log(`Payment succeeded for user ${firebaseUid}`);
-          } else {
-            // Fallback: update by stripeCustomerId directly
-            const result = await updateUserSubscriptionByStripeCustomerId(customerId, {
-              subscriptionStatus: subscription.status,
-              isPremium: ['active', 'trialing'].includes(subscription.status),
-              subscriptionEndsAt,
-            });
-            if (result) {
-              console.log(`Payment succeeded, updated by stripeCustomerId ${customerId}`);
+            // Update user subscription - try firebaseUid first, fallback to stripeCustomerId
+            if (firebaseUid) {
+              await updateUserSubscription(firebaseUid, {
+                subscriptionStatus: subscription.status,
+                isPremium: ['active', 'trialing'].includes(subscription.status),
+                subscriptionEndsAt,
+              });
+              console.log(`Payment succeeded for user ${firebaseUid}`);
             } else {
-              console.log(`No user found for payment with stripeCustomerId ${customerId}, but will still send receipt email`);
+              // Fallback: update by stripeCustomerId directly
+              const result = await updateUserSubscriptionByStripeCustomerId(customerId, {
+                subscriptionStatus: subscription.status,
+                isPremium: ['active', 'trialing'].includes(subscription.status),
+                subscriptionEndsAt,
+              });
+              if (result) {
+                console.log(`Payment succeeded, updated by stripeCustomerId ${customerId}`);
+              } else {
+                console.log(`No user found for payment with stripeCustomerId ${customerId}, but will still send receipt email`);
+              }
+            }
+          } catch (subError: any) {
+            console.error(`Error retrieving subscription:`, subError.message);
+            // Try to get period end from invoice lines as fallback
+            if (invoice.lines?.data?.[0]?.period?.end) {
+              subscriptionEndsAt = new Date(invoice.lines.data[0].period.end * 1000);
             }
           }
+        }
 
-          // Send receipt emails regardless of whether we found the user
-          const customerEmail = invoice.customer_email;
-          const customerName = invoice.customer_name || 'Valued Customer';
-          const plan = subscription.metadata?.plan || 'monthly';
-          const amount = invoice.amount_paid || 0;
-          const currency = invoice.currency || 'usd';
-          const invoiceNumber = invoice.number || `INV-${Date.now()}`;
-          const invoiceDate = invoice.created 
-            ? new Date(invoice.created * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-            : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-          const nextBillingDate = subscriptionEndsAt
-            ? subscriptionEndsAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-            : 'N/A';
+        const nextBillingDate = subscriptionEndsAt
+          ? subscriptionEndsAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+          : 'N/A';
 
           console.log(`Email check: customerEmail=${customerEmail}, RESEND_API_KEY=${process.env.RESEND_API_KEY ? 'set' : 'not set'}, RESEND_FROM_EMAIL=${process.env.RESEND_FROM_EMAIL}`);
 
@@ -415,9 +431,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           } else {
             console.log(`Skipping email: customerEmail=${customerEmail ? 'exists' : 'missing'}, RESEND_API_KEY=${process.env.RESEND_API_KEY ? 'exists' : 'missing'}`);
           }
-        } else {
-          console.log(`Invoice ${invoice.id} has no subscription, skipping`);
-        }
         break;
       }
 
