@@ -175,6 +175,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: `Webhook Error: ${err.message}` });
   }
 
+  console.log(`Received Stripe webhook event: ${event.type}, id: ${event.id}`);
+
   try {
     switch (event.type) {
       case 'customer.subscription.created':
@@ -245,6 +247,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
         const customerId = subscription.customer as string;
         const firebaseUid = subscription.metadata?.firebaseUid;
+        const subscriptionId = subscription.id;
+
+        console.log(`Processing subscription.deleted: subscriptionId=${subscriptionId}, customerId=${customerId}, firebaseUid=${firebaseUid || 'NOT SET'}`);
 
         let subscriptionEndsAt: Date | undefined;
         if (subscription.current_period_end) {
@@ -252,15 +257,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         // Try to update by firebaseUid first, fallback to stripeCustomerId
+        let updated = false;
         if (firebaseUid) {
-          await updateUserSubscription(firebaseUid, {
-            subscriptionStatus: 'canceled',
-            isPremium: false,
-            subscriptionEndsAt,
-          });
-          console.log(`Subscription fully canceled for user ${firebaseUid}`);
-        } else {
-          // Fallback: update by stripeCustomerId directly
+          try {
+            await updateUserSubscription(firebaseUid, {
+              subscriptionStatus: 'canceled',
+              isPremium: false,
+              subscriptionEndsAt,
+            });
+            console.log(`Subscription fully canceled for user ${firebaseUid}`);
+            updated = true;
+          } catch (err: any) {
+            console.error(`Failed to update by firebaseUid ${firebaseUid}:`, err.message);
+          }
+        }
+        
+        // Always try stripeCustomerId as well if firebaseUid failed or wasn't present
+        if (!updated) {
           const result = await updateUserSubscriptionByStripeCustomerId(customerId, {
             subscriptionStatus: 'canceled',
             isPremium: false,
@@ -269,7 +282,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           if (result) {
             console.log(`Subscription fully canceled by stripeCustomerId ${customerId}`);
           } else {
-            console.error(`No user found with stripeCustomerId ${customerId} for deletion`);
+            console.error(`CRITICAL: No user found with stripeCustomerId ${customerId} for deletion - subscription ${subscriptionId}`);
           }
         }
         break;
