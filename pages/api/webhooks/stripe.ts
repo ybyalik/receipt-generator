@@ -312,6 +312,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           created?: number;
         };
         
+        console.log(`Processing invoice.payment_succeeded: ${invoice.id}, subscription: ${invoice.subscription}, customer_email: ${invoice.customer_email}`);
+        
         if (invoice.subscription) {
           const subscription = await stripe.subscriptions.retrieve(
             invoice.subscription as string
@@ -319,23 +321,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             current_period_end?: number;
           };
           
-          const firebaseUid = subscription.metadata?.firebaseUid;
-          if (!firebaseUid) break;
+          // Try to get firebaseUid from metadata, fallback to finding user by customer ID
+          let firebaseUid = subscription.metadata?.firebaseUid;
+          
+          if (!firebaseUid) {
+            const customerId = subscription.customer as string;
+            const user = await getUserByStripeCustomerId(customerId);
+            if (user) {
+              firebaseUid = user.firebaseUid;
+              console.log(`Found user by stripeCustomerId for payment: ${customerId} -> ${firebaseUid}`);
+            } else {
+              console.log(`No user found for payment, but will still send receipt email if customer_email exists`);
+            }
+          }
 
           let subscriptionEndsAt: Date | undefined;
           if (subscription.current_period_end) {
             subscriptionEndsAt = new Date(subscription.current_period_end * 1000);
           }
 
-          await updateUserSubscription(firebaseUid, {
-            subscriptionStatus: subscription.status,
-            isPremium: ['active', 'trialing'].includes(subscription.status),
-            subscriptionEndsAt,
-          });
+          // Update user subscription if we found the user
+          if (firebaseUid) {
+            await updateUserSubscription(firebaseUid, {
+              subscriptionStatus: subscription.status,
+              isPremium: ['active', 'trialing'].includes(subscription.status),
+              subscriptionEndsAt,
+            });
+            console.log(`Payment succeeded for user ${firebaseUid}`);
+          }
 
-          console.log(`Payment succeeded for user ${firebaseUid}`);
-
-          // Send receipt emails
+          // Send receipt emails regardless of whether we found the user
           const customerEmail = invoice.customer_email;
           const customerName = invoice.customer_name || 'Valued Customer';
           const plan = subscription.metadata?.plan || 'monthly';
@@ -349,8 +364,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             ? subscriptionEndsAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
             : 'N/A';
 
+          console.log(`Email check: customerEmail=${customerEmail}, RESEND_API_KEY=${process.env.RESEND_API_KEY ? 'set' : 'not set'}, RESEND_FROM_EMAIL=${process.env.RESEND_FROM_EMAIL}`);
+
           if (customerEmail && process.env.RESEND_API_KEY) {
             const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@receiptgenerator.net';
+            console.log(`Preparing to send email from: ${fromEmail} to: ${customerEmail}`);
+            
             const receiptHtml = generateReceiptEmail({
               customerName,
               customerEmail,
@@ -365,26 +384,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             try {
               // Send receipt to customer
-              await resend.emails.send({
+              const customerResult = await resend.emails.send({
                 from: fromEmail,
                 to: customerEmail,
                 subject: `Payment Receipt - Receipt Generator Premium ${plan.charAt(0).toUpperCase() + plan.slice(1)}`,
                 html: receiptHtml,
               });
-              console.log(`Receipt email sent to customer: ${customerEmail}`);
+              console.log(`Receipt email sent to customer: ${customerEmail}, result:`, JSON.stringify(customerResult));
 
               // Send copy to admin
-              await resend.emails.send({
+              const adminResult = await resend.emails.send({
                 from: fromEmail,
                 to: ADMIN_EMAIL,
                 subject: `[Copy] Payment Receipt - ${customerName} (${customerEmail})`,
                 html: receiptHtml,
               });
-              console.log(`Receipt copy sent to admin: ${ADMIN_EMAIL}`);
+              console.log(`Receipt copy sent to admin: ${ADMIN_EMAIL}, result:`, JSON.stringify(adminResult));
             } catch (emailError: any) {
-              console.error('Failed to send receipt email:', emailError.message);
+              console.error('Failed to send receipt email:', emailError.message, emailError);
             }
+          } else {
+            console.log(`Skipping email: customerEmail=${customerEmail ? 'exists' : 'missing'}, RESEND_API_KEY=${process.env.RESEND_API_KEY ? 'exists' : 'missing'}`);
           }
+        } else {
+          console.log(`Invoice ${invoice.id} has no subscription, skipping`);
         }
         break;
       }
