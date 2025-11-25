@@ -37,19 +37,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
-        // Set user immediately with basic Firebase data for instant UI update
-        const basicUser = {
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          displayName: firebaseUser.displayName,
-          photoURL: firebaseUser.photoURL,
-          isPremium: false,
-        };
-        setUser(basicUser);
-        setLoading(false);
-        setPremiumLoading(true);
+        // Check for cached premium data first (valid for 5 minutes)
+        const cacheKey = `premium_${firebaseUser.uid}`;
+        const cached = typeof window !== 'undefined' ? sessionStorage.getItem(cacheKey) : null;
+        let cachedData = null;
+        
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached);
+            // Cache valid for 5 minutes
+            if (Date.now() - parsed.timestamp < 5 * 60 * 1000) {
+              cachedData = parsed.data;
+            }
+          } catch (e) {
+            // Invalid cache, ignore
+          }
+        }
 
-        // Fetch premium/subscription data in background
+        // If we have valid cached data, use it immediately
+        if (cachedData) {
+          setUser({
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            displayName: firebaseUser.displayName,
+            photoURL: firebaseUser.photoURL,
+            isPremium: cachedData.isPremium || false,
+            stripeCustomerId: cachedData.stripeCustomerId,
+            stripeSubscriptionId: cachedData.stripeSubscriptionId,
+            subscriptionPlan: cachedData.subscriptionPlan,
+            subscriptionStatus: cachedData.subscriptionStatus,
+            subscriptionEndsAt: cachedData.subscriptionEndsAt ? new Date(cachedData.subscriptionEndsAt) : null,
+          });
+          setLoading(false);
+          setPremiumLoading(false);
+        } else {
+          // Set user immediately with basic Firebase data for instant UI update
+          const basicUser = {
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            displayName: firebaseUser.displayName,
+            photoURL: firebaseUser.photoURL,
+            isPremium: false,
+          };
+          setUser(basicUser);
+          setLoading(false);
+          setPremiumLoading(true);
+        }
+
+        // Fetch fresh premium/subscription data in background
         try {
           const response = await fetch('/api/users/sync', {
             method: 'POST',
@@ -64,6 +99,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           
           if (response.ok) {
             const dbUser = await response.json();
+            
+            // Cache the premium data
+            if (typeof window !== 'undefined') {
+              sessionStorage.setItem(cacheKey, JSON.stringify({
+                timestamp: Date.now(),
+                data: dbUser,
+              }));
+            }
+            
             // Update with premium data once loaded
             setUser({
               uid: firebaseUser.uid,
