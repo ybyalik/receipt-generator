@@ -184,6 +184,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const subscription = event.data.object as Stripe.Subscription & {
           current_period_end?: number;
           cancel_at_period_end?: boolean;
+          cancel_at?: number | null;
           canceled_at?: number | null;
         };
         
@@ -192,22 +193,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
         const plan = subscription.metadata?.plan || 'monthly';
         
-        // Check if subscription is being canceled at period end
+        // Check if subscription is being canceled (either at period end OR at a specific date)
         const isCanceledAtPeriodEnd = subscription.cancel_at_period_end === true;
+        const hasScheduledCancellation = subscription.cancel_at !== null && subscription.cancel_at !== undefined;
+        const isCanceled = isCanceledAtPeriodEnd || hasScheduledCancellation;
+        
         const isActive = ['active', 'trialing'].includes(subscription.status);
         
-        // User keeps premium until period ends, even if they canceled
+        // User keeps premium until cancellation date, even if they canceled
         const isPremium = isActive;
         
         // Determine the correct status to display
         // Use 'canceled' status when user has scheduled cancellation, but keep isPremium true
         let displayStatus: string = subscription.status;
-        if (isCanceledAtPeriodEnd && isActive) {
+        if (isCanceled && isActive) {
           displayStatus = 'canceled'; // Show as canceled, but isPremium stays true until period ends
         }
         
+        console.log(`Processing subscription ${subscription.id}: status=${subscription.status}, cancel_at_period_end=${isCanceledAtPeriodEnd}, cancel_at=${subscription.cancel_at}, displayStatus=${displayStatus}`);
+        
+        // Use cancel_at date if available, otherwise use current_period_end
         let subscriptionEndsAt: Date | undefined;
-        if (subscription.current_period_end) {
+        if (subscription.cancel_at) {
+          subscriptionEndsAt = new Date(subscription.cancel_at * 1000);
+        } else if (subscription.current_period_end) {
           subscriptionEndsAt = new Date(subscription.current_period_end * 1000);
         }
 
