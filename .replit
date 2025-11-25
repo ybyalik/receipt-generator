@@ -38,6 +38,10 @@ externalPort = 3002
 localPort = 45385
 externalPort = 3003
 
+[[ports]]
+localPort = 45697
+externalPort = 5000
+
 [agent]
 expertMode = true
 integrations = ["resend:1.0.0", "javascript_openai_ai_integrations:1.0.0", "javascript_object_storage:1.0.0"]
@@ -68,3 +72,11 @@ waitForPort = 5000
 
 [objectStorage]
 defaultBucketID = "replit-objstore-54cb28b0-08bd-442a-b697-cdeead87c75d"
+
+[userenv]
+
+[userenv.production]
+NEXT_PUBLIC_BASE_URL = "https://receiptgenerator.net"
+
+[userenv.development]
+NEXT_PUBLIC_BASE_URL = "http://localhost:5000"
