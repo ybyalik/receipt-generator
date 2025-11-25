@@ -218,6 +218,11 @@ export async function getUserById(id: number): Promise<User | null> {
   return result.length > 0 ? result[0] : null;
 }
 
+export async function getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | null> {
+  const result = await db.select().from(users).where(eq(users.stripeCustomerId, stripeCustomerId));
+  return result.length > 0 ? result[0] : null;
+}
+
 export async function getAllUsers(searchQuery?: string): Promise<User[]> {
   if (searchQuery) {
     const result = await db.select().from(users).where(

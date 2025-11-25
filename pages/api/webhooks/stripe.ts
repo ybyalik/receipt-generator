@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { buffer } from 'micro';
 import Stripe from 'stripe';
 import { stripe } from '../../../lib/stripe';
-import { updateUserSubscription } from '../../../server/storage';
+import { updateUserSubscription, getUserByStripeCustomerId } from '../../../server/storage';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -173,16 +173,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription & {
           current_period_end?: number;
+          cancel_at_period_end?: boolean;
+          canceled_at?: number | null;
         };
-        const firebaseUid = subscription.metadata?.firebaseUid;
-
+        
+        // Try to get firebaseUid from metadata, fallback to finding user by customer ID
+        let firebaseUid = subscription.metadata?.firebaseUid;
+        
         if (!firebaseUid) {
-          console.error('No firebaseUid in subscription metadata');
-          break;
+          const customerId = subscription.customer as string;
+          const user = await getUserByStripeCustomerId(customerId);
+          if (user) {
+            firebaseUid = user.firebaseUid;
+            console.log(`Found user by stripeCustomerId: ${customerId} -> ${firebaseUid}`);
+          } else {
+            console.error('No firebaseUid in metadata and no user found by stripeCustomerId');
+            break;
+          }
         }
 
         const plan = subscription.metadata?.plan || 'monthly';
-        const isPremium = ['active', 'trialing'].includes(subscription.status);
+        
+        // Check if subscription is being canceled at period end
+        const isCanceledAtPeriodEnd = subscription.cancel_at_period_end === true;
+        const isActive = ['active', 'trialing'].includes(subscription.status);
+        
+        // User keeps premium until period ends, even if they canceled
+        const isPremium = isActive;
+        
+        // Determine the correct status to display
+        // Use 'canceled' status when user has scheduled cancellation, but keep isPremium true
+        let displayStatus: string = subscription.status;
+        if (isCanceledAtPeriodEnd && isActive) {
+          displayStatus = 'canceled'; // Show as canceled, but isPremium stays true until period ends
+        }
         
         let subscriptionEndsAt: Date | undefined;
         if (subscription.current_period_end) {
@@ -193,12 +217,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           stripeSubscriptionId: subscription.id,
           stripeCustomerId: subscription.customer as string,
           subscriptionPlan: plan,
-          subscriptionStatus: subscription.status,
+          subscriptionStatus: displayStatus,
           subscriptionEndsAt,
           isPremium,
         });
 
-        console.log(`Updated subscription for user ${firebaseUid}: ${subscription.status}`);
+        console.log(`Updated subscription for user ${firebaseUid}: ${displayStatus} (cancel_at_period_end: ${isCanceledAtPeriodEnd})`);
         break;
       }
 
@@ -206,11 +230,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const subscription = event.data.object as Stripe.Subscription & {
           current_period_end?: number;
         };
-        const firebaseUid = subscription.metadata?.firebaseUid;
-
+        
+        // Try to get firebaseUid from metadata, fallback to finding user by customer ID
+        let firebaseUid = subscription.metadata?.firebaseUid;
+        
         if (!firebaseUid) {
-          console.error('No firebaseUid in subscription metadata');
-          break;
+          const customerId = subscription.customer as string;
+          const user = await getUserByStripeCustomerId(customerId);
+          if (user) {
+            firebaseUid = user.firebaseUid;
+            console.log(`Found user by stripeCustomerId for deletion: ${customerId} -> ${firebaseUid}`);
+          } else {
+            console.error('No firebaseUid in metadata and no user found by stripeCustomerId for deletion');
+            break;
+          }
         }
 
         let subscriptionEndsAt: Date | undefined;
@@ -224,7 +257,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           subscriptionEndsAt,
         });
 
-        console.log(`Subscription canceled for user ${firebaseUid}`);
+        console.log(`Subscription fully canceled for user ${firebaseUid}`);
         break;
       }
 
