@@ -78,10 +78,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    // Determine base URL from request headers or environment
+    // Determine base URL from request headers (more reliable than env var in Replit)
     const protocol = req.headers['x-forwarded-proto'] || 'https';
     const host = req.headers['x-forwarded-host'] || req.headers.host;
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `${protocol}://${host}`;
+    
+    // Always use dynamic URL from headers - env var may have incorrect localhost value
+    const baseUrl = `${protocol}://${host}`;
     
     // Create a Checkout Session instead of directly creating a subscription
     const session = await stripe.checkout.sessions.create({
