@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { buffer } from 'micro';
 import Stripe from 'stripe';
 import { stripe } from '../../../lib/stripe';
-import { updateUserSubscription, getUserByStripeCustomerId } from '../../../server/storage';
+import { updateUserSubscription, getUserByStripeCustomerId, updateUserSubscriptionByStripeCustomerId } from '../../../server/storage';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -177,21 +177,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           canceled_at?: number | null;
         };
         
-        // Try to get firebaseUid from metadata, fallback to finding user by customer ID
-        let firebaseUid = subscription.metadata?.firebaseUid;
+        const customerId = subscription.customer as string;
+        const firebaseUid = subscription.metadata?.firebaseUid;
         
-        if (!firebaseUid) {
-          const customerId = subscription.customer as string;
-          const user = await getUserByStripeCustomerId(customerId);
-          if (user) {
-            firebaseUid = user.firebaseUid;
-            console.log(`Found user by stripeCustomerId: ${customerId} -> ${firebaseUid}`);
-          } else {
-            console.error('No firebaseUid in metadata and no user found by stripeCustomerId');
-            break;
-          }
-        }
-
         const plan = subscription.metadata?.plan || 'monthly';
         
         // Check if subscription is being canceled at period end
@@ -213,16 +201,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           subscriptionEndsAt = new Date(subscription.current_period_end * 1000);
         }
 
-        await updateUserSubscription(firebaseUid, {
-          stripeSubscriptionId: subscription.id,
-          stripeCustomerId: subscription.customer as string,
-          subscriptionPlan: plan,
-          subscriptionStatus: displayStatus,
-          subscriptionEndsAt,
-          isPremium,
-        });
-
-        console.log(`Updated subscription for user ${firebaseUid}: ${displayStatus} (cancel_at_period_end: ${isCanceledAtPeriodEnd})`);
+        // Try to update by firebaseUid first, fallback to stripeCustomerId
+        if (firebaseUid) {
+          await updateUserSubscription(firebaseUid, {
+            stripeSubscriptionId: subscription.id,
+            stripeCustomerId: customerId,
+            subscriptionPlan: plan,
+            subscriptionStatus: displayStatus,
+            subscriptionEndsAt,
+            isPremium,
+          });
+          console.log(`Updated subscription for user ${firebaseUid}: ${displayStatus} (cancel_at_period_end: ${isCanceledAtPeriodEnd})`);
+        } else {
+          // Fallback: update by stripeCustomerId directly
+          const result = await updateUserSubscriptionByStripeCustomerId(customerId, {
+            stripeSubscriptionId: subscription.id,
+            subscriptionPlan: plan,
+            subscriptionStatus: displayStatus,
+            subscriptionEndsAt,
+            isPremium,
+          });
+          if (result) {
+            console.log(`Updated subscription by stripeCustomerId ${customerId}: ${displayStatus} (cancel_at_period_end: ${isCanceledAtPeriodEnd})`);
+          } else {
+            console.error(`No user found with stripeCustomerId ${customerId}`);
+          }
+        }
         break;
       }
 
@@ -231,33 +235,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           current_period_end?: number;
         };
         
-        // Try to get firebaseUid from metadata, fallback to finding user by customer ID
-        let firebaseUid = subscription.metadata?.firebaseUid;
-        
-        if (!firebaseUid) {
-          const customerId = subscription.customer as string;
-          const user = await getUserByStripeCustomerId(customerId);
-          if (user) {
-            firebaseUid = user.firebaseUid;
-            console.log(`Found user by stripeCustomerId for deletion: ${customerId} -> ${firebaseUid}`);
-          } else {
-            console.error('No firebaseUid in metadata and no user found by stripeCustomerId for deletion');
-            break;
-          }
-        }
+        const customerId = subscription.customer as string;
+        const firebaseUid = subscription.metadata?.firebaseUid;
 
         let subscriptionEndsAt: Date | undefined;
         if (subscription.current_period_end) {
           subscriptionEndsAt = new Date(subscription.current_period_end * 1000);
         }
 
-        await updateUserSubscription(firebaseUid, {
-          subscriptionStatus: 'canceled',
-          isPremium: false,
-          subscriptionEndsAt,
-        });
-
-        console.log(`Subscription fully canceled for user ${firebaseUid}`);
+        // Try to update by firebaseUid first, fallback to stripeCustomerId
+        if (firebaseUid) {
+          await updateUserSubscription(firebaseUid, {
+            subscriptionStatus: 'canceled',
+            isPremium: false,
+            subscriptionEndsAt,
+          });
+          console.log(`Subscription fully canceled for user ${firebaseUid}`);
+        } else {
+          // Fallback: update by stripeCustomerId directly
+          const result = await updateUserSubscriptionByStripeCustomerId(customerId, {
+            subscriptionStatus: 'canceled',
+            isPremium: false,
+            subscriptionEndsAt,
+          });
+          if (result) {
+            console.log(`Subscription fully canceled by stripeCustomerId ${customerId}`);
+          } else {
+            console.error(`No user found with stripeCustomerId ${customerId} for deletion`);
+          }
+        }
         break;
       }
 
@@ -321,26 +327,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             current_period_end?: number;
           };
           
-          // Try to get firebaseUid from metadata, fallback to finding user by customer ID
-          let firebaseUid = subscription.metadata?.firebaseUid;
-          
-          if (!firebaseUid) {
-            const customerId = subscription.customer as string;
-            const user = await getUserByStripeCustomerId(customerId);
-            if (user) {
-              firebaseUid = user.firebaseUid;
-              console.log(`Found user by stripeCustomerId for payment: ${customerId} -> ${firebaseUid}`);
-            } else {
-              console.log(`No user found for payment, but will still send receipt email if customer_email exists`);
-            }
-          }
+          const customerId = subscription.customer as string;
+          const firebaseUid = subscription.metadata?.firebaseUid;
 
           let subscriptionEndsAt: Date | undefined;
           if (subscription.current_period_end) {
             subscriptionEndsAt = new Date(subscription.current_period_end * 1000);
           }
 
-          // Update user subscription if we found the user
+          // Update user subscription - try firebaseUid first, fallback to stripeCustomerId
           if (firebaseUid) {
             await updateUserSubscription(firebaseUid, {
               subscriptionStatus: subscription.status,
@@ -348,6 +343,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               subscriptionEndsAt,
             });
             console.log(`Payment succeeded for user ${firebaseUid}`);
+          } else {
+            // Fallback: update by stripeCustomerId directly
+            const result = await updateUserSubscriptionByStripeCustomerId(customerId, {
+              subscriptionStatus: subscription.status,
+              isPremium: ['active', 'trialing'].includes(subscription.status),
+              subscriptionEndsAt,
+            });
+            if (result) {
+              console.log(`Payment succeeded, updated by stripeCustomerId ${customerId}`);
+            } else {
+              console.log(`No user found for payment with stripeCustomerId ${customerId}, but will still send receipt email`);
+            }
           }
 
           // Send receipt emails regardless of whether we found the user

@@ -274,6 +274,27 @@ export async function updateUserSubscription(
   return result.length > 0 ? result[0] : null;
 }
 
+export async function updateUserSubscriptionByStripeCustomerId(
+  stripeCustomerId: string,
+  subscriptionData: {
+    stripeSubscriptionId?: string;
+    subscriptionPlan?: string;
+    subscriptionStatus?: string;
+    subscriptionEndsAt?: Date;
+    isPremium?: boolean;
+  }
+): Promise<User | null> {
+  const result = await db.update(users)
+    .set({
+      ...subscriptionData,
+      updatedAt: new Date(),
+    })
+    .where(eq(users.stripeCustomerId, stripeCustomerId))
+    .returning();
+  console.log(`updateUserSubscriptionByStripeCustomerId: Updated ${result.length} row(s) for customer ${stripeCustomerId}`);
+  return result.length > 0 ? result[0] : null;
+}
+
 export async function deleteUser(id: number): Promise<boolean> {
   const result = await db.delete(users).where(eq(users.id, id)).returning();
   return result.length > 0;
