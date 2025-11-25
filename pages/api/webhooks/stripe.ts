@@ -149,10 +149,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const sig = req.headers['stripe-signature'];
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  
+  // Use staging webhook secret in development, production secret in production
+  const isDevelopment = process.env.NODE_ENV === 'development' || 
+    (req.headers.host && (req.headers.host.includes('replit.dev') || req.headers.host.includes('localhost')));
+  
+  const webhookSecret = isDevelopment 
+    ? process.env.STRIPE_WEBHOOK_SECRET_STAGING 
+    : process.env.STRIPE_WEBHOOK_SECRET;
+
+  console.log(`Webhook environment: ${isDevelopment ? 'staging' : 'production'}, host: ${req.headers.host}`);
 
   if (!sig || !webhookSecret) {
-    console.error('Missing stripe signature or webhook secret');
+    console.error(`Missing stripe signature or webhook secret. sig: ${sig ? 'present' : 'missing'}, secret: ${webhookSecret ? 'present' : 'missing'}, isDev: ${isDevelopment}`);
     return res.status(400).json({ error: 'Webhook configuration error' });
   }
 
