@@ -16,7 +16,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { user, signOut, isAdmin } = useAuth();
+  const { user, signOut, isAdmin, premiumLoading } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -106,18 +106,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         <p className="text-sm font-medium text-gray-900 truncate">{user.displayName || 'User'}</p>
                         <p className="text-xs text-gray-500 truncate">{user.email}</p>
                         <div className="mt-2 flex items-center gap-2">
-                          {user.isPremium ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gradient-to-r from-amber-400 to-yellow-500 text-white">
-                              ⭐ Premium
+                          {premiumLoading ? (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-400">
+                              Loading...
                             </span>
+                          ) : user.isPremium ? (
+                            <>
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gradient-to-r from-amber-400 to-yellow-500 text-white">
+                                ⭐ Premium
+                              </span>
+                              {user.subscriptionPlan && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700 capitalize">
+                                  {user.subscriptionPlan}
+                                </span>
+                              )}
+                            </>
                           ) : (
                             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
                               Free
-                            </span>
-                          )}
-                          {user.subscriptionPlan && user.isPremium && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700 capitalize">
-                              {user.subscriptionPlan}
                             </span>
                           )}
                         </div>
@@ -253,18 +259,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       <p className="font-semibold text-navy-900">{user.displayName || 'User'}</p>
                       <p className="text-sm text-navy-600">{user.email}</p>
                       <div className="mt-2 flex items-center gap-2">
-                        {user.isPremium ? (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gradient-to-r from-amber-400 to-yellow-500 text-white">
-                            ⭐ Premium
+                        {premiumLoading ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-400">
+                            Loading...
                           </span>
+                        ) : user.isPremium ? (
+                          <>
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gradient-to-r from-amber-400 to-yellow-500 text-white">
+                              ⭐ Premium
+                            </span>
+                            {user.subscriptionPlan && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700 capitalize">
+                                {user.subscriptionPlan}
+                              </span>
+                            )}
+                          </>
                         ) : (
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
                             Free
-                          </span>
-                        )}
-                        {user.subscriptionPlan && user.isPremium && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700 capitalize">
-                            {user.subscriptionPlan}
                           </span>
                         )}
                       </div>

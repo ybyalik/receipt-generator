@@ -14,6 +14,7 @@ import { User } from '../lib/types';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  premiumLoading: boolean;
   signIn: () => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signUpWithEmail: (email: string, password: string, displayName: string) => Promise<void>;
@@ -26,6 +27,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [premiumLoading, setPremiumLoading] = useState(true);
 
   useEffect(() => {
     if (!auth) {
@@ -45,6 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
         setUser(basicUser);
         setLoading(false);
+        setPremiumLoading(true);
 
         // Fetch premium/subscription data in background
         try {
@@ -78,10 +81,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } catch (error) {
           console.error('Error syncing user:', error);
           // Keep basic user data even if sync fails
+        } finally {
+          setPremiumLoading(false);
         }
       } else {
         setUser(null);
         setLoading(false);
+        setPremiumLoading(false);
       }
     });
 
@@ -151,7 +157,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signInWithEmail, signUpWithEmail, signOut, isAdmin }}>
+    <AuthContext.Provider value={{ user, loading, premiumLoading, signIn, signInWithEmail, signUpWithEmail, signOut, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );
