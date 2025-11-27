@@ -4,6 +4,17 @@ import Link from 'next/link';
 import type { BlogPost } from '../../shared/schema';
 import { format } from 'date-fns';
 
+function stripHtml(html: string): string {
+  const text = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  return text;
+}
+
+function getExcerpt(html: string, maxLength: number = 150): string {
+  const text = stripHtml(html);
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength).trim() + '...';
+}
+
 export default function BlogIndex() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,10 +76,9 @@ export default function BlogIndex() {
                       <p className="text-sm text-gray-600 mb-4">
                         {post.publishedAt && format(new Date(post.publishedAt), 'MMMM d, yyyy')}
                       </p>
-                      <div 
-                        className="text-gray-700 line-clamp-3 flex-grow"
-                        dangerouslySetInnerHTML={{ __html: post.content }}
-                      />
+                      <p className="text-gray-700 line-clamp-3 flex-grow">
+                        {getExcerpt(post.content, 180)}
+                      </p>
                     </div>
                   </article>
                 </Link>
