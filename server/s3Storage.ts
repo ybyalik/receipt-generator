@@ -45,4 +45,24 @@ export class S3StorageService {
     
     return publicUrl;
   }
+
+  async uploadBlogImage(buffer: Buffer, filename: string, contentType: string = 'image/png'): Promise<string> {
+    const key = `blog-images/${filename}`;
+    
+    const command = new PutObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+      Body: buffer,
+      ContentType: contentType,
+      CacheControl: 'public, max-age=31536000',
+    });
+
+    await this.s3Client.send(command);
+
+    // Return the public URL (assumes bucket is publicly accessible)
+    const publicUrl = `https://${this.bucketName}.s3.${this.region}.amazonaws.com/${key}`;
+    console.log(`[S3] Blog image uploaded successfully: ${publicUrl}`);
+    
+    return publicUrl;
+  }
 }

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { IncomingForm, File } from 'formidable';
 import fs from 'fs';
 import path from 'path';
+import { S3StorageService } from '../../../server/s3Storage';
 
 export const config = {
   api: {
@@ -9,25 +10,38 @@ export const config = {
   },
 };
 
+const getContentType = (extension: string): string => {
+  const types: Record<string, string> = {
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.png': 'image/png',
+    '.gif': 'image/gif',
+    '.webp': 'image/webp',
+    '.svg': 'image/svg+xml',
+  };
+  return types[extension.toLowerCase()] || 'image/png';
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const uploadDir = path.join(process.cwd(), 'public', 'blog-images');
+  const tempDir = '/tmp/blog-uploads';
   
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
+  if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true });
   }
 
   const form = new IncomingForm({
-    uploadDir,
+    uploadDir: tempDir,
     keepExtensions: true,
     maxFileSize: 10 * 1024 * 1024,
   });
 
-  form.parse(req, (err, fields, files) => {
+  form.parse(req, async (err, fields, files) => {
     if (err) {
+      console.error('Form parse error:', err);
       return res.status(500).json({ error: 'Upload failed' });
     }
 
@@ -37,16 +51,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const timestamp = Date.now();
-    const originalName = (file as File).originalFilename || 'image';
-    const extension = path.extname(originalName);
-    const newFileName = `${timestamp}${extension}`;
-    const newPath = path.join(uploadDir, newFileName);
+    try {
+      const timestamp = Date.now();
+      const originalName = (file as File).originalFilename || 'image';
+      const extension = path.extname(originalName);
+      const newFileName = `${timestamp}${extension}`;
+      const contentType = getContentType(extension);
 
-    fs.renameSync((file as File).filepath, newPath);
+      // Read the file into a buffer
+      const fileBuffer = fs.readFileSync((file as File).filepath);
 
-    const imageUrl = `/blog-images/${newFileName}`;
-    
-    res.status(200).json({ url: imageUrl });
+      // Upload to S3
+      const s3Service = new S3StorageService();
+      const imageUrl = await s3Service.uploadBlogImage(fileBuffer, newFileName, contentType);
+
+      // Clean up temp file
+      fs.unlinkSync((file as File).filepath);
+
+      console.log(`Blog image uploaded to S3: ${imageUrl}`);
+      res.status(200).json({ url: imageUrl });
+    } catch (error: any) {
+      console.error('S3 upload error:', error);
+      
+      // Clean up temp file on error
+      try {
+        fs.unlinkSync((file as File).filepath);
+      } catch {}
+      
+      return res.status(500).json({ error: 'Failed to upload image to storage' });
+    }
   });
 }
