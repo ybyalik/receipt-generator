@@ -53,7 +53,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navLinks = [
     { href: '/templates', label: 'Templates' },
     { href: '/ai', label: 'AI Generator' },
-    { href: '/blog', label: 'Blog' },
     { href: '/contact', label: 'Contact' },
   ];
 
@@ -401,6 +400,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </a>
             </div>
             <div className="flex flex-wrap justify-center gap-6 text-sm">
+              <Link href="/blog" className="hover:text-accent-400 transition-colors cursor-pointer">
+                Blog
+              </Link>
               <Link href="/privacy" className="hover:text-accent-400 transition-colors cursor-pointer">
                 Privacy Policy
               </Link>
