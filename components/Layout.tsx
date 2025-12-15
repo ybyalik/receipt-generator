@@ -403,6 +403,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <Link href="/blog" className="hover:text-accent-400 transition-colors cursor-pointer">
                 Blog
               </Link>
+              <Link href="/sitemap" className="hover:text-accent-400 transition-colors cursor-pointer">
+                Sitemap
+              </Link>
               <Link href="/privacy" className="hover:text-accent-400 transition-colors cursor-pointer">
                 Privacy Policy
               </Link>
