@@ -678,10 +678,10 @@ export async function getServerSideProps(context: any) {
       props: {
         initialTemplate: template,
         metaTags: {
-          title: `${template.name} - Customizable Receipt Template`,
-          description: `Create and customize ${template.name.toLowerCase()} instantly. Edit details, add items, and download professional receipts in seconds.`,
-          ogTitle: `${template.name} - Customizable Receipt Template`,
-          ogDescription: `Create and customize ${template.name.toLowerCase()} instantly. Edit details, add items, and download professional receipts in seconds.`,
+          title: `${template.name} - ${template.name} Template Generator`,
+          description: `Generate a ${template.name} using a customizable template. Edit items, prices, taxes, and dates, then download a professional receipt in seconds.`,
+          ogTitle: `${template.name} - ${template.name} Template Generator`,
+          ogDescription: `Generate a ${template.name} using a customizable template. Edit items, prices, taxes, and dates, then download a professional receipt in seconds.`,
           ogType: 'website',
         },
       },
