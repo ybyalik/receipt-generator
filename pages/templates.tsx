@@ -1,12 +1,17 @@
 import type { NextPage, GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import Layout from '../components/Layout';
 import { FiArrowRight } from 'react-icons/fi';
-import ReceiptPreview from '../components/ReceiptPreview';
 import { getAllTemplates } from '../server/storage';
 import type { Template } from '../shared/schema';
 import type { Section, TemplateSettings } from '../lib/types';
+
+const ReceiptPreview = dynamic(() => import('../components/ReceiptPreview'), {
+  ssr: false,
+  loading: () => <div className="h-full bg-gray-100 animate-pulse rounded" />,
+});
 
 interface TemplatesPageProps {
   templates: Template[];
