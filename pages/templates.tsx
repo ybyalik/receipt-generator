@@ -1,14 +1,18 @@
-import type { NextPage } from 'next';
+import type { NextPage, GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '../components/Layout';
-import { useTemplates } from '../contexts/TemplatesContext';
 import { FiArrowRight } from 'react-icons/fi';
 import ReceiptPreview from '../components/ReceiptPreview';
+import { getAllTemplates } from '../server/storage';
+import type { Template } from '../shared/schema';
+import type { Section, TemplateSettings } from '../lib/types';
 
-const Templates: NextPage = () => {
-  const { templates } = useTemplates();
-  
+interface TemplatesPageProps {
+  templates: Template[];
+}
+
+const Templates: NextPage<TemplatesPageProps> = ({ templates }) => {
   return (
     <Layout>
       <Head>
@@ -40,8 +44,8 @@ const Templates: NextPage = () => {
                 <div className="bg-white rounded-lg shadow-sm h-64 overflow-hidden flex items-start justify-center">
                   <div className="scale-50 origin-top">
                     <ReceiptPreview
-                      sections={template.sections}
-                      settings={template.settings}
+                      sections={template.sections as Section[]}
+                      settings={template.settings as TemplateSettings}
                       showWatermark={false}
                     />
                   </div>
@@ -50,7 +54,7 @@ const Templates: NextPage = () => {
               <div className="p-6">
                 <h3 className="text-xl font-semibold mb-2 text-navy-900">{template.name}</h3>
                 <p className="text-navy-600 mb-4">
-                  {template.sections.length} customizable sections
+                  {(template.sections as Section[]).length} customizable sections
                 </p>
                 <div className="flex items-center text-accent-500 font-semibold group-hover:text-accent-600 transition-colors">
                   Customize Template
@@ -63,6 +67,25 @@ const Templates: NextPage = () => {
       </div>
     </Layout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<TemplatesPageProps> = async () => {
+  try {
+    const templates = await getAllTemplates();
+    
+    return {
+      props: {
+        templates: JSON.parse(JSON.stringify(templates)),
+      },
+    };
+  } catch (error) {
+    console.error('Failed to fetch templates:', error);
+    return {
+      props: {
+        templates: [],
+      },
+    };
+  }
 };
 
 export default Templates;
