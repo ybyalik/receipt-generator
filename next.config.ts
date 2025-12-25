@@ -6,12 +6,12 @@ const replitDomains = process.env.REPLIT_DOMAINS
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  ...(replitDomains.length > 0 && {
-    allowedDevOrigins: replitDomains,
-  }),
+  allowedDevOrigins: [
+    '*.replit.dev',
+    '*.replit.app',
+    '*.pike.replit.dev',
+    ...replitDomains,
+  ],
   // Performance optimizations
   compress: true,
   compiler: {
