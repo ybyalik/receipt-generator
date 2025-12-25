@@ -417,8 +417,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ? subscriptionEndsAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
           : 'N/A';
 
-          console.log(`Email check: customerEmail=${customerEmail}, RESEND_API_KEY=${process.env.RESEND_API_KEY ? 'set' : 'not set'}, RESEND_FROM_EMAIL=${process.env.RESEND_FROM_EMAIL}`);
-
           if (customerEmail && process.env.RESEND_API_KEY) {
             const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@receiptgenerator.net';
             console.log(`Preparing to send email from: ${fromEmail} to: ${customerEmail}`);
