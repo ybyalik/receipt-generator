@@ -457,8 +457,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             } catch (emailError: any) {
               console.error('Failed to send receipt email:', emailError.message, emailError);
             }
-          } else {
-            console.log(`Skipping email: customerEmail=${customerEmail ? 'exists' : 'missing'}, RESEND_API_KEY=${process.env.RESEND_API_KEY ? 'exists' : 'missing'}`);
           }
         break;
       }
