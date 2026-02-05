@@ -1,17 +1,7 @@
 import type { NextConfig } from "next";
 
-const replitDomains = process.env.REPLIT_DOMAINS 
-  ? process.env.REPLIT_DOMAINS.split(',') 
-  : [];
-
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  allowedDevOrigins: [
-    '*.replit.dev',
-    '*.replit.app',
-    '*.pike.replit.dev',
-    ...replitDomains,
-  ],
   // Performance optimizations
   compress: true,
   compiler: {

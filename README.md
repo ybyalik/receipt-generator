@@ -1,24 +1,70 @@
-Welcome to the NextJS base template bootstrapped using the `create-next-app`. This template supports TypeScript, but you can use normal JavaScript as well.
+# Receipt Generator
+
+A full-stack Next.js application for creating, customizing, and downloading professional receipts.
+
+## Tech Stack
+
+- **Framework**: Next.js 16 with TypeScript
+- **Styling**: Tailwind CSS v4
+- **Database**: PostgreSQL with Drizzle ORM
+- **Authentication**: Firebase Auth
+- **Payments**: Stripe
+- **Storage**: AWS S3
 
 ## Getting Started
 
-Hit the run button to start the development server.
+### Prerequisites
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- Node.js 18+
+- PostgreSQL database
+- Firebase project (for authentication)
+- Stripe account (for payments)
+- AWS S3 bucket (for file storage)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on `/api/hello`. This endpoint can be edited in `pages/api/hello.ts`.
+### Environment Variables
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Copy `.env.example` to `.env` and fill in your values:
+
+```bash
+cp .env.example .env
+```
+
+### Installation
+
+```bash
+npm install
+```
+
+### Development
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:3000`.
+
+### Production Build
+
+```bash
+npm run build
+npm start
+```
+
+## Project Structure
+
+```
+├── components/     # React components
+├── contexts/       # React Context providers
+├── lib/            # Utilities and configurations
+├── pages/          # Next.js pages and API routes
+├── public/         # Static assets
+├── server/         # Database and business logic
+├── shared/         # Shared types and schemas
+└── styles/         # Global CSS styles
+```
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-## Productionizing your Next App
-
-To make your next App run smoothly in production make sure to deploy your project with [Repl Deployments](https://docs.replit.com/hosting/deployments/about-deployments)!
-
-You can also produce a production build by running `npm run build` and [changing the run command](https://docs.replit.com/programming-ide/configuring-repl#run) to `npm run start`.
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [Drizzle ORM](https://orm.drizzle.team/docs/overview)

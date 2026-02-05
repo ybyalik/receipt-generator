@@ -78,11 +78,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    // Determine base URL from request headers (more reliable than env var in Replit)
+    // Determine base URL from request headers
     const protocol = req.headers['x-forwarded-proto'] || 'https';
     const host = req.headers['x-forwarded-host'] || req.headers.host;
-    
-    // Always use dynamic URL from headers - env var may have incorrect localhost value
     const baseUrl = `${protocol}://${host}`;
     
     // Create a Checkout Session instead of directly creating a subscription
