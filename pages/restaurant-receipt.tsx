@@ -18,7 +18,7 @@ interface RestaurantPageProps {
 
 const RestaurantReceipt: NextPage<RestaurantPageProps> = ({ templates }) => {
   const restaurantTemplates = templates.filter(t =>
-    t.category === 'Restaurant' ||
+    (t as any).category === 'Restaurant' ||
     t.name.toLowerCase().includes('restaurant') ||
     t.name.toLowerCase().includes('cafe') ||
     t.name.toLowerCase().includes('diner') ||
