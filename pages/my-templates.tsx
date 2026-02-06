@@ -82,7 +82,7 @@ const MyTemplates: NextPage = () => {
   return (
     <Layout>
       <Head>
-        <title>My Templates - ReceiptGen</title>
+        <title>My Templates - Receipt Generator</title>
       </Head>
 
       <div className="max-w-7xl mx-auto px-4 py-4 sm:py-8">

@@ -381,7 +381,7 @@ export default function MyTemplateEditor() {
   return (
     <Layout>
       <Head>
-        <title>{template.name} - My Templates - ReceiptGen</title>
+        <title>{template.name} - My Templates - Receipt Generator</title>
       </Head>
 
       <div className="max-w-7xl mx-auto px-4 py-8">

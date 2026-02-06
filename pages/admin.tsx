@@ -22,7 +22,7 @@ const Admin: NextPage = () => {
     return (
       <Layout>
         <Head>
-          <title>Admin - ReceiptGen</title>
+          <title>Admin - Receipt Generator</title>
         </Head>
         <div className="max-w-7xl mx-auto px-4 py-12 text-center">
           <p className="text-gray-600">Loading...</p>
@@ -36,7 +36,7 @@ const Admin: NextPage = () => {
     return (
       <Layout>
         <Head>
-          <title>Unauthorized - ReceiptGen</title>
+          <title>Unauthorized - Receipt Generator</title>
         </Head>
         <div className="max-w-7xl mx-auto px-4 py-12 text-center">
           <h1 className="text-2xl font-bold text-red-600">Unauthorized Access</h1>
@@ -126,7 +126,7 @@ const Admin: NextPage = () => {
   return (
     <Layout>
       <Head>
-        <title>Admin - ReceiptGen</title>
+        <title>Admin - Receipt Generator</title>
       </Head>
 
       <div className="max-w-7xl mx-auto px-4 py-8">

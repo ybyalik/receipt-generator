@@ -66,7 +66,7 @@ export default function EmailCaptureModal({ isOpen, onClose, onSubmit }: EmailCa
             Download your receipt
           </h3>
           <p className="text-sm" style={{ color: '#6b7280' }}>
-            Enter your email to download. We&apos;ll also send you tips to get the most out of ReceiptGen.
+            Enter your email to download. We&apos;ll also send you tips to get the most out of ReceiptGenerator.net.
           </p>
         </div>
 

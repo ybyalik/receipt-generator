@@ -107,7 +107,7 @@ const Pricing: NextPage = () => {
   return (
     <Layout>
       <Head>
-        <title>Pricing - ReceiptGen</title>
+        <title>Pricing - Receipt Generator</title>
         <meta name="description" content="Choose your plan" />
       </Head>
 

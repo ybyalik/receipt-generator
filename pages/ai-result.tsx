@@ -213,7 +213,7 @@ export default function AIResult() {
   return (
     <Layout>
       <Head>
-        <title>AI-Generated Receipt - ReceiptGen</title>
+        <title>AI-Generated Receipt - Receipt Generator</title>
       </Head>
 
       <div className="max-w-[1400px] mx-auto px-4 py-4 sm:py-8">

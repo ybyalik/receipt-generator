@@ -98,7 +98,7 @@ Make it professional, helpful, and SEO-friendly.`;
     return (
       <Layout>
         <Head>
-          <title>Settings - Admin - ReceiptGen</title>
+          <title>Settings - Admin - Receipt Generator</title>
         </Head>
         <div className="max-w-7xl mx-auto px-4 py-12 text-center">
           <p className="text-gray-600">Loading...</p>
@@ -114,7 +114,7 @@ Make it professional, helpful, and SEO-friendly.`;
   return (
     <Layout>
       <Head>
-        <title>Settings - Admin - ReceiptGen</title>
+        <title>Settings - Admin - Receipt Generator</title>
       </Head>
 
       <div className="max-w-4xl mx-auto px-4 py-8">

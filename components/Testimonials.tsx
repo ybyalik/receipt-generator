@@ -120,7 +120,7 @@ export default function Testimonials() {
             Loved by 50,000+ users
           </h2>
           <p className="font-body text-lg max-w-xl mx-auto" style={{ color: '#6b7280' }}>
-            See what businesses are saying about ReceiptGen
+            See what businesses are saying about ReceiptGenerator.net
           </p>
         </div>
       </div>
