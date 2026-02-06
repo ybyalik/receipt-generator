@@ -59,6 +59,12 @@ export default function Checkout() {
     createCheckoutSession();
   }, [user, loading, plan, router, showError]);
 
+  const planLabels: Record<string, string> = {
+    weekly: 'Weekly — $4.99/week',
+    monthly: 'Monthly — $9.99/month',
+    yearly: 'Yearly — $44.99/year ($3.75/month)',
+  };
+
   return (
     <Layout>
       <div className="min-h-screen flex items-center justify-center">
@@ -67,6 +73,19 @@ export default function Checkout() {
           <p className="text-gray-600 text-lg">
             {!user ? 'Please sign in to continue...' : 'Redirecting to secure checkout...'}
           </p>
+          {plan && typeof plan === 'string' && planLabels[plan] && (
+            <p className="text-gray-500 text-sm mt-2">
+              {planLabels[plan]}
+            </p>
+          )}
+          <div className="flex items-center justify-center gap-4 mt-6 text-gray-400 text-xs">
+            <div className="flex items-center gap-1">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              <span>Secured by Stripe</span>
+            </div>
+            <span>|</span>
+            <span>256-bit SSL encryption</span>
+          </div>
         </div>
       </div>
       

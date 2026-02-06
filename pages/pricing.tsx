@@ -76,6 +76,7 @@ const Pricing: NextPage = () => {
       price: '$4.99',
       period: '/week',
       popular: false,
+      cta: 'Get Started',
     },
     {
       name: 'Monthly',
@@ -83,13 +84,15 @@ const Pricing: NextPage = () => {
       period: '/month',
       popular: false,
       savings: 'Save $10/month',
+      cta: 'Get Premium Access',
     },
     {
       name: 'Yearly',
       price: '$44.99',
       period: '/year',
       popular: true,
-      savings: 'Save $75/year',
+      savings: 'Just $3.75/month',
+      cta: 'Get Best Value',
     },
   ];
 
@@ -162,7 +165,7 @@ const Pricing: NextPage = () => {
                 }`}
                 style={plan.popular ? { backgroundColor: '#0d9488', color: '#ffffff' } : undefined}
               >
-                Select Plan
+                {plan.cta}
               </Link>
             </div>
           ))}

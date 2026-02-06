@@ -55,13 +55,20 @@ export default function PremiumUpsellModal({ isOpen, onClose }: PremiumUpsellMod
           </ul>
 
           {/* Pricing highlight */}
-          <div className="rounded-xl p-4 mb-6" style={{ backgroundColor: '#f0fdfa', border: '1px solid #ccfbf1' }}>
+          <div className="rounded-xl p-4 mb-4" style={{ backgroundColor: '#f0fdfa', border: '1px solid #ccfbf1' }}>
             <div className="flex items-baseline justify-center gap-1">
               <span className="text-3xl font-bold" style={{ color: '#0d9488' }}>$9.99</span>
               <span className="text-gray-500 text-sm">/month</span>
             </div>
             <p className="text-center text-xs text-gray-500 mt-1">
-              or $44.99/year (save 62%)
+              or $3.75/month billed yearly (save 62%)
+            </p>
+          </div>
+
+          {/* Discount callout */}
+          <div className="rounded-lg p-3 mb-6 text-center" style={{ backgroundColor: '#fefce8', border: '1px solid #fef08a' }}>
+            <p className="text-sm font-medium" style={{ color: '#854d0e' }}>
+              Use code <span className="font-bold tracking-wide">STAY20</span> for 20% off your first month
             </p>
           </div>
 
@@ -73,7 +80,7 @@ export default function PremiumUpsellModal({ isOpen, onClose }: PremiumUpsellMod
             onClick={onClose}
           >
             <FiDownload className="inline mr-2 -mt-0.5" />
-            View Plans & Upgrade
+            Get Premium Access
           </Link>
           <button
             onClick={onClose}
