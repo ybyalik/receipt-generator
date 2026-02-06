@@ -95,8 +95,8 @@ export const RelatedTemplates: React.FC<RelatedTemplatesProps> = ({
             <div className="bg-gradient-to-br from-paper-100 to-white p-4 h-48 flex items-center justify-center overflow-hidden">
               <div className="transform scale-[0.4] origin-center pointer-events-none">
                 <ReceiptPreview
-                  sections={template.sections || []}
-                  settings={template.settings || {
+                  sections={(template.sections as any) || []}
+                  settings={(template.settings as any) || {
                     currency: '$',
                     currencyFormat: 'symbol_before',
                     font: 'courier',
