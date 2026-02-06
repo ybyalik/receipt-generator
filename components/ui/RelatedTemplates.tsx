@@ -35,8 +35,8 @@ export const RelatedTemplates: React.FC<RelatedTemplatesProps> = ({
 
         // Prioritize templates from the same category
         if (currentCategory) {
-          const sameCategory = related.filter(t => t.category === currentCategory);
-          const otherCategory = related.filter(t => t.category !== currentCategory);
+          const sameCategory = related.filter(t => (t as any).category === currentCategory);
+          const otherCategory = related.filter(t => (t as any).category !== currentCategory);
 
           // Take from same category first, then fill with others
           related = [...sameCategory, ...otherCategory];
@@ -115,9 +115,9 @@ export const RelatedTemplates: React.FC<RelatedTemplatesProps> = ({
                   <h3 className="font-medium text-ink-900 group-hover:text-gold-600 transition-colors line-clamp-1">
                     {template.name}
                   </h3>
-                  {template.category && (
+                  {(template as any).category && (
                     <span className="text-xs text-ink-500 mt-1 block">
-                      {template.category}
+                      {(template as any).category}
                     </span>
                   )}
                 </div>
