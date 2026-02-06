@@ -450,7 +450,7 @@ export async function getEligibleEmailsForStep(stepNumber: number, delayMinutes:
     LIMIT ${limit}
   `);
 
-  return (result.rows || result) as { id: number; email: string; createdAt: Date }[];
+  return result as unknown as { id: number; email: string; createdAt: Date }[];
 }
 
 export async function logEmailSend(data: {
@@ -514,7 +514,7 @@ export async function getEmailCaptureLeads(limit: number = 100, offset: number =
     ORDER BY email, created_at ASC
     LIMIT ${limit} OFFSET ${offset}
   `);
-  return (result.rows || result) as { id: number; email: string; source: string; unsubscribed: boolean; createdAt: Date }[];
+  return result as unknown as { id: number; email: string; source: string; unsubscribed: boolean; createdAt: Date }[];
 }
 
 export async function unsubscribeEmail(email: string): Promise<void> {
