@@ -58,16 +58,16 @@ export default function Contact() {
         <div className="max-w-3xl mx-auto px-4">
           <div className="bg-white rounded-lg shadow-md p-8">
             <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-navy-900 mb-3">Contact Us</h1>
+              <h1 className="text-4xl font-bold text-gray-900 mb-3">Contact Us</h1>
               <p className="text-gray-600">Have a question? We&apos;d love to hear from you.</p>
             </div>
 
-            <div className="mb-8 p-4 bg-navy-50 rounded-lg border border-navy-200">
-              <div className="flex items-center justify-center gap-2 text-navy-700">
+            <div className="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <div className="flex items-center justify-center gap-2 text-gray-700">
                 <FiMail className="w-5 h-5" />
                 <a 
                   href="mailto:contact@receiptgenerator.net"
-                  className="font-medium hover:text-navy-900 transition-colors"
+                  className="font-medium hover:text-gray-900 transition-colors"
                 >
                   contact@receiptgenerator.net
                 </a>
@@ -102,7 +102,7 @@ export default function Contact() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-colors"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                   placeholder="Your name"
                 />
               </div>
@@ -118,7 +118,7 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-colors"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -134,7 +134,7 @@ export default function Contact() {
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-colors"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
                   placeholder="How can we help?"
                 />
               </div>
@@ -150,7 +150,7 @@ export default function Contact() {
                   onChange={handleChange}
                   required
                   rows={6}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-colors resize-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors resize-none"
                   placeholder="Your message..."
                 />
               </div>
@@ -158,7 +158,8 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-navy-600 text-white px-6 py-3 rounded-lg hover:bg-navy-700 transition-colors font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-6 py-3 rounded-lg transition-colors font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
               >
                 <FiSend className="w-5 h-5" />
                 {isSubmitting ? 'Sending...' : 'Send Message'}

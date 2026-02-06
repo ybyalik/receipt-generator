@@ -4,9 +4,11 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import { FiUpload, FiLoader, FiCheck, FiAlertCircle } from 'react-icons/fi';
 import type { Section, TemplateSettings } from '../lib/types';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function AIReceiptGenerator() {
   const router = useRouter();
+  const { user } = useAuth();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -292,19 +294,37 @@ export default function AIReceiptGenerator() {
         });
       }
 
-      // Store in sessionStorage and redirect to a new template
-      const templateData = {
-        sections,
-        settings,
-        fromAI: true,
-      };
-      
-      sessionStorage.setItem('ai-generated-template', JSON.stringify(templateData));
-      
-      setSuccess(true);
-      setTimeout(() => {
-        router.push('/ai-result');
-      }, 1000);
+      // Save to DB and redirect with ID (fallback to sessionStorage)
+      const templateData = { sections, settings, fromAI: true };
+
+      try {
+        const saveRes = await fetch('/api/ai-results', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user?.uid, sections, settings }),
+        });
+        if (saveRes.ok) {
+          const { id } = await saveRes.json();
+          setSuccess(true);
+          setTimeout(() => {
+            router.push(`/ai-result?id=${id}`);
+          }, 1000);
+        } else {
+          // Fallback to sessionStorage
+          sessionStorage.setItem('ai-generated-template', JSON.stringify(templateData));
+          setSuccess(true);
+          setTimeout(() => {
+            router.push('/ai-result');
+          }, 1000);
+        }
+      } catch {
+        // Fallback to sessionStorage
+        sessionStorage.setItem('ai-generated-template', JSON.stringify(templateData));
+        setSuccess(true);
+        setTimeout(() => {
+          router.push('/ai-result');
+        }, 1000);
+      }
 
     } catch (err: any) {
       console.error('Analysis error:', err);
@@ -328,10 +348,10 @@ export default function AIReceiptGenerator() {
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-6 sm:mb-8">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
-              <h1 className="text-3xl sm:text-4xl font-bold text-navy-900">
+              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
                 AI Receipt Generator
               </h1>
-              <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-semibold rounded-full">
+              <span className="px-3 py-1 bg-teal-100 text-teal-700 text-sm font-semibold rounded-full">
                 BETA
               </span>
             </div>
@@ -360,7 +380,7 @@ export default function AIReceiptGenerator() {
                   className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer transition-all ${
                     loading
                       ? 'border-gray-300 bg-gray-50 cursor-not-allowed'
-                      : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50'
+                      : 'border-gray-300 hover:border-teal-500 hover:bg-teal-50'
                   }`}
                 >
                   {previewUrl ? (
@@ -414,8 +434,9 @@ export default function AIReceiptGenerator() {
               className={`w-full py-3 px-6 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
                 !selectedFile || loading || success
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
+                  : ''
               }`}
+              style={!selectedFile || loading || success ? {} : { backgroundColor: '#0d9488', color: '#ffffff' }}
             >
               {loading ? (
                 <>
@@ -436,9 +457,9 @@ export default function AIReceiptGenerator() {
             </button>
 
             {/* Info */}
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h3 className="text-sm font-medium text-blue-900 mb-2">How it works:</h3>
-              <ol className="text-sm text-blue-800 space-y-1 list-decimal list-inside">
+            <div className="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg">
+              <h3 className="text-sm font-medium text-teal-900 mb-2">How it works:</h3>
+              <ol className="text-sm text-teal-800 space-y-1 list-decimal list-inside">
                 <li>Upload a clear photo or screenshot of your receipt</li>
                 <li>AI will analyze and extract all text and information</li>
                 <li>A matching receipt template will be automatically created</li>

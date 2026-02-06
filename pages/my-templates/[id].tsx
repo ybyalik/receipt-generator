@@ -6,8 +6,10 @@ import ReceiptPreview from '../../components/ReceiptPreview';
 import { Section, TemplateSettings } from '../../lib/types';
 import { useAuth } from '../../contexts/AuthContext';
 import html2canvas from 'html2canvas';
-import { FiSave, FiDownload, FiRefreshCw, FiEdit2, FiPlus, FiArrowLeft } from 'react-icons/fi';
+import jsPDF from 'jspdf';
+import { FiSave, FiDownload, FiRefreshCw, FiEdit2, FiPlus, FiArrowLeft, FiFile } from 'react-icons/fi';
 import { useToast } from '../../components/ToastContainer';
+import PremiumUpsellModal from '../../components/PremiumUpsellModal';
 import {
   DndContext,
   closestCenter,
@@ -67,7 +69,7 @@ function SortableSection({
 export default function MyTemplateEditor() {
   const router = useRouter();
   const { id } = router.query;
-  const { user } = useAuth();
+  const { user, getIdToken } = useAuth();
   const { showSuccess, showError } = useToast();
   const previewRef = useRef<HTMLDivElement>(null);
   const watermarkPreviewRef = useRef<HTMLDivElement>(null);
@@ -86,6 +88,7 @@ export default function MyTemplateEditor() {
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingSlug, setIsEditingSlug] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showUpsellModal, setShowUpsellModal] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -95,7 +98,10 @@ export default function MyTemplateEditor() {
 
     async function loadTemplate() {
       try {
-        const res = await fetch(`/api/user-templates/${id}?userId=${user.uid}`);
+        const token = await getIdToken();
+        const res = await fetch(`/api/user-templates/${id}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
         if (res.ok) {
           const data = await res.json();
           setTemplate(data);
@@ -292,11 +298,14 @@ export default function MyTemplateEditor() {
     if (!template || !user) return;
     
     try {
+      const token = await getIdToken();
       const res = await fetch(`/api/user-templates/${template.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
-          userId: user.uid,
           updates: {
             name: templateName,
             sections: sections,
@@ -317,7 +326,7 @@ export default function MyTemplateEditor() {
 
   const downloadReceipt = async () => {
     if (!user?.isPremium) {
-      router.push('/pricing');
+      setShowUpsellModal(true);
       return;
     }
 
@@ -330,6 +339,29 @@ export default function MyTemplateEditor() {
       link.download = `${template.name}.png`;
       link.href = canvas.toDataURL();
       link.click();
+    }
+  };
+
+  const downloadAsPdf = async () => {
+    if (!user?.isPremium) {
+      setShowUpsellModal(true);
+      return;
+    }
+    if (previewRef.current) {
+      const canvas = await html2canvas(previewRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const pdfWidth = (canvas.width / 2) * 0.2646;
+      const pdfHeight = (canvas.height / 2) * 0.2646;
+      const pdf = new jsPDF({
+        orientation: pdfHeight > pdfWidth ? 'portrait' : 'landscape',
+        unit: 'mm',
+        format: [pdfWidth, pdfHeight],
+      });
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`${template.name}.pdf`);
     }
   };
 
@@ -370,12 +402,12 @@ export default function MyTemplateEditor() {
                 onChange={(e) => setTemplateName(e.target.value)}
                 onBlur={() => setIsEditingName(false)}
                 onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
-                className="text-3xl font-bold border-b-2 border-blue-500 focus:outline-none"
+                className="text-3xl font-bold border-b-2 border-teal-500 focus:outline-none"
                 autoFocus
               />
             ) : (
               <h1 
-                className="text-3xl font-bold cursor-pointer hover:text-blue-600 transition-colors"
+                className="text-3xl font-bold cursor-pointer hover:text-teal-600 transition-colors"
                 onClick={() => setIsEditingName(true)}
                 title="Click to edit template name"
               >
@@ -392,7 +424,7 @@ export default function MyTemplateEditor() {
               </button>
               <button
                 onClick={saveTemplate}
-                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex items-center px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
               >
                 <FiSave className="mr-2" />
                 Save Template
@@ -481,7 +513,7 @@ export default function MyTemplateEditor() {
                 <div className="flex space-x-2">
                   {!user?.isPremium && (
                     <button
-                      onClick={downloadWithWatermark}
+                      onClick={() => setShowUpsellModal(true)}
                       className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
                     >
                       Download Sample
@@ -489,11 +521,22 @@ export default function MyTemplateEditor() {
                   )}
                   <button
                     onClick={downloadReceipt}
-                    className="flex items-center px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                    className="flex items-center px-3 py-1 text-sm rounded"
+                    style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
                   >
                     <FiDownload className="mr-1" />
-                    {user?.isPremium ? 'Download' : 'Remove Watermark'}
+                    {user?.isPremium ? 'PNG' : 'Remove Watermark'}
                   </button>
+                  {user?.isPremium && (
+                    <button
+                      onClick={downloadAsPdf}
+                      className="flex items-center px-3 py-1 text-sm rounded border"
+                      style={{ borderColor: '#0d9488', color: '#0d9488' }}
+                    >
+                      <FiFile className="mr-1" />
+                      PDF
+                    </button>
+                  )}
                 </div>
               </div>
               
@@ -519,8 +562,10 @@ export default function MyTemplateEditor() {
       </div>
 
       {/* Hidden watermarked preview for secure sample downloads */}
+      <PremiumUpsellModal isOpen={showUpsellModal} onClose={() => setShowUpsellModal(false)} />
+
       <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }}>
-        <ReceiptPreview 
+        <ReceiptPreview
           sections={sections}
           settings={settings}
           showWatermark={true}

@@ -10,7 +10,7 @@ import { useToast } from '../components/ToastContainer';
 
 const MyTemplates: NextPage = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, getIdToken } = useAuth();
   const { showSuccess, showError } = useToast();
   const [userTemplates, setUserTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +24,10 @@ const MyTemplates: NextPage = () => {
 
     async function loadUserTemplates() {
       try {
-        const res = await fetch(`/api/user-templates?userId=${user.uid}`);
+        const token = await getIdToken();
+        const res = await fetch(`/api/user-templates`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
         if (res.ok) {
           const data = await res.json();
           setUserTemplates(data);
@@ -49,8 +52,10 @@ const MyTemplates: NextPage = () => {
     if (!deleteConfirm || !user) return;
 
     try {
-      const res = await fetch(`/api/user-templates/${deleteConfirm.id}?userId=${user.uid}`, {
+      const token = await getIdToken();
+      const res = await fetch(`/api/user-templates/${deleteConfirm.id}`, {
         method: 'DELETE',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
 
       if (res.ok) {
@@ -88,7 +93,8 @@ const MyTemplates: NextPage = () => {
           </div>
           <button 
             onClick={() => router.push('/templates')}
-            className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"
+            className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
+            style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
           >
             <FiPlus className="mr-2" />
             Create from Template
@@ -107,7 +113,8 @@ const MyTemplates: NextPage = () => {
             </p>
             <button
               onClick={() => router.push('/templates')}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center px-4 py-2 rounded-lg transition-colors"
+              style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
             >
               <FiPlus className="mr-2" />
               Browse Templates
@@ -131,7 +138,7 @@ const MyTemplates: NextPage = () => {
                   <div className="flex gap-2">
                     <button 
                       onClick={() => handleEditTemplate(template.id)}
-                      className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors cursor-pointer"
+                      className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 text-teal-600 bg-teal-50 hover:bg-teal-100 rounded-lg transition-colors cursor-pointer"
                       title="Edit template"
                     >
                       <FiEdit />

@@ -89,29 +89,29 @@
   --color-yellow-900: #713f12;
   --color-yellow-950: #422006;
   
-  /* Custom brand colors - navy palette */
-  --color-navy-50: #f0f4f8;
-  --color-navy-100: #d9e2ec;
-  --color-navy-200: #bcccdc;
-  --color-navy-300: #9fb3c8;
-  --color-navy-400: #829ab1;
-  --color-navy-500: #627d98;
-  --color-navy-600: #486581;
-  --color-navy-700: #334e68;
-  --color-navy-800: #243b53;
-  --color-navy-900: #102a43;
-  
-  /* Custom brand colors - accent palette */
-  --color-accent-50: #e6f6ff;
-  --color-accent-100: #b3e0ff;
-  --color-accent-200: #80c9ff;
-  --color-accent-300: #4db3ff;
-  --color-accent-400: #1a9cff;
-  --color-accent-500: #0070c9;
-  --color-accent-600: #005fa3;
-  --color-accent-700: #004d85;
-  --color-accent-800: #003a66;
-  --color-accent-900: #002747;
+  /* Custom brand colors - navy palette (mapped to gray) */
+  --color-navy-50: #f9fafb;
+  --color-navy-100: #f3f4f6;
+  --color-navy-200: #e5e7eb;
+  --color-navy-300: #d1d5db;
+  --color-navy-400: #9ca3af;
+  --color-navy-500: #6b7280;
+  --color-navy-600: #4b5563;
+  --color-navy-700: #374151;
+  --color-navy-800: #1f2937;
+  --color-navy-900: #111827;
+
+  /* Custom brand colors - accent palette (teal) */
+  --color-accent-50: #f0fdfa;
+  --color-accent-100: #ccfbf1;
+  --color-accent-200: #99f6e4;
+  --color-accent-300: #5eead4;
+  --color-accent-400: #2dd4bf;
+  --color-accent-500: #14b8a6;
+  --color-accent-600: #0d9488;
+  --color-accent-700: #0f766e;
+  --color-accent-800: #115e59;
+  --color-accent-900: #134e4a;
   
   /* Utility colors */
   --color-success-500: #10b981;
@@ -147,7 +147,7 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid #0085e6;
+  outline: 2px solid #0d9488;
   outline-offset: 2px;
 }
 

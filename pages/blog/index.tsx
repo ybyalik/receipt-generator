@@ -49,7 +49,7 @@ export default function BlogIndex() {
     <Layout>
       <div className="min-h-screen bg-gray-50 py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-3xl sm:text-4xl font-bold text-navy-900 mb-6 sm:mb-8">Blog</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">Blog</h1>
 
           {posts.length === 0 ? (
             <div className="text-center py-12 text-gray-600">
@@ -70,7 +70,7 @@ export default function BlogIndex() {
                       </div>
                     )}
                     <div className="p-6 flex-grow flex flex-col">
-                      <h2 className="text-xl font-bold text-navy-900 mb-2 hover:text-navy-700 transition-colors">
+                      <h2 className="text-xl font-bold text-gray-900 mb-2 hover:text-gray-700 transition-colors">
                         {post.title}
                       </h2>
                       <p className="text-sm text-gray-600 mb-4">

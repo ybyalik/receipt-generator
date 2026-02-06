@@ -7,8 +7,12 @@ import { useTemplates } from '../../contexts/TemplatesContext';
 import { Section, TemplateSettings } from '../../lib/types';
 import { useAuth } from '../../contexts/AuthContext';
 import html2canvas from 'html2canvas';
-import { FiSave, FiDownload, FiRefreshCw, FiEdit2, FiPlus } from 'react-icons/fi';
+import jsPDF from 'jspdf';
+import { FiSave, FiDownload, FiRefreshCw, FiEdit2, FiPlus, FiFile } from 'react-icons/fi';
 import { useToast } from '../../components/ToastContainer';
+import PremiumUpsellModal from '../../components/PremiumUpsellModal';
+import AuthModal from '../../components/AuthModal';
+import EmailCaptureModal from '../../components/EmailCaptureModal';
 import {
   DndContext,
   closestCenter,
@@ -72,7 +76,7 @@ interface TemplateEditorProps {
 export default function TemplateEditor({ initialTemplate }: TemplateEditorProps) {
   const router = useRouter();
   const { id } = router.query;
-  const { user } = useAuth();
+  const { user, getIdToken } = useAuth();
   const previewRef = useRef<HTMLDivElement>(null);
   const watermarkPreviewRef = useRef<HTMLDivElement>(null);
   const { getTemplateBySlug, updateTemplate, loading: templatesLoading } = useTemplates();
@@ -81,6 +85,9 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
   const [template, setTemplate] = useState<any>(initialTemplate);
   const [sections, setSections] = useState<Section[]>([]);
   const [showSaveModal, setShowSaveModal] = useState(false);
+  const [showUpsellModal, setShowUpsellModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showEmailCapture, setShowEmailCapture] = useState(false);
   const [templateName, setTemplateName] = useState('');
   const [settings, setSettings] = useState<TemplateSettings>({
     currency: '$',
@@ -98,14 +105,14 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
         setTemplate(cachedTemplate);
       }
       
-      // Also fetch from API to ensure we have the latest data
-      fetch(`/api/templates`)
-        .then(res => res.json())
-        .then(templates => {
-          const freshTemplate = templates.find((t: any) => t.slug === id);
-          if (freshTemplate) {
-            setTemplate(freshTemplate);
-          }
+      // Fetch single template by slug (instead of all templates)
+      fetch(`/api/templates/by-slug/${encodeURIComponent(id as string)}`)
+        .then(res => {
+          if (!res.ok) throw new Error('Template not found');
+          return res.json();
+        })
+        .then(freshTemplate => {
+          setTemplate(freshTemplate);
         })
         .catch(err => console.error('Failed to fetch template:', err));
     }
@@ -147,7 +154,7 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
       <Layout>
         <div className="max-w-7xl mx-auto px-4 py-12 text-center">
           <div className="flex items-center justify-center gap-2">
-            <FiRefreshCw className="animate-spin text-navy-600" />
+            <FiRefreshCw className="animate-spin text-teal-600" />
             <span className="text-gray-600">Loading template...</span>
           </div>
         </div>
@@ -315,7 +322,7 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
 
   const handleSaveClick = () => {
     if (!user) {
-      showError('Please sign in to save templates');
+      setShowAuthModal(true);
       return;
     }
     setShowSaveModal(true);
@@ -335,11 +342,14 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
     const newSlug = templateName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     
     try {
+      const token = await getIdToken();
       const res = await fetch('/api/user-templates', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
-          userId: user.uid,
           baseTemplateId: template.id,
           template: {
             name: templateName,
@@ -366,7 +376,7 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
 
   const downloadReceipt = async () => {
     if (!user?.isPremium) {
-      router.push('/pricing');
+      setShowUpsellModal(true);
       return;
     }
 
@@ -379,6 +389,34 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
       link.download = `${template.name}.png`;
       link.href = canvas.toDataURL();
       link.click();
+    }
+  };
+
+  const downloadAsPdf = async () => {
+    if (!user?.isPremium) {
+      setShowUpsellModal(true);
+      return;
+    }
+
+    if (previewRef.current) {
+      const canvas = await html2canvas(previewRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+
+      // Size PDF to match receipt dimensions (convert px to mm at 96 DPI * scale 2)
+      const pdfWidth = (imgWidth / 2) * 0.2646; // px to mm
+      const pdfHeight = (imgHeight / 2) * 0.2646;
+      const pdf = new jsPDF({
+        orientation: pdfHeight > pdfWidth ? 'portrait' : 'landscape',
+        unit: 'mm',
+        format: [pdfWidth, pdfHeight],
+      });
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`${template.name}.pdf`);
     }
   };
 
@@ -400,7 +438,7 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
       <Layout>
         <div className="max-w-7xl mx-auto px-4 py-12 text-center">
           <div className="flex items-center justify-center gap-2">
-            <FiRefreshCw className="animate-spin text-navy-600" />
+            <FiRefreshCw className="animate-spin text-teal-600" />
             <span className="text-gray-600">Loading template...</span>
           </div>
         </div>
@@ -428,7 +466,8 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
               </button>
               <button
                 onClick={handleSaveClick}
-                className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+                className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors cursor-pointer"
+                style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
               >
                 <FiSave className="mr-2" />
                 Save Template
@@ -527,7 +566,7 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
                 <div className="hidden lg:flex flex-col sm:flex-row gap-2">
                   {!user?.isPremium && (
                     <button
-                      onClick={downloadWithWatermark}
+                      onClick={() => user ? setShowUpsellModal(true) : setShowEmailCapture(true)}
                       className="flex items-center justify-center px-3 sm:px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer text-sm sm:text-base"
                     >
                       <FiDownload className="mr-2" />
@@ -536,15 +575,26 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
                   )}
                   <button
                     onClick={downloadReceipt}
-                    className="flex items-center justify-center px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer text-sm sm:text-base whitespace-nowrap"
+                    className="flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg transition-colors cursor-pointer text-sm sm:text-base whitespace-nowrap"
+                    style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
                   >
                     <FiDownload className="mr-2" />
-                    {user?.isPremium ? 'Download' : 'Remove Watermark'}
+                    {user?.isPremium ? 'PNG' : 'Remove Watermark'}
                   </button>
+                  {user?.isPremium && (
+                    <button
+                      onClick={downloadAsPdf}
+                      className="flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg transition-colors cursor-pointer text-sm sm:text-base whitespace-nowrap border-2"
+                      style={{ borderColor: '#0d9488', color: '#0d9488' }}
+                    >
+                      <FiFile className="mr-2" />
+                      PDF
+                    </button>
+                  )}
                 </div>
               </div>
               
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded">
+              <div className="bg-gradient-to-br from-orange-50 to-amber-50 p-4 rounded">
                 <ReceiptPreview 
                   sections={sections}
                   settings={settings}
@@ -557,7 +607,7 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
               <div className="lg:hidden mt-4 flex flex-col gap-2">
                 {!user?.isPremium && (
                   <button
-                    onClick={downloadWithWatermark}
+                    onClick={() => user ? setShowUpsellModal(true) : setShowEmailCapture(true)}
                     className="flex items-center justify-center px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
                   >
                     <FiDownload className="mr-2" />
@@ -566,11 +616,22 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
                 )}
                 <button
                   onClick={downloadReceipt}
-                  className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap"
+                  className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors cursor-pointer whitespace-nowrap"
+                  style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
                 >
                   <FiDownload className="mr-2" />
-                  {user?.isPremium ? 'Download' : 'Remove Watermark'}
+                  {user?.isPremium ? 'Download PNG' : 'Remove Watermark'}
                 </button>
+                {user?.isPremium && (
+                  <button
+                    onClick={downloadAsPdf}
+                    className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors cursor-pointer whitespace-nowrap border-2"
+                    style={{ borderColor: '#0d9488', color: '#0d9488' }}
+                  >
+                    <FiFile className="mr-2" />
+                    Download PDF
+                  </button>
+                )}
                 <button
                   onClick={resetTemplate}
                   className="flex items-center justify-center px-4 py-2 bg-red-50 border-2 border-red-500 text-red-700 rounded-lg hover:bg-red-100 transition-colors cursor-pointer"
@@ -580,7 +641,8 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
                 </button>
                 <button
                   onClick={handleSaveClick}
-                  className="flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer"
+                  className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors cursor-pointer"
+                  style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
                 >
                   <FiSave className="mr-2" />
                   Save Template
@@ -611,7 +673,7 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
                 value={templateName}
                 onChange={(e) => setTemplateName(e.target.value)}
                 placeholder="e.g., My Computer Repair Receipt"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
                 onKeyDown={(e) => e.key === 'Enter' && saveTemplate()}
                 autoFocus
               />
@@ -622,7 +684,8 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
             <div className="flex space-x-3">
               <button
                 onClick={saveTemplate}
-                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+                className="flex-1 px-4 py-2 rounded-lg transition-colors cursor-pointer"
+                style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
               >
                 Save
               </button>
@@ -640,9 +703,20 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
         </div>
       )}
 
+      <PremiumUpsellModal isOpen={showUpsellModal} onClose={() => setShowUpsellModal(false)} />
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      <EmailCaptureModal
+        isOpen={showEmailCapture}
+        onClose={() => setShowEmailCapture(false)}
+        onSubmit={() => {
+          setShowEmailCapture(false);
+          downloadWithWatermark();
+        }}
+      />
+
       {/* Hidden watermarked preview for secure sample downloads */}
       <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }}>
-        <ReceiptPreview 
+        <ReceiptPreview
           sections={sections}
           settings={settings}
           showWatermark={true}
@@ -658,15 +732,17 @@ export async function getServerSideProps(context: any) {
   const { id } = context.params;
   
   try {
-    // Fetch template data server-side
+    // Fetch single template by slug (avoids loading all templates)
     const protocol = context.req.headers['x-forwarded-proto'] || 'http';
     const host = context.req.headers.host;
     const baseUrl = `${protocol}://${host}`;
-    
-    const res = await fetch(`${baseUrl}/api/templates`);
-    const templates = await res.json();
-    const template = templates.find((t: any) => t.slug === id);
-    
+
+    const res = await fetch(`${baseUrl}/api/templates/by-slug/${encodeURIComponent(id)}`);
+    if (!res.ok) {
+      return { notFound: true };
+    }
+    const template = await res.json();
+
     if (!template) {
       return {
         notFound: true,

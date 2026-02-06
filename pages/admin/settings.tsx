@@ -121,7 +121,7 @@ Make it professional, helpful, and SEO-friendly.`;
         <div className="mb-6">
           <button
             onClick={() => router.push('/admin')}
-            className="text-blue-600 hover:text-blue-800 mb-4"
+            className="text-teal-600 hover:text-teal-800 mb-4"
           >
             ← Back to Admin Panel
           </button>
@@ -149,7 +149,7 @@ Make it professional, helpful, and SEO-friendly.`;
             <textarea
               value={seoPrompt}
               onChange={(e) => setSeoPrompt(e.target.value)}
-              className="w-full h-96 px-4 py-3 border rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full h-96 px-4 py-3 border rounded-lg font-mono text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
               placeholder="Enter your custom AI prompt..."
             />
           </div>
@@ -158,16 +158,16 @@ Make it professional, helpful, and SEO-friendly.`;
             <button
               onClick={handleSave}
               disabled={saving}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+              className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             >
               {saving ? 'Saving...' : 'Save Settings'}
             </button>
           </div>
         </div>
 
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <h3 className="font-semibold text-blue-900 mb-2">Available Placeholders:</h3>
-          <ul className="text-sm text-blue-800 space-y-1">
+        <div className="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg">
+          <h3 className="font-semibold text-teal-900 mb-2">Available Placeholders:</h3>
+          <ul className="text-sm text-teal-800 space-y-1">
             <li><code className="bg-white px-2 py-1 rounded">{'{templateName}'}</code> - The name of the template</li>
             <li><code className="bg-white px-2 py-1 rounded">{'{industry}'}</code> - The industry/type extracted from the template name</li>
           </ul>

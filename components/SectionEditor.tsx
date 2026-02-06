@@ -114,7 +114,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
             {renderAlignmentButtons(section.alignment, (alignment) => onUpdate({ ...section, alignment }))}
             <div className="mb-3">
               <label className="block text-sm font-medium mb-1">Logo</label>
-              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-3 hover:border-blue-400 hover:bg-blue-50 transition-all">
+              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-3 hover:border-teal-400 hover:bg-teal-50 transition-all">
                 <div className="flex items-center gap-3">
                   {section.logo && (
                     <div className="relative flex-shrink-0">
@@ -131,7 +131,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   <div className="flex-1">
                     <label className="cursor-pointer">
                       <div className="flex flex-col items-center justify-center text-center py-2">
-                        <div className="text-blue-600 font-medium text-sm mb-1">
+                        <div className="text-teal-600 font-medium text-sm mb-1">
                           {section.logo ? 'Change Logo' : 'Click to Upload Logo'}
                         </div>
                         <div className="text-xs text-gray-500">
@@ -209,10 +209,51 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
         );
 
       case 'items_list':
+        // Auto-calculate helper
+        const recalculate = (items: typeof section.items, totalLines: typeof section.totalLines, taxRate?: number) => {
+          const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+          const roundedSubtotal = Math.round(subtotal * 100) / 100;
+
+          // Find or create Subtotal line
+          const subtotalIdx = totalLines.findIndex(l => l.title.toLowerCase().includes('subtotal'));
+          const newLines = [...totalLines];
+          if (subtotalIdx >= 0) {
+            newLines[subtotalIdx] = { ...newLines[subtotalIdx], value: roundedSubtotal };
+          }
+
+          // Find tax line and calculate if a rate is embedded in the title (e.g. "Tax (8.25%)")
+          const taxIdx = newLines.findIndex(l => l.title.toLowerCase().includes('tax'));
+          let taxAmount = 0;
+          if (taxIdx >= 0) {
+            const rateMatch = newLines[taxIdx].title.match(/([\d.]+)%/);
+            const rate = taxRate ?? (rateMatch ? parseFloat(rateMatch[1]) : null);
+            if (rate !== null) {
+              taxAmount = Math.round(roundedSubtotal * rate) / 100;
+              newLines[taxIdx] = { ...newLines[taxIdx], value: Math.round(taxAmount * 100) / 100 };
+            } else {
+              taxAmount = newLines[taxIdx].value;
+            }
+          }
+
+          const total = Math.round((roundedSubtotal + taxAmount) * 100) / 100;
+          return { totalLines: newLines, total };
+        };
+
         return (
           <>
             <div className="mb-3">
-              <label className="block text-sm font-medium mb-2">Items</label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium">Items</label>
+                <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={section.autoCalculate ?? true}
+                    onChange={(e) => onUpdate({ ...section, autoCalculate: e.target.checked })}
+                    className="rounded border-gray-300"
+                  />
+                  Auto-calculate totals
+                </label>
+              </div>
               <div className="grid grid-cols-[80px_1fr_100px_auto] gap-2 mb-2 text-xs text-navy-600 font-medium">
                 <div>Quantity</div>
                 <div>Item</div>
@@ -227,7 +268,12 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     onChange={(e) => {
                       const newItems = [...section.items];
                       newItems[idx].quantity = parseFloat(e.target.value) || 0;
-                      onUpdate({ ...section, items: newItems });
+                      if (section.autoCalculate !== false) {
+                        const { totalLines, total } = recalculate(newItems, section.totalLines);
+                        onUpdate({ ...section, items: newItems, totalLines, total: { ...section.total, price: total } });
+                      } else {
+                        onUpdate({ ...section, items: newItems });
+                      }
                     }}
                     placeholder="Qty"
                     className="border border-gray-300 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
@@ -249,7 +295,12 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     onChange={(e) => {
                       const newItems = [...section.items];
                       newItems[idx].price = parseFloat(e.target.value) || 0;
-                      onUpdate({ ...section, items: newItems });
+                      if (section.autoCalculate !== false) {
+                        const { totalLines, total } = recalculate(newItems, section.totalLines);
+                        onUpdate({ ...section, items: newItems, totalLines, total: { ...section.total, price: total } });
+                      } else {
+                        onUpdate({ ...section, items: newItems });
+                      }
                     }}
                     placeholder="$0.00"
                     className="border border-gray-300 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
@@ -258,7 +309,12 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                     type="button"
                     onClick={() => {
                       const newItems = section.items.filter((_, i) => i !== idx);
-                      onUpdate({ ...section, items: newItems });
+                      if (section.autoCalculate !== false) {
+                        const { totalLines, total } = recalculate(newItems, section.totalLines);
+                        onUpdate({ ...section, items: newItems, totalLines, total: { ...section.total, price: total } });
+                      } else {
+                        onUpdate({ ...section, items: newItems });
+                      }
                     }}
                     className="text-red-600 hover:text-red-800 hover:bg-red-50 px-2 rounded-lg transition-colors cursor-pointer"
                     title="Remove item"
@@ -278,7 +334,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <span className="text-lg">⊕</span> Add line
               </button>
             </div>
-            
+
             {/* Divider after Items controls */}
             <div className="mb-3 pb-3 border-b border-gray-300">
               <ToggleSwitch
@@ -357,7 +413,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 </div>
               )}
             </div>
-            
+
             <div className="mb-3">
               <label className="block text-sm font-medium mb-2">Total Lines</label>
               <div className="grid grid-cols-[1fr_120px_auto] gap-2 mb-2 text-xs text-navy-600 font-medium">
@@ -387,7 +443,12 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                       onUpdate({ ...section, totalLines: newLines });
                     }}
                     placeholder="$0.00"
-                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400"
+                    className={`border border-gray-300 rounded-lg px-2 py-1 text-sm placeholder:text-gray-400 ${
+                      section.autoCalculate !== false && (line.title.toLowerCase().includes('subtotal') || line.title.toLowerCase().includes('tax'))
+                        ? 'bg-gray-50 text-gray-500'
+                        : ''
+                    }`}
+                    readOnly={section.autoCalculate !== false && (line.title.toLowerCase().includes('subtotal') || line.title.toLowerCase().includes('tax'))}
                   />
                   <button
                     type="button"
@@ -408,17 +469,17 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                   const newLines = [...section.totalLines, { title: '', value: 0 }];
                   onUpdate({ ...section, totalLines: newLines });
                 }}
-                className="w-full border-2 border-dashed border-gray-300 rounded px-3 py-2 text-sm text-blue-600 hover:border-blue-400 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 mb-3 cursor-pointer"
+                className="w-full border-2 border-dashed border-gray-300 rounded px-3 py-2 text-sm text-teal-600 hover:border-teal-400 hover:bg-teal-50 transition-colors flex items-center justify-center gap-2 mb-3 cursor-pointer"
               >
                 <span className="text-lg">⊕</span> Add line
               </button>
-              
-              <div className="grid grid-cols-[1fr_120px] gap-2 p-2 bg-navy-50 rounded-lg">
+
+              <div className={`grid grid-cols-[1fr_120px] gap-2 p-2 rounded-lg ${section.autoCalculate !== false ? 'bg-teal-50 border border-teal-200' : 'bg-navy-50'}`}>
                 <input
                   type="text"
                   value={section.total.title}
-                  onChange={(e) => onUpdate({ 
-                    ...section, 
+                  onChange={(e) => onUpdate({
+                    ...section,
                     total: { ...section.total, title: e.target.value }
                   })}
                   placeholder="Total:"
@@ -427,14 +488,20 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, onRemo
                 <input
                   type="number"
                   value={section.total.price}
-                  onChange={(e) => onUpdate({ 
-                    ...section, 
+                  onChange={(e) => onUpdate({
+                    ...section,
                     total: { ...section.total, price: parseFloat(e.target.value) || 0 }
                   })}
                   placeholder="$0.00"
-                  className="border border-gray-300 rounded-lg px-2 py-1 text-sm font-medium placeholder:text-gray-400"
+                  className={`border border-gray-300 rounded-lg px-2 py-1 text-sm font-medium placeholder:text-gray-400 ${
+                    section.autoCalculate !== false ? 'bg-teal-50 text-gray-500' : ''
+                  }`}
+                  readOnly={section.autoCalculate !== false}
                 />
               </div>
+              {section.autoCalculate !== false && (
+                <p className="text-xs text-teal-600 mt-1">Auto-calculated from items + tax</p>
+              )}
             </div>
             
             {/* Total Size Increase controls */}

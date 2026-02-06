@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
 import fs from 'fs';
 import OpenAI from 'openai';
+import { rateLimit } from '../../lib/rate-limit';
 
 export const config = {
   api: {
@@ -20,6 +21,11 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Rate limit: 5 requests per minute per IP
+  if (!rateLimit(req, res, { maxRequests: 5, windowMs: 60 * 1000 })) {
+    return; // Response already sent by rateLimit
   }
 
   try {

@@ -93,7 +93,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       ],
       mode: 'subscription',
-      success_url: `${baseUrl}/my-templates?success=true`,
+      success_url: `${baseUrl}/subscription-success`,
       cancel_url: `${baseUrl}/pricing?canceled=true`,
       metadata: {
         firebaseUid: user.firebaseUid,

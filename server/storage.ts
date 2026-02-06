@@ -1,9 +1,9 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { templates, userTemplates, users, blogPosts } from '../shared/schema';
+import { templates, userTemplates, users, blogPosts, aiResults, emailCaptures, emailSequenceSteps, emailSendLog, settings } from '../shared/schema';
 import type { Template as ReceiptTemplate, Section } from '../lib/types';
 import type { User, NewUser, BlogPost, NewBlogPost } from '../shared/schema';
-import { eq, and, like, or, desc } from 'drizzle-orm';
+import { eq, and, like, or, desc, asc, sql, not, inArray } from 'drizzle-orm';
 
 const connectionString = process.env.DATABASE_URL!;
 const client = postgres(connectionString);
@@ -350,4 +350,175 @@ export async function updateBlogPost(id: number, updates: Partial<NewBlogPost>):
 export async function deleteBlogPost(id: number): Promise<boolean> {
   const result = await db.delete(blogPosts).where(eq(blogPosts.id, id)).returning();
   return result.length > 0;
+}
+
+// AI Results Functions
+export async function saveAiResult(data: { userId?: string; sections: any; settings: any }) {
+  const result = await db.insert(aiResults).values({
+    userId: data.userId || null,
+    sections: data.sections,
+    settings: data.settings,
+  }).returning();
+  return result[0];
+}
+
+export async function getAiResult(id: number) {
+  const result = await db.select().from(aiResults).where(eq(aiResults.id, id));
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function captureEmail(email: string, source: string = 'download') {
+  const result = await db.insert(emailCaptures).values({ email, source }).returning();
+  return result[0];
+}
+
+// ─── Email Campaign Functions ────────────────────────────────────
+
+export async function getEmailCampaignEnabled(): Promise<boolean> {
+  const result = await db.select().from(settings)
+    .where(eq(settings.key, 'email_campaign_enabled')).limit(1);
+  return result.length > 0 && result[0].value === 'true';
+}
+
+export async function setEmailCampaignEnabled(enabled: boolean): Promise<void> {
+  const existing = await db.select().from(settings)
+    .where(eq(settings.key, 'email_campaign_enabled')).limit(1);
+  if (existing.length > 0) {
+    await db.update(settings)
+      .set({ value: enabled ? 'true' : 'false', updatedAt: new Date() })
+      .where(eq(settings.key, 'email_campaign_enabled'));
+  } else {
+    await db.insert(settings).values({ key: 'email_campaign_enabled', value: enabled ? 'true' : 'false' });
+  }
+}
+
+export async function getEmailSequenceSteps() {
+  return db.select().from(emailSequenceSteps).orderBy(asc(emailSequenceSteps.stepNumber));
+}
+
+export async function getEmailSequenceStep(id: number) {
+  const result = await db.select().from(emailSequenceSteps).where(eq(emailSequenceSteps.id, id));
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createEmailSequenceStep(data: {
+  stepNumber: number;
+  delayMinutes: number;
+  subject: string;
+  htmlBody: string;
+}) {
+  const result = await db.insert(emailSequenceSteps).values(data).returning();
+  return result[0];
+}
+
+export async function updateEmailSequenceStep(id: number, updates: {
+  stepNumber?: number;
+  delayMinutes?: number;
+  subject?: string;
+  htmlBody?: string;
+  isActive?: boolean;
+}) {
+  const result = await db.update(emailSequenceSteps)
+    .set({ ...updates, updatedAt: new Date() })
+    .where(eq(emailSequenceSteps.id, id))
+    .returning();
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function deleteEmailSequenceStep(id: number) {
+  const result = await db.delete(emailSequenceSteps).where(eq(emailSequenceSteps.id, id));
+  return true;
+}
+
+export async function getEligibleEmailsForStep(stepNumber: number, delayMinutes: number, limit: number = 50) {
+  const cutoffISO = new Date(Date.now() - delayMinutes * 60 * 1000).toISOString();
+
+  // Use raw SQL for DISTINCT ON which isn't well-supported in Drizzle with postgres.js
+  const previousStepCondition = stepNumber > 1
+    ? sql`AND ec.email IN (SELECT email FROM email_send_log WHERE step_number = ${stepNumber - 1} AND status = 'sent')`
+    : sql``;
+
+  const result = await db.execute(sql`
+    SELECT DISTINCT ON (ec.email) ec.id, ec.email, ec.created_at as "createdAt"
+    FROM email_captures ec
+    WHERE ec.unsubscribed = false
+      AND ec.created_at <= ${cutoffISO}::timestamptz
+      AND ec.email NOT IN (SELECT email FROM users WHERE is_premium = true)
+      AND ec.email NOT IN (SELECT email FROM email_send_log WHERE step_number = ${stepNumber})
+      ${previousStepCondition}
+    ORDER BY ec.email, ec.created_at ASC
+    LIMIT ${limit}
+  `);
+
+  return (result.rows || result) as { id: number; email: string; createdAt: Date }[];
+}
+
+export async function logEmailSend(data: {
+  emailCaptureId: number;
+  email: string;
+  stepNumber: number;
+  status: string;
+  resendMessageId?: string;
+  errorMessage?: string;
+}) {
+  const result = await db.insert(emailSendLog).values(data).returning();
+  return result[0];
+}
+
+export async function getEmailCampaignStats() {
+  const totalLeads = await db.select({ count: sql<number>`count(distinct email)` })
+    .from(emailCaptures);
+  const unsubscribedCount = await db.select({ count: sql<number>`count(distinct email)` })
+    .from(emailCaptures)
+    .where(eq(emailCaptures.unsubscribed, true));
+  const totalSent = await db.select({ count: sql<number>`count(*)` })
+    .from(emailSendLog)
+    .where(eq(emailSendLog.status, 'sent'));
+  const totalFailed = await db.select({ count: sql<number>`count(*)` })
+    .from(emailSendLog)
+    .where(eq(emailSendLog.status, 'failed'));
+
+  // Count captured emails that are also premium users
+  const premiumUsers = await db.select({ email: users.email })
+    .from(users)
+    .where(eq(users.isPremium, true));
+  const premiumEmails = premiumUsers.map(u => u.email);
+
+  let purchaserCount = 0;
+  if (premiumEmails.length > 0) {
+    const result = await db.select({ count: sql<number>`count(distinct email)` })
+      .from(emailCaptures)
+      .where(inArray(emailCaptures.email, premiumEmails));
+    purchaserCount = Number(result[0]?.count || 0);
+  }
+
+  return {
+    totalLeads: Number(totalLeads[0]?.count || 0),
+    unsubscribed: Number(unsubscribedCount[0]?.count || 0),
+    purchasers: purchaserCount,
+    totalSent: Number(totalSent[0]?.count || 0),
+    totalFailed: Number(totalFailed[0]?.count || 0),
+  };
+}
+
+export async function getRecentSendLogs(limit: number = 50) {
+  return db.select().from(emailSendLog)
+    .orderBy(desc(emailSendLog.sentAt))
+    .limit(limit);
+}
+
+export async function getEmailCaptureLeads(limit: number = 100, offset: number = 0) {
+  const result = await db.execute(sql`
+    SELECT DISTINCT ON (email) id, email, source, unsubscribed, created_at as "createdAt"
+    FROM email_captures
+    ORDER BY email, created_at ASC
+    LIMIT ${limit} OFFSET ${offset}
+  `);
+  return (result.rows || result) as { id: number; email: string; source: string; unsubscribed: boolean; createdAt: Date }[];
+}
+
+export async function unsubscribeEmail(email: string): Promise<void> {
+  await db.update(emailCaptures)
+    .set({ unsubscribed: true })
+    .where(eq(emailCaptures.email, email));
 }

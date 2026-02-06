@@ -5,15 +5,18 @@ import Layout from '../components/Layout';
 import ReceiptPreview from '../components/ReceiptPreview';
 import SectionEditor from '../components/SectionEditor';
 import SettingsPanel from '../components/SettingsPanel';
-import { FiDownload, FiSave, FiArrowLeft } from 'react-icons/fi';
+import { FiDownload, FiSave, FiArrowLeft, FiFile } from 'react-icons/fi';
 import type { Section, TemplateSettings } from '../lib/types';
 import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../components/ToastContainer';
+import PremiumUpsellModal from '../components/PremiumUpsellModal';
+import EmailCaptureModal from '../components/EmailCaptureModal';
 
 export default function AIResult() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, getIdToken } = useAuth();
   const { showSuccess, showError } = useToast();
   const [sections, setSections] = useState<Section[]>([]);
   const [settings, setSettings] = useState<TemplateSettings>({
@@ -27,33 +30,53 @@ export default function AIResult() {
   const [loading, setLoading] = useState(true);
   const [templateName, setTemplateName] = useState('My AI Receipt');
   const [showSaveModal, setShowSaveModal] = useState(false);
-  
+  const [showUpsellModal, setShowUpsellModal] = useState(false);
+  const [showEmailCapture, setShowEmailCapture] = useState(false);
+
   const previewRef = useRef<HTMLDivElement>(null);
   const watermarkPreviewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Load template from sessionStorage
-    const templateDataStr = sessionStorage.getItem('ai-generated-template');
-    if (!templateDataStr) {
-      router.push('/ai');
-      return;
-    }
+    const loadResult = async () => {
+      // Try loading from DB via query param first
+      const resultId = new URLSearchParams(window.location.search).get('id');
+      if (resultId) {
+        try {
+          const res = await fetch(`/api/ai-results?id=${resultId}`);
+          if (res.ok) {
+            const data = await res.json();
+            setSections(data.sections || []);
+            setSettings(data.settings || settings);
+            setLoading(false);
+            return;
+          }
+        } catch (error) {
+          console.error('Failed to load from DB:', error);
+        }
+      }
 
-    try {
-      const templateData = JSON.parse(templateDataStr);
-      setSections(templateData.sections || []);
-      setSettings(templateData.settings || settings);
-      setLoading(false);
-    } catch (error) {
-      console.error('Failed to load template:', error);
-      router.push('/ai');
-    }
+      // Fallback to sessionStorage
+      const templateDataStr = sessionStorage.getItem('ai-generated-template');
+      if (!templateDataStr) {
+        router.push('/ai');
+        return;
+      }
+      try {
+        const templateData = JSON.parse(templateDataStr);
+        setSections(templateData.sections || []);
+        setSettings(templateData.settings || settings);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to load template:', error);
+        router.push('/ai');
+      }
+    };
+    loadResult();
   }, []);
 
   const handleDownload = async () => {
     if (!user?.isPremium) {
-      // Show pricing modal or redirect
-      router.push('/pricing');
+      setShowUpsellModal(true);
       return;
     }
 
@@ -79,6 +102,35 @@ export default function AIResult() {
     }
   };
 
+  const handleDownloadPdf = async () => {
+    if (!user?.isPremium) {
+      setShowUpsellModal(true);
+      return;
+    }
+    if (!previewRef.current) return;
+    try {
+      const canvas = await html2canvas(previewRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const pdfWidth = (canvas.width / 2) * 0.2646;
+      const pdfHeight = (canvas.height / 2) * 0.2646;
+      const pdf = new jsPDF({
+        orientation: pdfHeight > pdfWidth ? 'portrait' : 'landscape',
+        unit: 'mm',
+        format: [pdfWidth, pdfHeight],
+      });
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`ai-receipt-${Date.now()}.pdf`);
+      sessionStorage.removeItem('ai-generated-template');
+      showSuccess('PDF downloaded successfully!');
+    } catch (error) {
+      console.error('PDF download failed:', error);
+      showError('Failed to download PDF');
+    }
+  };
+
   const downloadWithWatermark = async () => {
     if (watermarkPreviewRef.current) {
       const canvas = await html2canvas(watermarkPreviewRef.current, {
@@ -101,7 +153,7 @@ export default function AIResult() {
 
   const handleSaveClick = () => {
     if (!user) {
-      router.push('/pricing');
+      setShowUpsellModal(true);
       return;
     }
     setShowSaveModal(true);
@@ -114,14 +166,21 @@ export default function AIResult() {
     }
 
     try {
+      const token = await getIdToken();
+      const slug = templateName.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + `-${Date.now()}`;
       const response = await fetch('/api/user-templates', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
-          name: templateName.trim(),
-          sections,
-          settings,
-          firebaseUid: user.uid,
+          template: {
+            name: templateName.trim(),
+            slug,
+            sections,
+            settings,
+          },
         }),
       });
 
@@ -161,7 +220,7 @@ export default function AIResult() {
         <div className="mb-4 sm:mb-6">
           <div className="flex flex-col gap-4 mb-2">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-navy-900">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 AI-Generated Receipt Template
               </h1>
               <p className="text-sm sm:text-base text-gray-600 mt-1">Review and customize your automatically generated receipt</p>
@@ -176,7 +235,8 @@ export default function AIResult() {
               </button>
               <button
                 onClick={handleSaveClick}
-                className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+                className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors cursor-pointer"
+                style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
               >
                 <FiSave className="mr-2" />
                 Save Template
@@ -228,7 +288,7 @@ export default function AIResult() {
                 <div className="hidden lg:flex flex-col sm:flex-row gap-2">
                   {!user?.isPremium && (
                     <button
-                      onClick={downloadWithWatermark}
+                      onClick={() => user ? setShowUpsellModal(true) : setShowEmailCapture(true)}
                       className="flex items-center justify-center px-3 sm:px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer text-sm sm:text-base"
                     >
                       <FiDownload className="mr-2" />
@@ -237,11 +297,22 @@ export default function AIResult() {
                   )}
                   <button
                     onClick={handleDownload}
-                    className="flex items-center justify-center px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer text-sm sm:text-base whitespace-nowrap"
+                    className="flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg transition-colors cursor-pointer text-sm sm:text-base whitespace-nowrap"
+                    style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
                   >
                     <FiDownload className="mr-2" />
-                    {user?.isPremium ? 'Download' : 'Remove Watermark'}
+                    {user?.isPremium ? 'PNG' : 'Remove Watermark'}
                   </button>
+                  {user?.isPremium && (
+                    <button
+                      onClick={handleDownloadPdf}
+                      className="flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg transition-colors cursor-pointer text-sm sm:text-base whitespace-nowrap border-2"
+                      style={{ borderColor: '#0d9488', color: '#0d9488' }}
+                    >
+                      <FiFile className="mr-2" />
+                      PDF
+                    </button>
+                  )}
                 </div>
               </div>
               
@@ -282,7 +353,7 @@ export default function AIResult() {
               <div className="lg:hidden mt-4 flex flex-col gap-2">
                 {!user?.isPremium && (
                   <button
-                    onClick={downloadWithWatermark}
+                    onClick={() => user ? setShowUpsellModal(true) : setShowEmailCapture(true)}
                     className="flex items-center justify-center px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
                   >
                     <FiDownload className="mr-2" />
@@ -291,11 +362,22 @@ export default function AIResult() {
                 )}
                 <button
                   onClick={handleDownload}
-                  className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap"
+                  className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors cursor-pointer whitespace-nowrap"
+                  style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
                 >
                   <FiDownload className="mr-2" />
-                  {user?.isPremium ? 'Download' : 'Remove Watermark'}
+                  {user?.isPremium ? 'Download PNG' : 'Remove Watermark'}
                 </button>
+                {user?.isPremium && (
+                  <button
+                    onClick={handleDownloadPdf}
+                    className="flex items-center justify-center px-4 py-2 rounded-lg transition-colors cursor-pointer whitespace-nowrap border-2"
+                    style={{ borderColor: '#0d9488', color: '#0d9488' }}
+                  >
+                    <FiFile className="mr-2" />
+                    Download PDF
+                  </button>
+                )}
                 <button
                   onClick={handleBackToAI}
                   className="flex items-center justify-center px-4 py-2 bg-gray-100 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
@@ -329,7 +411,7 @@ export default function AIResult() {
               value={templateName}
               onChange={(e) => setTemplateName(e.target.value)}
               placeholder="My AI Receipt"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-teal-500"
               autoFocus
               onKeyPress={(e) => e.key === 'Enter' && handleSaveTemplate()}
             />
@@ -342,7 +424,8 @@ export default function AIResult() {
               </button>
               <button
                 onClick={handleSaveTemplate}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 rounded-lg transition-colors"
+                style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
               >
                 Save Template
               </button>
@@ -350,6 +433,16 @@ export default function AIResult() {
           </div>
         </div>
       )}
+
+      <PremiumUpsellModal isOpen={showUpsellModal} onClose={() => setShowUpsellModal(false)} />
+      <EmailCaptureModal
+        isOpen={showEmailCapture}
+        onClose={() => setShowEmailCapture(false)}
+        onSubmit={() => {
+          setShowEmailCapture(false);
+          downloadWithWatermark();
+        }}
+      />
     </Layout>
   );
 }

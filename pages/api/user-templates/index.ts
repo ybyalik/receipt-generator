@@ -1,29 +1,32 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getUserTemplates, createUserTemplate } from '../../../server/storage';
+import { verifyAuthToken } from '../../../lib/firebase-admin';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req;
 
+  // Verify Firebase auth token
+  const decodedToken = await verifyAuthToken(req.headers.authorization);
+  if (!decodedToken) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
   try {
     switch (method) {
       case 'GET': {
-        const userId = req.query.userId as string;
-        if (!userId) {
-          return res.status(400).json({ error: 'userId is required' });
-        }
-        
-        const templates = await getUserTemplates(userId);
+        // Use the verified UID, not a client-supplied one
+        const templates = await getUserTemplates(decodedToken.uid);
         return res.status(200).json(templates);
       }
 
       case 'POST': {
-        const { userId, template, baseTemplateId } = req.body;
-        
-        if (!userId || !template) {
-          return res.status(400).json({ error: 'userId and template are required' });
+        const { template, baseTemplateId } = req.body;
+
+        if (!template) {
+          return res.status(400).json({ error: 'template is required' });
         }
 
-        const newTemplate = await createUserTemplate(userId, template, baseTemplateId);
+        const newTemplate = await createUserTemplate(decodedToken.uid, template, baseTemplateId);
         return res.status(201).json(newTemplate);
       }
 

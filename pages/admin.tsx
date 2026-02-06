@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { useTemplates } from '../contexts/TemplatesContext';
 import { useAuth } from '../contexts/AuthContext';
-import { FiPlus, FiEdit, FiTrash2, FiEye } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash2, FiEye, FiMail } from 'react-icons/fi';
 import { useToast } from '../components/ToastContainer';
 
 const Admin: NextPage = () => {
@@ -45,7 +45,7 @@ const Admin: NextPage = () => {
           </p>
           <button
             onClick={() => router.push('/')}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+            className="mt-4 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors cursor-pointer"
           >
             Go Home
           </button>
@@ -134,6 +134,13 @@ const Admin: NextPage = () => {
           <h1 className="text-3xl font-bold">Admin Panel</h1>
           <div className="flex flex-wrap gap-3">
             <button
+              onClick={() => router.push('/admin/email-campaigns')}
+              className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              <FiMail className="mr-2" />
+              Email Campaigns
+            </button>
+            <button
               onClick={() => router.push('/admin/settings')}
               className="flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
             >
@@ -154,7 +161,7 @@ const Admin: NextPage = () => {
             </button>
             <button
               onClick={handleCreateTemplate}
-              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
             >
               <FiPlus className="mr-2" />
               Create New Template
@@ -188,7 +195,7 @@ const Admin: NextPage = () => {
                   </a>
                   <button
                     onClick={() => handleEditTemplate(template.id)}
-                    className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors cursor-pointer"
+                    className="p-2 text-teal-600 hover:bg-teal-50 rounded transition-colors cursor-pointer"
                     title="Edit global template"
                   >
                     <FiEdit />
@@ -237,7 +244,7 @@ const Admin: NextPage = () => {
                 value={newTemplateName}
                 onChange={(e) => setNewTemplateName(e.target.value)}
                 placeholder="e.g., Hotel Receipt"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
                 onKeyDown={(e) => e.key === 'Enter' && createTemplate()}
               />
               <p className="text-sm text-gray-500 mt-1">
@@ -247,7 +254,7 @@ const Admin: NextPage = () => {
             <div className="flex space-x-3">
               <button
                 onClick={createTemplate}
-                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+                className="flex-1 bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors cursor-pointer"
               >
                 Create Template
               </button>

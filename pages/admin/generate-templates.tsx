@@ -89,7 +89,7 @@ export default function GenerateTemplates() {
                 id="industries"
                 value={industries}
                 onChange={(e) => setIndustries(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
                 rows={8}
                 placeholder="Hair Salon&#10;Plumbing Service&#10;Veterinary Clinic&#10;Landscaping&#10;Photography Studio"
                 disabled={loading}
@@ -99,12 +99,12 @@ export default function GenerateTemplates() {
               </p>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4">
-              <h3 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
-                <FiZap className="text-blue-600" />
+            <div className="bg-teal-50 border border-teal-200 rounded-md p-4 mb-4">
+              <h3 className="font-medium text-teal-900 mb-2 flex items-center gap-2">
+                <FiZap className="text-teal-600" />
                 How It Works
               </h3>
-              <ul className="text-sm text-blue-800 space-y-1">
+              <ul className="text-sm text-teal-800 space-y-1">
                 <li>• AI generates realistic business names, addresses, and items for each type</li>
                 <li>• Each template gets a completely unique random visual style</li>
                 <li>• Randomized fonts, dividers, sections, and layouts for maximum variety</li>
@@ -116,7 +116,7 @@ export default function GenerateTemplates() {
             <button
               type="submit"
               disabled={loading || !industries.trim()}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-3 px-6 rounded-md flex items-center justify-center gap-2 transition-colors"
+              className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white font-medium py-3 px-6 rounded-md flex items-center justify-center gap-2 transition-colors"
             >
               {loading ? (
                 <>
@@ -182,7 +182,7 @@ export default function GenerateTemplates() {
                               href={`/template/${result.template.slug}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline"
+                              className="text-teal-600 hover:underline"
                             >
                               {result.template.slug}
                             </Link>
@@ -203,10 +203,10 @@ export default function GenerateTemplates() {
             </div>
 
             {successCount > 0 && (
-              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
-                <p className="text-sm text-blue-800">
+              <div className="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-md">
+                <p className="text-sm text-teal-800">
                   ✨ {successCount} template{successCount !== 1 ? 's' : ''} created successfully!{' '}
-                  <Link href="/admin" className="font-medium text-blue-600 hover:underline">
+                  <Link href="/admin" className="font-medium text-teal-600 hover:underline">
                     View all templates →
                   </Link>
                 </p>

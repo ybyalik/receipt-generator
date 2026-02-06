@@ -11,6 +11,10 @@ const AuthModal = dynamic(() => import('./AuthModal'), {
   loading: () => null,
 });
 
+const ExitIntentPopup = dynamic(() => import('./ExitIntentPopup'), {
+  ssr: false,
+});
+
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -53,12 +57,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navLinks = [
     { href: '/templates', label: 'Templates' },
     { href: '/ai', label: 'AI Generator' },
+    { href: '/pricing', label: 'Pricing' },
     { href: '/contact', label: 'Contact' },
   ];
 
   return (
-    <div className="min-h-screen bg-navy-50 flex flex-col">
-      <nav className="bg-white shadow-sm border-b border-navy-100 sticky top-0 z-40">
+    <div className="min-h-screen bg-white flex flex-col">
+      <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -79,7 +84,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-navy-600 hover:text-accent-500 font-semibold transition-colors"
+                  className="text-gray-600 hover:text-teal-600 font-semibold transition-colors"
                 >
                   {link.label}
                 </Link>
@@ -92,7 +97,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="flex items-center space-x-2 text-navy-700 font-medium hover:text-accent-500 transition-colors cursor-pointer"
+                    className="flex items-center space-x-2 text-gray-700 font-medium hover:text-teal-600 transition-colors cursor-pointer"
                   >
                     <FiUser className="w-5 h-5" />
                     <span className="max-w-[150px] truncate">{user.displayName || user.email}</span>
@@ -115,7 +120,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                 ⭐ Premium
                               </span>
                               {user.subscriptionPlan && (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700 capitalize">
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-teal-100 text-teal-700 capitalize">
                                   {user.subscriptionPlan}
                                 </span>
                               )}
@@ -132,7 +137,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         <>
                           <Link
                             href="/admin"
-                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-navy-50 transition-colors cursor-pointer"
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                             onClick={() => setIsDropdownOpen(false)}
                           >
                             <FiSettings className="mr-3 w-4 h-4" />
@@ -140,7 +145,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                           </Link>
                           <Link
                             href="/admin/users"
-                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-navy-50 transition-colors cursor-pointer"
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                             onClick={() => setIsDropdownOpen(false)}
                           >
                             <FiUsers className="mr-3 w-4 h-4" />
@@ -151,7 +156,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       
                       <Link
                         href="/my-templates"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-navy-50 transition-colors cursor-pointer"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                         onClick={() => setIsDropdownOpen(false)}
                       >
                         <FiHeart className="mr-3 w-4 h-4" />
@@ -187,7 +192,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                               alert('An error occurred. Please try again.');
                             }
                           }}
-                          className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-navy-50 transition-colors cursor-pointer"
+                          className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                         >
                           <FiCreditCard className="mr-3 w-4 h-4" />
                           Manage Subscription
@@ -212,7 +217,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               ) : (
                 <button
                   onClick={() => setIsAuthModalOpen(true)}
-                  className="bg-accent-500 text-white px-6 py-2 rounded-lg hover:bg-accent-600 font-semibold transition-all hover:shadow-md cursor-pointer"
+                  className="px-6 py-2 rounded-lg font-semibold transition-all hover:shadow-md cursor-pointer" style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
                 >
                   Register/Login
                 </button>
@@ -222,7 +227,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-navy-600 hover:bg-navy-50 transition-colors"
+              className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
@@ -244,7 +249,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block py-3 text-lg font-semibold text-navy-700 hover:text-accent-500 transition-colors border-b border-navy-100"
+                    className="block py-3 text-lg font-semibold text-gray-700 hover:text-teal-600 transition-colors border-b border-gray-100"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.label}
@@ -253,10 +258,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
                 {/* Mobile User Section */}
                 {user ? (
-                  <div className="pt-4 border-t border-navy-200">
-                    <div className="mb-4 pb-4 border-b border-navy-100">
-                      <p className="font-semibold text-navy-900">{user.displayName || 'User'}</p>
-                      <p className="text-sm text-navy-600">{user.email}</p>
+                  <div className="pt-4 border-t border-gray-200">
+                    <div className="mb-4 pb-4 border-b border-gray-100">
+                      <p className="font-semibold text-gray-900">{user.displayName || 'User'}</p>
+                      <p className="text-sm text-gray-600">{user.email}</p>
                       <div className="mt-2 flex items-center gap-2">
                         {premiumLoading ? (
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-400">
@@ -268,7 +273,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                               ⭐ Premium
                             </span>
                             {user.subscriptionPlan && (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700 capitalize">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-teal-100 text-teal-700 capitalize">
                                 {user.subscriptionPlan}
                               </span>
                             )}
@@ -285,7 +290,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       <>
                         <Link
                           href="/admin"
-                          className="flex items-center py-3 text-navy-700 hover:text-accent-500 transition-colors"
+                          className="flex items-center py-3 text-gray-700 hover:text-teal-600 transition-colors"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           <FiSettings className="mr-3 w-5 h-5" />
@@ -293,7 +298,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         </Link>
                         <Link
                           href="/admin/users"
-                          className="flex items-center py-3 text-navy-700 hover:text-accent-500 transition-colors"
+                          className="flex items-center py-3 text-gray-700 hover:text-teal-600 transition-colors"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           <FiUsers className="mr-3 w-5 h-5" />
@@ -304,7 +309,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
                     <Link
                       href="/my-templates"
-                      className="flex items-center py-3 text-navy-700 hover:text-accent-500 transition-colors"
+                      className="flex items-center py-3 text-gray-700 hover:text-teal-600 transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <FiHeart className="mr-3 w-5 h-5" />
@@ -340,7 +345,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                             alert('An error occurred. Please try again.');
                           }
                         }}
-                        className="w-full flex items-center py-3 text-navy-700 hover:text-accent-500 transition-colors"
+                        className="w-full flex items-center py-3 text-gray-700 hover:text-teal-600 transition-colors"
                       >
                         <FiCreditCard className="mr-3 w-5 h-5" />
                         <span className="font-medium">Manage Subscription</span>
@@ -352,7 +357,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         setIsMobileMenuOpen(false);
                         signOut();
                       }}
-                      className="w-full flex items-center py-3 text-error-600 hover:text-error-700 transition-colors mt-2 pt-4 border-t border-navy-100"
+                      className="w-full flex items-center py-3 text-error-600 hover:text-error-700 transition-colors mt-2 pt-4 border-t border-gray-100"
                     >
                       <FiLogOut className="mr-3 w-5 h-5" />
                       <span className="font-medium">Sign Out</span>
@@ -365,7 +370,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         setIsMobileMenuOpen(false);
                         setIsAuthModalOpen(true);
                       }}
-                      className="w-full bg-accent-500 text-white px-6 py-3 rounded-lg hover:bg-accent-600 font-semibold transition-all"
+                      className="w-full px-6 py-3 rounded-lg font-semibold transition-all" style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
                     >
                       Register/Login
                     </button>
@@ -393,39 +398,40 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 href="https://www.linkedin.com/company/receipt-generator/"
                 target="_blank"
                 rel="nofollow noopener noreferrer"
-                className="text-white hover:text-accent-400 transition-colors"
+                className="text-white hover:text-teal-400 transition-colors"
                 aria-label="LinkedIn"
               >
                 <FaLinkedin className="w-6 h-6" />
               </a>
             </div>
             <div className="flex flex-wrap justify-center gap-6 text-sm">
-              <Link href="/blog" className="hover:text-accent-400 transition-colors cursor-pointer">
+              <Link href="/blog" className="hover:text-teal-400 transition-colors cursor-pointer">
                 Blog
               </Link>
-              <Link href="/sitemap" className="hover:text-accent-400 transition-colors cursor-pointer">
+              <Link href="/sitemap" className="hover:text-teal-400 transition-colors cursor-pointer">
                 Sitemap
               </Link>
-              <Link href="/privacy" className="hover:text-accent-400 transition-colors cursor-pointer">
+              <Link href="/privacy" className="hover:text-teal-400 transition-colors cursor-pointer">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="hover:text-accent-400 transition-colors cursor-pointer">
+              <Link href="/terms" className="hover:text-teal-400 transition-colors cursor-pointer">
                 Terms of Service
               </Link>
-              <Link href="/about" className="hover:text-accent-400 transition-colors cursor-pointer">
+              <Link href="/about" className="hover:text-teal-400 transition-colors cursor-pointer">
                 About
               </Link>
-              <Link href="/contact" className="hover:text-accent-400 transition-colors cursor-pointer">
+              <Link href="/contact" className="hover:text-teal-400 transition-colors cursor-pointer">
                 Contact Us
               </Link>
             </div>
             <p className="text-gray-400 text-sm text-center">
-              Copyright © 2025 ReceiptGenerator.net. All Rights Reserved.
+              Copyright © {new Date().getFullYear()} ReceiptGenerator.net. All Rights Reserved.
             </p>
           </div>
         </div>
       </footer>
       {isAuthModalOpen && <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />}
+      {!user?.isPremium && <ExitIntentPopup />}
     </div>
   );
 };

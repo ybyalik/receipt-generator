@@ -63,8 +63,8 @@ export default function Checkout() {
     <Layout>
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin w-12 h-12 border-4 border-accent-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-navy-600 text-lg">
+          <div className="animate-spin w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">
             {!user ? 'Please sign in to continue...' : 'Redirecting to secure checkout...'}
           </p>
         </div>

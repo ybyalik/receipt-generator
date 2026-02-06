@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { 
+import {
   signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
-  signOut as firebaseSignOut, 
+  signOut as firebaseSignOut,
   onAuthStateChanged,
-  User as FirebaseUser 
+  sendPasswordResetEmail,
+  User as FirebaseUser
 } from 'firebase/auth';
 import { auth, googleProvider } from '../lib/firebase';
 import { User } from '../lib/types';
@@ -18,8 +19,10 @@ interface AuthContextType {
   signIn: () => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signUpWithEmail: (email: string, password: string, displayName: string) => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   isAdmin: () => boolean;
+  getIdToken: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -184,6 +187,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const resetPassword = async (email: string) => {
+    if (!auth) {
+      console.error('Firebase authentication is not configured.');
+      return;
+    }
+    await sendPasswordResetEmail(auth, email);
+  };
+
   const signOut = async () => {
     if (!auth) return;
     try {
@@ -194,6 +205,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const getIdToken = async (): Promise<string | null> => {
+    if (!auth?.currentUser) return null;
+    try {
+      return await auth.currentUser.getIdToken();
+    } catch {
+      return null;
+    }
+  };
+
   const isAdmin = () => {
     if (!user?.email) return false;
     const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',').map(e => e.trim()) || [];
@@ -201,7 +221,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, premiumLoading, signIn, signInWithEmail, signUpWithEmail, signOut, isAdmin }}>
+    <AuthContext.Provider value={{ user, loading, premiumLoading, signIn, signInWithEmail, signUpWithEmail, resetPassword, signOut, isAdmin, getIdToken }}>
       {children}
     </AuthContext.Provider>
   );

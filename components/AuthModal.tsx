@@ -9,12 +9,13 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const { signIn, signInWithEmail, signUpWithEmail } = useAuth();
-  const [mode, setMode] = useState<'choice' | 'login' | 'signup'>('choice');
+  const { signIn, signInWithEmail, signUpWithEmail, resetPassword } = useAuth();
+  const [mode, setMode] = useState<'choice' | 'login' | 'signup' | 'forgot'>('choice');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -81,11 +82,34 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     }
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
+    try {
+      await resetPassword(email);
+      setSuccess('Password reset email sent! Check your inbox.');
+    } catch (err: any) {
+      if (err.code === 'auth/user-not-found') {
+        setError('No account found with this email');
+      } else if (err.code === 'auth/invalid-email') {
+        setError('Invalid email address');
+      } else {
+        setError('Failed to send reset email. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const resetForm = () => {
     setEmail('');
     setPassword('');
     setDisplayName('');
     setError('');
+    setSuccess('');
     setMode('choice');
   };
 
@@ -99,41 +123,42 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 relative">
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 text-navy-400 hover:text-navy-600 transition-colors"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
         >
           <FiX className="w-6 h-6" />
         </button>
 
         {mode === 'choice' && (
           <>
-            <h2 className="text-3xl font-bold text-navy-900 mb-6 text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
               Welcome!
             </h2>
             
             <button
               onClick={handleGoogleSignIn}
-              className="w-full flex items-center justify-center gap-3 bg-white border-2 border-navy-200 text-navy-700 px-6 py-3 rounded-xl font-semibold hover:bg-navy-50 transition-all mb-4"
+              className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-200 text-gray-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-50 transition-all mb-4"
             >
               <Image src="/google-icon.svg" alt="Google" width={24} height={24} />
               Continue with Google
             </button>
 
             <div className="flex items-center gap-4 my-6">
-              <div className="flex-1 border-t border-navy-200"></div>
-              <span className="text-navy-500 text-sm">or</span>
-              <div className="flex-1 border-t border-navy-200"></div>
+              <div className="flex-1 border-t border-gray-200"></div>
+              <span className="text-gray-500 text-sm">or</span>
+              <div className="flex-1 border-t border-gray-200"></div>
             </div>
 
             <button
               onClick={() => setMode('login')}
-              className="w-full bg-accent-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-accent-600 transition-all mb-3"
+              className="w-full px-6 py-3 rounded-xl font-semibold transition-all mb-3"
+              style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
             >
               Sign In with Email
             </button>
 
             <button
               onClick={() => setMode('signup')}
-              className="w-full bg-navy-100 text-navy-700 px-6 py-3 rounded-xl font-semibold hover:bg-navy-200 transition-all"
+              className="w-full bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-all"
             >
               Create Account
             </button>
@@ -142,7 +167,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
         {mode === 'login' && (
           <>
-            <h2 className="text-3xl font-bold text-navy-900 mb-6 text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
               Sign In
             </h2>
             
@@ -154,7 +179,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               )}
 
               <div>
-                <label className="block text-navy-700 font-medium mb-2">
+                <label className="block text-gray-700 font-medium mb-2">
                   <FiMail className="inline mr-2" />
                   Email
                 </label>
@@ -162,14 +187,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-navy-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
                   required
                   autoFocus
                 />
               </div>
 
               <div>
-                <label className="block text-navy-700 font-medium mb-2">
+                <label className="block text-gray-700 font-medium mb-2">
                   <FiLock className="inline mr-2" />
                   Password
                 </label>
@@ -177,7 +202,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-navy-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
                   required
                 />
               </div>
@@ -185,15 +210,25 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-accent-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-accent-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-6 py-3 rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
               >
                 {loading ? 'Signing in...' : 'Sign In'}
               </button>
 
               <button
                 type="button"
+                onClick={() => { setError(''); setMode('forgot'); }}
+                className="w-full text-sm hover:underline"
+                style={{ color: '#0d9488' }}
+              >
+                Forgot your password?
+              </button>
+
+              <button
+                type="button"
                 onClick={() => { resetForm(); setMode('choice'); }}
-                className="w-full text-navy-600 text-sm hover:text-navy-800"
+                className="w-full text-gray-600 text-sm hover:text-gray-800"
               >
                 ← Back to options
               </button>
@@ -201,9 +236,65 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           </>
         )}
 
+        {mode === 'forgot' && (
+          <>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">
+              Reset Password
+            </h2>
+            <p className="text-gray-500 text-sm text-center mb-6">
+              Enter your email and we'll send you a reset link
+            </p>
+
+            <form onSubmit={handleForgotPassword} className="space-y-4">
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
+              {success && (
+                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+                  {success}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-gray-700 font-medium mb-2">
+                  <FiMail className="inline mr-2" />
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  required
+                  autoFocus
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full px-6 py-3 rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
+              >
+                {loading ? 'Sending...' : 'Send Reset Link'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => { setError(''); setSuccess(''); setMode('login'); }}
+                className="w-full text-gray-600 text-sm hover:text-gray-800"
+              >
+                ← Back to sign in
+              </button>
+            </form>
+          </>
+        )}
+
         {mode === 'signup' && (
           <>
-            <h2 className="text-3xl font-bold text-navy-900 mb-6 text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
               Create Account
             </h2>
             
@@ -215,7 +306,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               )}
 
               <div>
-                <label className="block text-navy-700 font-medium mb-2">
+                <label className="block text-gray-700 font-medium mb-2">
                   <FiUser className="inline mr-2" />
                   Name
                 </label>
@@ -223,14 +314,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full px-4 py-3 border border-navy-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
                   required
                   autoFocus
                 />
               </div>
 
               <div>
-                <label className="block text-navy-700 font-medium mb-2">
+                <label className="block text-gray-700 font-medium mb-2">
                   <FiMail className="inline mr-2" />
                   Email
                 </label>
@@ -238,13 +329,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-navy-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-navy-700 font-medium mb-2">
+                <label className="block text-gray-700 font-medium mb-2">
                   <FiLock className="inline mr-2" />
                   Password
                 </label>
@@ -252,7 +343,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-navy-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
                   placeholder="At least 6 characters"
                   required
                 />
@@ -261,7 +352,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-accent-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-accent-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-6 py-3 rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ backgroundColor: '#0d9488', color: '#ffffff' }}
               >
                 {loading ? 'Creating account...' : 'Create Account'}
               </button>
@@ -269,7 +361,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               <button
                 type="button"
                 onClick={() => { resetForm(); setMode('choice'); }}
-                className="w-full text-navy-600 text-sm hover:text-navy-800"
+                className="w-full text-gray-600 text-sm hover:text-gray-800"
               >
                 ← Back to options
               </button>

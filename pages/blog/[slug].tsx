@@ -55,7 +55,7 @@ export default function BlogPost() {
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Post not found</h1>
             <p className="text-gray-600 mb-4">The blog post you&apos;re looking for doesn&apos;t exist.</p>
-            <Link href="/blog" className="text-navy-600 hover:text-navy-800">
+            <Link href="/blog" className="text-teal-600 hover:text-teal-800">
               ← Back to blog
             </Link>
           </div>
@@ -84,7 +84,7 @@ export default function BlogPost() {
 
       <div className="min-h-screen bg-gray-50 py-8 sm:py-12">
         <article className="max-w-3xl mx-auto px-4">
-          <Link href="/blog" className="text-navy-600 hover:text-navy-800 mb-4 sm:mb-6 inline-block">
+          <Link href="/blog" className="text-teal-600 hover:text-teal-800 mb-4 sm:mb-6 inline-block">
             ← Back to blog
           </Link>
 
@@ -98,7 +98,7 @@ export default function BlogPost() {
             </div>
           )}
 
-          <h1 className="text-2xl sm:text-4xl font-bold text-navy-900 mb-3 sm:mb-4">{post.title}</h1>
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">{post.title}</h1>
           
           <p className="text-gray-600 mb-8">
             {post.publishedAt && format(new Date(post.publishedAt), 'MMMM d, yyyy')}

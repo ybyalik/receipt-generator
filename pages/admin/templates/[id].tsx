@@ -156,7 +156,7 @@ export default function AdminTemplateEditor() {
           <p className="mt-2 text-gray-600">You need admin privileges to access this page.</p>
           <button
             onClick={() => router.push('/')}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+            className="mt-4 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors cursor-pointer"
           >
             Go Home
           </button>
@@ -183,7 +183,7 @@ export default function AdminTemplateEditor() {
           <p className="mt-2 text-gray-600">Template ID: {id}</p>
           <button
             onClick={() => router.push('/admin')}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="mt-4 px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700"
           >
             Back to Admin
           </button>
@@ -406,12 +406,12 @@ export default function AdminTemplateEditor() {
                 onChange={(e) => setTemplateName(e.target.value)}
                 onBlur={() => setIsEditingName(false)}
                 onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
-                className="text-3xl font-bold border-b-2 border-blue-500 focus:outline-none"
+                className="text-3xl font-bold border-b-2 border-teal-500 focus:outline-none"
                 autoFocus
               />
             ) : (
               <h1 
-                className="text-3xl font-bold cursor-pointer hover:text-blue-600 transition-colors"
+                className="text-3xl font-bold cursor-pointer hover:text-teal-600 transition-colors"
                 onClick={() => setIsEditingName(true)}
                 title="Click to edit template name"
               >
@@ -428,7 +428,7 @@ export default function AdminTemplateEditor() {
               </button>
               <button
                 onClick={saveTemplate}
-                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex items-center px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
               >
                 <FiSave className="mr-2" />
                 Save Global Template
@@ -444,12 +444,12 @@ export default function AdminTemplateEditor() {
                 onChange={(e) => setTemplateSlug(e.target.value)}
                 onBlur={() => setIsEditingSlug(false)}
                 onKeyDown={(e) => e.key === 'Enter' && setIsEditingSlug(false)}
-                className="border-b border-blue-500 focus:outline-none px-1"
+                className="border-b border-teal-500 focus:outline-none px-1"
                 autoFocus
               />
             ) : (
               <span 
-                className="cursor-pointer hover:text-blue-600 transition-colors flex items-center"
+                className="cursor-pointer hover:text-teal-600 transition-colors flex items-center"
                 onClick={() => setIsEditingSlug(true)}
                 title="Click to edit URL slug"
               >

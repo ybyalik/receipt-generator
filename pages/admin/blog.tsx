@@ -160,10 +160,10 @@ export default function AdminBlog() {
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4">
           <div className="mb-6 flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-navy-900">Blog Posts</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Blog Posts</h1>
             <button
               onClick={handleCreatePost}
-              className="bg-navy-600 text-white px-4 py-2 rounded-lg hover:bg-navy-700 transition-colors flex items-center gap-2"
+              className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2"
             >
               <FiPlus /> New Post
             </button>
@@ -172,7 +172,7 @@ export default function AdminBlog() {
           {showEditor ? (
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-navy-900">
+                <h2 className="text-2xl font-bold text-gray-900">
                   {editingPost ? 'Edit Post' : 'New Post'}
                 </h2>
                 <button
@@ -200,7 +200,7 @@ export default function AdminBlog() {
                   
                   <div className="flex items-start gap-4">
                     <div className="flex-1">
-                      <label className="flex items-center justify-center w-full px-4 py-8 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-navy-500 hover:bg-gray-50 transition-colors">
+                      <label className="flex items-center justify-center w-full px-4 py-8 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-500 hover:bg-gray-50 transition-colors">
                         <div className="text-center">
                           <FiUpload className="mx-auto h-12 w-12 text-gray-400" />
                           <p className="mt-2 text-sm text-gray-600">
@@ -258,7 +258,7 @@ export default function AdminBlog() {
                 <div className="flex gap-3 pt-4">
                   <button
                     onClick={handleSavePost}
-                    className="bg-navy-600 text-white px-6 py-2 rounded-lg hover:bg-navy-700 transition-colors"
+                    className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-colors"
                   >
                     Save Post
                   </button>
@@ -303,7 +303,7 @@ export default function AdminBlog() {
                       <td className="px-6 py-4 text-sm text-right">
                         <button
                           onClick={() => handleEditPost(post)}
-                          className="text-blue-600 hover:text-blue-800 mr-3 transition-colors"
+                          className="text-teal-600 hover:text-teal-800 mr-3 transition-colors"
                         >
                           <FiEdit2 size={18} />
                         </button>
