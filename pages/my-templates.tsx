@@ -80,7 +80,7 @@ const MyTemplates: NextPage = () => {
   }
 
   return (
-    <Layout>
+    <Layout breadcrumbs={[{ label: 'My Templates' }]}>
       <Head>
         <title>My Templates - Receipt Generator</title>
       </Head>

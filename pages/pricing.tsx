@@ -105,7 +105,7 @@ const Pricing: NextPage = () => {
   ];
 
   return (
-    <Layout>
+    <Layout breadcrumbs={[{ label: 'Pricing' }]}>
       <Head>
         <title>Pricing - Receipt Generator</title>
         <meta name="description" content="Choose your plan" />

@@ -71,7 +71,7 @@ export default function BlogPost() {
   };
 
   return (
-    <Layout>
+    <Layout breadcrumbs={[{ label: 'Blog', href: '/blog' }, { label: post.title }]}>
       <Head>
         <title>{post.title} | Blog</title>
         <meta name="description" content={getMetaDescription(post.content)} />

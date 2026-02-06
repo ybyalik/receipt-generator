@@ -5,7 +5,7 @@ import { FiCheckCircle, FiZap, FiShield, FiUsers } from 'react-icons/fi';
 
 export default function About() {
   return (
-    <Layout>
+    <Layout breadcrumbs={[{ label: 'About' }]}>
       <Head>
         <title>About Us - Receipt Generator</title>
         <meta name="description" content="Learn about Receipt Generator, our mission to make professional receipt creation easy and accessible for everyone." />

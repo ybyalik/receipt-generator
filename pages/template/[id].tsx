@@ -449,7 +449,7 @@ export default function TemplateEditor({ initialTemplate }: TemplateEditorProps)
   console.log('Render time - template has seoContent:', !!template?.seoContent);
 
   return (
-    <Layout>
+    <Layout breadcrumbs={[{ label: 'Templates', href: '/templates' }, { label: template.name }]}>
       <div className="max-w-[1400px] mx-auto px-4 py-4 sm:py-8">
         <div className="mb-4 sm:mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">

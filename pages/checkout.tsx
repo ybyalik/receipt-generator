@@ -66,7 +66,7 @@ export default function Checkout() {
   };
 
   return (
-    <Layout>
+    <Layout breadcrumbs={[{ label: 'Pricing', href: '/pricing' }, { label: 'Checkout' }]}>
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full mx-auto mb-4"></div>

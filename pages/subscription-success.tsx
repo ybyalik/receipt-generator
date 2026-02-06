@@ -39,7 +39,7 @@ export default function SubscriptionSuccess() {
   }
 
   return (
-    <Layout>
+    <Layout breadcrumbs={[{ label: 'Subscription Confirmed' }]}>
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
         <div className="bg-white rounded-2xl shadow-xl p-12">
           <div className="w-20 h-20 bg-success-100 rounded-full flex items-center justify-center mx-auto mb-6">

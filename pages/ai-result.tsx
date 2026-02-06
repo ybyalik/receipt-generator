@@ -211,7 +211,7 @@ export default function AIResult() {
   }
 
   return (
-    <Layout>
+    <Layout breadcrumbs={[{ label: 'AI Receipt Generator', href: '/ai' }, { label: 'Your Receipt' }]}>
       <Head>
         <title>AI-Generated Receipt - Receipt Generator</title>
       </Head>

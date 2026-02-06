@@ -335,7 +335,7 @@ export default function AIReceiptGenerator() {
   };
 
   return (
-    <Layout>
+    <Layout breadcrumbs={[{ label: 'AI Receipt Generator' }]}>
       <Head>
         <title>AI Receipt Generator - Upload Image & Create Template Instantly</title>
         <meta name="description" content="Upload a receipt image and let our AI automatically extract data to create a customizable template. Powered by advanced vision technology." />

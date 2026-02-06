@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { useAuth } from '../contexts/AuthContext';
 import { FiUser, FiLogOut, FiChevronDown, FiSettings, FiHeart, FiUsers, FiCreditCard, FiMenu, FiX } from 'react-icons/fi';
 import { FaLinkedin } from 'react-icons/fa';
+import Breadcrumbs, { BreadcrumbItem } from './Breadcrumbs';
 
 const AuthModal = dynamic(() => import('./AuthModal'), {
   ssr: false,
@@ -17,9 +18,10 @@ const ExitIntentPopup = dynamic(() => import('./ExitIntentPopup'), {
 
 interface LayoutProps {
   children: React.ReactNode;
+  breadcrumbs?: BreadcrumbItem[];
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs }) => {
   const { user, signOut, isAdmin, premiumLoading } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -381,6 +383,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </>
         )}
       </nav>
+      {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
       <main className="flex-grow">{children}</main>
       <footer className="bg-black text-white py-8 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

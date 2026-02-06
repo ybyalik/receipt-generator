@@ -69,7 +69,7 @@ const Templates: NextPage<TemplatesPageProps> = ({ templates }) => {
   }, [templates, activeCategory, search]);
 
   return (
-    <Layout>
+    <Layout breadcrumbs={[{ label: 'Templates' }]}>
       <Head>
         <title>Receipt Templates - Customizable Business Receipt Designs</title>
         <meta name="description" content="Browse our collection of professional receipt templates for restaurants, retail, repair shops, gas stations, and more. Fully customizable and ready to download instantly." />

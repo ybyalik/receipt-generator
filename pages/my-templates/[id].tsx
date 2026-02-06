@@ -379,7 +379,7 @@ export default function MyTemplateEditor() {
   };
 
   return (
-    <Layout>
+    <Layout breadcrumbs={[{ label: 'My Templates', href: '/my-templates' }, { label: template.name }]}>
       <Head>
         <title>{template.name} - My Templates - Receipt Generator</title>
       </Head>

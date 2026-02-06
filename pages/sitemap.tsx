@@ -13,7 +13,7 @@ interface SitemapPageProps {
 
 const Sitemap: NextPage<SitemapPageProps> = ({ templates, blogPosts }) => {
   return (
-    <Layout>
+    <Layout breadcrumbs={[{ label: 'Sitemap' }]}>
       <Head>
         <title>Sitemap - Receipt Generator</title>
         <meta name="description" content="Complete sitemap of Receipt Generator. Find all pages including templates, blog posts, and more." />
